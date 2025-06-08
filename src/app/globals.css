@@ -1,0 +1,441 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  font-size: 20px;
+  color: white;
+
+  font-variant-ligatures: none;
+
+  font-family: "Lexend";
+}
+
+@theme {
+  --color-bg: #0d0e10;
+  --color-bg-light: #16191d;
+  --color-bg-lighter: #1b222a;
+  --color-bg-lightest: #2c2f37;
+  --color-bg-light-transparent: rgba(22, 25, 29, 0.5);
+
+  --color-primary: #254fa8;
+  --color-primary-disabled: #16367a;
+  --color-secondary: #3263ce;
+  --color-tertiary: #3364ce;
+
+  --color-danger: #9f0900;
+  --color-danger-secondary: #6c0a05;
+}
+
+select, option {
+  font: -moz-pull-down-menu;
+}
+
+@layer base {
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  :root {
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer utilities {
+  .absolute-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .text-clamp {
+    font-size: clamp(1rem, 2vw, 1.5rem);
+  }
+
+  .overflow-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pixelated {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+  }
+
+  .fade-in {
+    animation: fade-in 0.1s forwards ease-out;
+  }
+
+  .fade-in-75 {
+    animation: fade-in-75 0.1s forwards ease-out;
+  }
+
+  .scale-in {
+    animation: scale-in 0.1s forwards ease-out;
+  }
+
+  .scale-in-center {
+    animation: scale-in-center 0.1s forwards ease-out;
+  }
+
+  .fade-out {
+    animation: fade-out 0.1s forwards ease-out;
+  }
+
+  .fade-out-75 {
+    animation: fade-out-75 0.1s forwards ease-out;
+  }
+
+  .scale-out {
+    animation: scale-out 0.05s forwards ease-out;
+  }
+
+  .scale-out-center {
+    animation: scale-out-center 0.05s forwards ease-out;
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 100%;
+    }
+  }
+
+  @keyframes fade-in-75 {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 75%;
+    }
+  }
+
+  @keyframes fade-out {
+    0% {
+      opacity: 100%;
+    }
+
+    100% {
+      opacity: 0%;
+    }
+  }
+
+  @keyframes fade-out-75 {
+    0% {
+      opacity: 75%;
+    }
+
+    100% {
+      opacity: 0%;
+    }
+  }
+
+  @keyframes scale-in {
+    0% {
+      transform: scale(85%);
+    }
+
+    100% {
+      transform: scale(100%);
+    }
+  }
+
+  @keyframes scale-in-center {
+    0% {
+      transform: translate(-50%, -50%) scale(85%);
+    }
+
+    100% {
+      transform: translate(-50%, -50%) scale(100%);
+    }
+  }
+
+  @keyframes scale-out {
+    0% {
+      transform: scale(100%);
+    }
+
+    100% {
+      transform: scale(85%);
+    }
+  }
+
+  @keyframes scale-out-center {
+    0% {
+      transform: translate(-50%, -50%) scale(100%);
+    }
+
+    100% {
+      transform: translate(-50%, -50%) scale(85%);
+    }
+  }
+}
+
+@layer components {
+  a:not(.no-style) {
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  a:not(.no-style)::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 0.25rem;
+    border-radius: 0.25rem;
+    animation: underline-shrink 0.2s ease-in-out;
+  }
+
+  a:not(.no-style):hover {
+    color: var(--primary);
+  }
+
+  a:not(.no-style).active::after, a:not(.no-style):hover::after {
+    animation: underline-expand 0.2s ease-in-out;
+    background-color: var(--primary);
+  }
+
+  code:not(pre code) {
+    background-color: var(--background-lighter);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+  }
+
+  input.vertical[type=range] {
+      writing-mode: vertical-lr;
+      direction: rtl;
+      appearance: slider-vertical;
+      width: 16px;
+      vertical-align: bottom;
+  }
+
+  .color-picker {
+    background-color: var(--background-light) !important;
+    border-radius: 0.5rem !important;
+    font-family: unset !important;
+    z-index: 60 !important;
+
+    & div {
+      z-index: 60 !important;
+    }
+
+    & svg {
+      fill: currentColor !important;
+
+      &:hover {
+        background-color: unset !important;
+      }
+    }
+
+    & input {
+      background-color: var(--background-light) !important;
+      border-radius: 0.2rem !important;
+      color: white !important;
+      border: var(--background-lighter) !important;
+      outline: var(--background-lighter) !important;
+    }
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+      /* display: none; <- Crashes Chrome on hover */
+      -webkit-appearance: none;
+      margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  }
+
+  input[type=number] {
+      -moz-appearance: textfield; /* Firefox */
+      appearance: textfield; /* Chrome */
+  }
+}
+
+@keyframes underline-expand {
+  0% {
+    width: 0;
+    background-color: transparent;
+  }
+
+  100% {
+    width: 100%;
+    background-color: var(--primary);
+  }
+}
+
+@keyframes underline-shrink {
+  0% {
+    width: 100%;
+    background-color: var(--primary);
+  }
+
+  100% {
+    width: 0;
+    background-color: transparent;
+  }
+}
+
+.markdown {
+  & code {
+    white-space: pre-wrap;
+    font-family: 'Fira Mono', monospace;
+  }
+
+  & pre:has(code) {
+    background-color: var(--background-lighter);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: scroll;
+  }
+
+  & pre code {
+    overflow-x: hidden;
+  }
+
+  & img {
+    max-width: 100%;
+    border-radius: 0.5rem;
+  }
+
+  & p {
+    padding: 0.5rem 0;
+  }
+
+  & h1, h2, h3, h4 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.25rem;
+  }
+
+  & a {
+    color: var(--primary);
+  }
+
+  & hr {
+    border: none;
+    height: 3px;
+    background-color: var(--background-lighter);
+    border-radius: 999px;
+  }
+
+  & ul li {
+    padding: 0.05rem 1rem;
+  }
+
+  & ul li::before {
+    content: "•";
+    color: var(--primary);
+    display: inline-block;
+    width: 1em;
+    font-size: 1rem;
+    margin-left: -1em;
+  }
+
+  & ol {
+    counter-reset: list;
+  }
+
+  & ol li {
+    counter-increment: list;
+    padding: 0.05rem 1rem;
+    /* add number */
+    &::before {
+      content: counter(list) ".";
+      color: var(--primary);
+      display: inline-block;
+      width: 1em;
+      font-size: 1rem;
+      margin-left: -1em;
+    }
+  }
+
+  & blockquote {
+    background-color: var(--background-lightest);
+    padding: 0.5rem 1rem;
+    border-left: 0.25rem solid var(--primary);
+    border-radius: 0.5rem;
+  }
+}
+
+.recharts-cartesian-grid line {
+  stroke: var(--background-lighter);
+}
+
+.recharts-rectangle.recharts-tooltip-cursor {
+  fill: var(--background-lighter);
+}
+
+.recharts-cartesian-axis-tick line, .recharts-cartesian-axis-line {
+  stroke: var(--background-lighter);
+}
+
+.table-alternate-colors tbody > tr:nth-child(odd) {
+  background-color: var(--background-light);
+}
+
+/* round the outside of a 2-column grid, not the inside */
+.round-outside-grid {
+  & > * {
+    border-radius: 0.2rem;
+  }
+
+  & > :first-child {
+    border-top-left-radius: 1rem;
+  }
+
+  & > :nth-child(2) {
+    border-top-right-radius: 1rem;
+  }
+
+  & > :nth-last-child(2) {
+    border-bottom-left-radius: 1rem;
+  }
+
+  & > :last-child {
+    border-bottom-right-radius: 1rem;
+  }
+}
+
+/* Scrollbar for Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #555 #1a1a1a;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+  border: 2px solid #1a1a1a;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #777;
+}
