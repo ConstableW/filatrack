@@ -7,11 +7,17 @@ import { filamentLogTable, filamentTable } from "@/db/schema/filament";
 import { eq } from "drizzle-orm";
 import { Filament, FilamentLog } from "@/db/types";
 
-export async function getAllFilaments(): Promise<DBRes<Filament[]>>  {
+export async function getAllFilaments(): Promise<DBRes<Filament[]>> {
+    console.log("[getallfilaments] getting session");
+
     const session = await auth();
+
+    console.log(`[getallfilaments] got session: ${JSON.stringify(session)}`);
 
     if (!session || !session.user)
         return { error: "Not authenticated" };
+
+    console.log("[getallfilaments] fetching db data");
 
     return {
         data: await db.select().from(filamentTable)
@@ -19,11 +25,17 @@ export async function getAllFilaments(): Promise<DBRes<Filament[]>>  {
     };
 }
 
-export async function getFilament(id: string): Promise<DBRes<Filament | null>>  {
+export async function getFilament(id: string): Promise<DBRes<Filament | null>> {
+    console.log("[getfilament] getting session");
+
     const session = await auth();
+
+    console.log(`[getfilament] got session: ${JSON.stringify(session)}`);
 
     if (!session || !session.user)
         return { error: "Not authenticated" };
+
+    console.log("[getallfilaments] fetching db data");
 
     return {
         data: (await db.select().from(filamentTable)
@@ -95,10 +107,14 @@ export async function deleteFilament(filamentId: string): Promise<DBRes<Filament
 }
 
 export async function getFilamentLogs(filamentId: string): Promise<DBRes<FilamentLog[]>> {
+    console.log("[getFilamentLogs] getting session");
+
     const session = await auth();
 
     if (!session || !session.user)
         return { error: "Not authenticated" };
+
+    console.log("[getFilamentLogs] getting filament");
 
     const filament = (await db.select().from(filamentTable)
         .where(eq(filamentTable.id, filamentId)))[0];
@@ -108,6 +124,8 @@ export async function getFilamentLogs(filamentId: string): Promise<DBRes<Filamen
 
     if (filament.userId !== session.user.id)
         return { error: "This is not your filament." };
+
+    console.log("[getFilamentLogs] getting filament logs");
 
     return {
         data: await db.select().from(filamentLogTable)
@@ -133,6 +151,7 @@ export async function logFilamentUse(log: DBCreateParams<FilamentLog>): Promise<
     return {
         data: (await db.insert(filamentLogTable).values({
             ...log,
-        }))[0],
+        })
+            .returning())[0],
     };
 }
