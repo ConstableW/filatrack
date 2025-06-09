@@ -4,9 +4,9 @@ import Divider from "../Divider";
 import Input from "../Input";
 import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
-import { Filament } from "../../../prisma/generated/prisma";
 import FilamentEntry from "./Filament";
 import { editFilament, logFilamentUse } from "@/app/lib/filament";
+import { Filament } from "@/db/types";
 
 export default function LogFilamentModal({ open, onClose, filament, onFinish }:
     { filament: Filament, onFinish: (newFilament: Filament) => void } & ModalProps) {

@@ -8,11 +8,11 @@ import { useEffect, useState } from "react";
 import Modal, { ModalFooter } from "../Modal";
 import Divider from "../Divider";
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../Dropdown";
-import { Filament } from "../../../prisma/generated/prisma";
 import { deleteFilament } from "@/app/lib/filament";
 import LogFilamentModal from "./LogFilament";
 import FilamentHistoryModal from "./FilamentHistory";
 import { toDateString } from "@/app/lib/date";
+import { Filament } from "@/db/types";
 
 export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
     { filament: Filament, isPreview?: boolean, onDelete?: () => void, onEdit?: (filament: Filament) => void }) {
@@ -58,7 +58,9 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
                 </Subtext>
                 <Subtext className="text-xs flex flex-row gap-1 items-center"><Box size={16} /> {filament.material}</Subtext>
             </div>
-            {(!isPreview && !filament.isEmpty) && <Button className="w-full mt-1" onClick={() => setOpenModal("log")}>Log</Button>}
+            {(!isPreview && filament.currentMass > 0) &&
+            <Button className="w-full mt-1" onClick={() => setOpenModal("log")}>Log</Button>
+            }
 
             {!isPreview && <button
                 className="absolute top-1 right-1 p-1 rounded-full cursor-pointer transition-all bg-bg-light hover:bg-bg-lighter"

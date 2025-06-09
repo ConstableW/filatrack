@@ -1,11 +1,11 @@
 "use client";
 
-import { Filament } from "../../../prisma/generated/prisma";
 import { useEffect, useState } from "react";
 import Skeleton from "../Skeleton";
 import FilamentEntry from "./Filament";
 import AddFilament from "./AddFilament";
 import { getAllFilaments } from "@/app/lib/filament";
+import { Filament } from "@/db/types";
 
 export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean, isEmpty?: boolean }) {
     const [filaments, setFilaments] = useState<Filament[]>([]);
@@ -30,9 +30,9 @@ export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean
 
         {filaments
             .map((f, i) => {
-                if (f.isEmpty && !isEmpty)
+                if (f.currentMass <= 0 && !isEmpty)
                     return null;
-                if (!f.isEmpty && isEmpty)
+                if (f.currentMass > 0 && isEmpty)
                     return null;
                 return <FilamentEntry key={f.id} filament={f} onDelete={() => deleteFilament(i)} onEdit={f => editFilament(i, f)} />;
             })

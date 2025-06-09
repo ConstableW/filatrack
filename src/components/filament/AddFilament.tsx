@@ -10,10 +10,10 @@ import Button, { ButtonStyles } from "../Button";
 import PopoverColorPicker from "../ColorPicker";
 import { createFilament } from "@/app/lib/filament";
 import { useObjectState } from "@/app/lib/hooks";
-import { Filament } from "../../../prisma/generated/prisma";
 import { DBCreateParams } from "@/app/lib/types";
 import MaterialPicker, { filamentMaterials } from "./MaterialPicker";
 import MassPicker from "./MassPicker";
+import { Filament } from "@/db/types";
 
 export default function AddFilament({ onAdd }: { onAdd?: (filament: Filament) => void }) {
     const [modalOpen, setModalOpen] = useState(false);
@@ -30,8 +30,6 @@ export default function AddFilament({ onAdd }: { onAdd?: (filament: Filament) =>
         currentMass: 1000,
         startingMass: 1000,
 
-        isEmpty: false,
-
         lastUsed: new Date(0),
     });
 
@@ -45,8 +43,6 @@ export default function AddFilament({ onAdd }: { onAdd?: (filament: Filament) =>
 
             currentMass: 1000,
             startingMass: 1000,
-
-            isEmpty: false,
 
             lastUsed: new Date(0),
         });

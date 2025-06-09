@@ -1,5 +1,4 @@
 import { Weight } from "lucide-react";
-import { Filament, FilamentLog } from "../../../prisma/generated/prisma";
 import Button from "../Button";
 import Divider from "../Divider";
 import Modal, { ModalFooter, ModalProps } from "../Modal";
@@ -8,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getFilamentLogs } from "@/app/lib/filament";
 import Spinner from "../Spinner";
 import { toDateString } from "@/app/lib/date";
+import { Filament, FilamentLog } from "@/db/types";
 
 function FilamentHistoryEntry({ log }: { log: FilamentLog }) {
     return (
