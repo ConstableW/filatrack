@@ -14,6 +14,7 @@ import FilamentHistoryModal from "./FilamentHistory";
 import { toDateString } from "@/app/lib/date";
 import { Filament } from "@/db/types";
 import { grams } from "@/app/lib/units";
+import AddFilament from "./AddFilament";
 
 export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
     { filament: Filament, isPreview?: boolean, onDelete?: () => void, onEdit?: (filament: Filament) => void }) {
@@ -120,6 +121,13 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
                 open={openModal === "history"}
                 onClose={() => setOpenModal("")}
                 filament={filament}
+            />
+
+            <AddFilament
+                open={openModal === "edit"}
+                onClose={() => setOpenModal("")}
+                currentFilament={filament}
+                onAdd={onEdit}
             />
 
             <Modal open={openModal === "move"} onClose={() => setOpenModal("")} title="Move Filament">

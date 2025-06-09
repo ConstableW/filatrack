@@ -1,3 +1,5 @@
+import Input from "../Input";
+
 export const filamentMaterials = [
     "PLA",
     "TPU",
@@ -10,11 +12,19 @@ export const filamentMaterials = [
 ];
 
 export default function MaterialPicker({ value, onChange }: { value: string, onChange: (val: string) => void }) {
-    return (
+    return (<>
         <div className="grid grid-rows-2 grid-cols-4 gap-1 my-2">
             {filamentMaterials.map(f => <MaterialEntry key={f} selected={value === f} onClick={() => onChange(f)}>{f}</MaterialEntry>)}
         </div>
-    );
+
+        <Input
+            placeholder="Other..."
+            className={filamentMaterials.includes(value) ? "" : "!border-primary"}
+            value={filamentMaterials.includes(value) ? "" : value}
+            onChange={e => onChange(e.target.value)}
+            maxLength={32}
+        />
+    </>);
 }
 
 export function MaterialEntry({ children, selected, onClick }:

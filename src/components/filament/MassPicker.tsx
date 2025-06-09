@@ -13,8 +13,8 @@ const presets: Record<string, number> = {
     "2kg": 2000,
 };
 
-export default function MassPicker({ values, onChange }:
-    { values: MassData, onChange: (massData: MassData) => void }) {
+export default function MassPicker({ values, onChange, noHelper }:
+    { values: MassData, onChange: (massData: MassData) => void, noHelper?: boolean }) {
     const [infoModalOpen, setInfoModalOpen] = useState(false);
 
     return (<>
@@ -32,15 +32,15 @@ export default function MassPicker({ values, onChange }:
                 onChange={e => onChange({ ...values, startingMass: parseInt(e.target.value) })}
             />
         </div>
-        <Subtext className="text-tertiary cursor-pointer" onClick={() => setInfoModalOpen(true)}>
+        {!noHelper && <Subtext className="text-tertiary cursor-pointer" onClick={() => setInfoModalOpen(true)}>
                 I don't know how much filament is left
-        </Subtext>
+        </Subtext>}
 
         <div className="flex flex-row gap-1 w-full">
             {Object.keys(presets).map(k => (
                 <div
                     className={`px-2 py-1 text-center w-full rounded-full bg-bg-lighter cursor-pointer 
-                        border-2 border-transparent hover:border-primary transition-all 
+                        border-2 border-transparent hover:border-primary transition-all ${noHelper && "mt-2"}
                         ${values.startingMass === presets[k] && "!border-primary"}`}
                     onClick={() => onChange({ currentMass: presets[k], startingMass: presets[k] })}
                     key={k}
@@ -50,6 +50,6 @@ export default function MassPicker({ values, onChange }:
             ))}
         </div>
 
-        <FindMassModal open={infoModalOpen} onClose={() => setInfoModalOpen(false)} />
+        {!noHelper && <FindMassModal open={infoModalOpen} onClose={() => setInfoModalOpen(false)} />}
     </>);
 }

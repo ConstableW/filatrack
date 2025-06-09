@@ -37,6 +37,12 @@ export async function createFilament(filament: DBCreateParams<Filament>): Promis
     if (!session || !session.user)
         return { error: "Not authenticated" };
 
+    if (filament.name.length > 32)
+        return { error: "Filament name too long" };
+
+    if (filament.brand.length > 32)
+        return { error: "Filament brand name too long" };
+
     return {
         data: (await db.insert(filamentTable).values({
             ...filament,

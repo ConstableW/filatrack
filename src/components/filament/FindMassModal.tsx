@@ -11,7 +11,7 @@ const text = [
     "If you don't have one, there are many resources online that tell you how much they weigh. " +
     "Simply search \"Empty filament spool weight\" and you'll find a bunch of results.",
     "Once you've gotten the mass of your empty spool, All you need to do is " +
-    "subtract it by the total weight of the whole spool (with filament).",
+    "subtract it by the total mass of the whole spool (with filament).",
 ];
 
 export default function FindMassModal({ open, onClose }: { open: boolean, onClose: () => void }) {
@@ -29,7 +29,7 @@ export default function FindMassModal({ open, onClose }: { open: boolean, onClos
 
     return (
         <Modal open={open} title="Finding Filament Mass" onClose={onClose} level={2}>
-            <Subtext>
+            <Subtext className="min-w-[500px]">
                 Use this tool if the spool you're adding has been used and you don't know how much filament is currently on it.
             </Subtext>
             <Divider />

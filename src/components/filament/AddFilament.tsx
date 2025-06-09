@@ -1,26 +1,24 @@
 "use client";
 
-import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import Modal, { ModalFooter } from "../Modal";
+import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
 import Divider from "../Divider";
 import Input from "../Input";
 import Button, { ButtonStyles } from "../Button";
 import PopoverColorPicker from "../ColorPicker";
-import { createFilament } from "@/app/lib/filament";
+import { createFilament, editFilament } from "@/app/lib/filament";
 import { useObjectState } from "@/app/lib/hooks";
 import { DBCreateParams } from "@/app/lib/types";
-import MaterialPicker, { filamentMaterials } from "./MaterialPicker";
+import MaterialPicker from "./MaterialPicker";
 import MassPicker from "./MassPicker";
 import { Filament } from "@/db/types";
 
-export default function AddFilament({ onAdd }: { onAdd?: (filament: Filament) => void }) {
-    const [modalOpen, setModalOpen] = useState(false);
-
+export default function AddFilament({ onAdd, currentFilament, open, onClose }:
+    ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament) => void }) {
     const [step, setStep] = useState(0);
 
-    const [filamentData, setFilamentData] = useObjectState<DBCreateParams<Filament>>({
+    const [filamentData, setFilamentData] = useObjectState<DBCreateParams<Filament>>(currentFilament ?? {
         name: "",
         brand: "",
         color: "#09f",
@@ -47,6 +45,7 @@ export default function AddFilament({ onAdd }: { onAdd?: (filament: Filament) =>
             lastUsed: new Date(0),
         });
         setStep(0);
+        setError("");
     }
 
     const [error, setError] = useState("");
@@ -65,7 +64,9 @@ export default function AddFilament({ onAdd }: { onAdd?: (filament: Filament) =>
 
         setLoading(true);
 
-        const res = await createFilament(filamentData);
+        const res = currentFilament ?
+            await editFilament(currentFilament.id, filamentData) :
+            await createFilament(filamentData);
 
         if (res.error) {
             setError(res.error);
@@ -74,26 +75,23 @@ export default function AddFilament({ onAdd }: { onAdd?: (filament: Filament) =>
         }
 
         setLoading(false);
-        setModalOpen(false);
+        onClose();
 
         onAdd?.(res.data!);
     }
 
     useEffect(() => {
         reset();
-    }, [modalOpen]);
+
+        if (currentFilament)
+            setFilamentData(currentFilament);
+    }, [open]);
 
     return (<>
-        <div
-            className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center justify-center relative w-[175px] 
-                cursor-pointer transition-all border-2 border-transparent hover:border-primary min-h-[269px]`}
-            onClick={() => setModalOpen(true)}
-        >
-            <Plus className="absolute-center text-gray-500" size={64} />
-        </div>
-
-        <Modal open={modalOpen} onClose={() => setModalOpen(false)} title="New Filament">
-            <Subtext>Add a new filament to start tracking it's usage.</Subtext>
+        <Modal open={open} onClose={onClose} title={`${currentFilament ? "Edit" : "Add"} Filament`}>
+            <Subtext>
+                {currentFilament ? "Edit this filament's properties." : "Add a new filament to start tracking it's usage."}
+            </Subtext>
             <Divider />
 
             {step === 0 && <>
@@ -102,11 +100,13 @@ export default function AddFilament({ onAdd }: { onAdd?: (filament: Filament) =>
                     value={filamentData.name}
                     onChange={e => setFilamentData({ name: e.target.value })}
                     error={(requiredError && !filamentData.name) && "This field is required"}
+                    maxLength={32}
                 />
                 <Input
                     label="Brand"
                     value={filamentData.brand}
                     onChange={e => setFilamentData({ brand: e.target.value })}
+                    maxLength={32}
                 />
 
                 <p>Color</p>
@@ -118,13 +118,6 @@ export default function AddFilament({ onAdd }: { onAdd?: (filament: Filament) =>
             {step === 1 && <>
                 <p>Material</p>
                 <MaterialPicker value={filamentData.material} onChange={m => setFilamentData({ material: m })} />
-                <Input
-                    placeholder="Other..."
-                    className={filamentMaterials.includes(filamentData.material) ? "" : "!border-primary"}
-                    value={filamentMaterials.includes(filamentData.material) ? "" : filamentData.material}
-                    onChange={e => setFilamentData({ material: e.target.value })}
-                    error={(requiredError && !filamentData.material) && "This field is required"}
-                />
             </>}
 
             {step === 2 && <>
@@ -136,7 +129,7 @@ export default function AddFilament({ onAdd }: { onAdd?: (filament: Filament) =>
                     Previous
                 </Button>
                 <Button onClick={() => (step === 2 ? addFilament() : setStep(step + 1))} loading={loading}>
-                    {step === 2 ? "Add" : "Next"}
+                    {step === 2 ? (currentFilament ? "Edit" : "Add") : "Next"}
                 </Button>
             </ModalFooter>
         </Modal>
