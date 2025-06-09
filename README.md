@@ -17,5 +17,6 @@ Please also make sure you install the ESLint VSCode plugin or your PRs witll fai
 1. Install [PNPM](https://pnpm.io/)
 2. Clone the repo: `git clone https://github.com/MrDiamondDog/filatrack/`
 3. Install dependencies: `pnpm i`
-4. Run dev server: `pnpm dev`
-5. Success!
+4. Copy `.env.example` to `.env` and fill out values
+6. Run dev server: `pnpm dev`
+7. Success!
