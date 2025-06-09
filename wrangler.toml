@@ -8,3 +8,5 @@ binding = "ASSETS"
 [dev]
 port = 3000
 host = "localhost"
+[observability.logs]
+enabled = true
