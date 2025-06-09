@@ -2,7 +2,7 @@
   "name": "filatrack",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@9.5.0^",
+  "packageManager": "pnpm@10.12.1",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
