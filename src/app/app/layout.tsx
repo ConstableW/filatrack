@@ -1,9 +1,10 @@
 import { auth } from "@/auth";
 import AccountCard from "@/components/Account";
 import SidebarItem from "@/components/SidebarItem";
-import { Cog } from "lucide-react";
+import { Cog, Heart } from "lucide-react";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { FaGithub } from "react-icons/fa6";
 import { GiFilmSpool } from "react-icons/gi";
 
 export const metadata: Metadata = {
@@ -31,6 +32,14 @@ export default async function AppLayout({
                 <SidebarItem href="/app/settings">
                     <Cog /> Settings
                 </SidebarItem>
+                <div className="mt-auto">
+                    <SidebarItem href="https://github.com/sponsors/mrdiamonddog/">
+                        <Heart /> Support
+                    </SidebarItem>
+                    <SidebarItem href="https://github.com/mrdiamonddog/filatrack">
+                        <FaGithub /> GitHub
+                    </SidebarItem>
+                </div>
             </div>
             <div className="bg-bg w-full rounded-lg m-2 p-4 pt-2">{children}</div>
         </main>
