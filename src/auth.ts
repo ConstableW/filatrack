@@ -12,4 +12,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }),
     ],
     debug: true,
+    trustHost: true,
 });
