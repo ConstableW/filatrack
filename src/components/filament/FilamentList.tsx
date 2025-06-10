@@ -54,6 +54,10 @@ export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean
             </div>
         }
 
-        <AddFilamentModal open={addFilamentOpen} onClose={() => setAddFilamentOpen(false)} onAdd={f => setFilaments([...filaments, f])} />
+        <AddFilamentModal
+            open={addFilamentOpen}
+            onClose={() => setAddFilamentOpen(false)}
+            onAdd={f => setFilaments([...filaments, f])}
+        />
     </>);
 }
