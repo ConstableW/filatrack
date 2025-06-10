@@ -6,8 +6,7 @@ import { userSettingsTable } from "@/db/schema/settings";
 import { db } from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { usersTable } from "@/db/schema/user";
-
-type UserSettings = typeof userSettingsTable.$inferSelect;
+import { UserSettings } from "@/db/types";
 
 export async function getUserId(): Promise<DBRes<string>> {
     const session = await auth();
@@ -33,7 +32,7 @@ export async function setUsername(username: string): Promise<DBRes<undefined>> {
     return {};
 }
 
-export async function getUserSettings(userId: string): Promise<DBRes<UserSettings>> {
+export async function getUserSettings(userId?: string): Promise<DBRes<UserSettings>> {
     const session = await auth();
 
     if (!session || !session.user)
@@ -41,7 +40,7 @@ export async function getUserSettings(userId: string): Promise<DBRes<UserSetting
 
     return {
         data: (await db.select().from(userSettingsTable)
-            .where(eq(userSettingsTable.userId, userId)))[0],
+            .where(eq(userSettingsTable.userId, userId ?? session.user.id!)))[0],
     };
 }
 
@@ -69,3 +68,11 @@ export async function setUserSettings(userId: string, newSettings: Partial<UserS
     };
 }
 
+export async function deleteUser() {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    await db.delete(usersTable).where(eq(usersTable.id, session.user.id!));
+}

@@ -5,7 +5,7 @@ export default defineConfig({
     out: "./drizzle",
     dialect: "postgresql",
     dbCredentials: {
-        url: process.env.DATABASE_URL!,
+        url: process.env.NODE_ENV === "production" ? process.env.DATABASE_URL! : process.env.STAGING_DATABASE_URL!,
     },
     schemaFilter: ["public"],
     verbose: true,

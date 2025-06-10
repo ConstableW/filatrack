@@ -6,7 +6,7 @@ import { Filament } from "@/db/types";
 import Skeleton from "../Skeleton";
 import { getAllFilaments } from "@/app/lib/filament";
 import { Plus } from "lucide-react";
-import AddFilament from "./AddFilament";
+import AddFilamentModal from "./AddFilament";
 
 export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean, isEmpty?: boolean }) {
     const [filaments, setFilaments] = useState<Filament[]>([]);
@@ -32,7 +32,7 @@ export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean
     }
 
     return (<>
-        {filaments.length === 0 && <Skeleton width={200} height={269} count={1} />}
+        {loading && <Skeleton width={200} height={269} count={2} className="flex flex-row gap-2 flex-wrap" />}
 
         {filaments
             .map((f, i) => {
@@ -54,6 +54,6 @@ export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean
             </div>
         }
 
-        <AddFilament open={addFilamentOpen} onClose={() => setAddFilamentOpen(false)} onAdd={f => setFilaments([...filaments, f])} />
+        <AddFilamentModal open={addFilamentOpen} onClose={() => setAddFilamentOpen(false)} onAdd={f => setFilaments([...filaments, f])} />
     </>);
 }

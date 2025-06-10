@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "./db/drizzle";
-import { eq } from "drizzle-orm";
 import { userSettingsTable } from "./db/schema/settings";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -18,18 +17,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     debug: process.env.NODE_ENV !== "production",
     pages: {
         signIn: "/login",
+        error: "/login",
     },
     callbacks: {
-        async signIn({ user, account, profile }): Promise<boolean> {
-            const currentUserSettings = await db.select().from(userSettingsTable)
-                .where(eq(userSettingsTable.userId, user.id!));
-
-            if (currentUserSettings.length === 0)
+    },
+    events: {
+        async signIn({ user, account, profile, isNewUser }) {
+            if (isNewUser)
                 await db.insert(userSettingsTable).values({
                     userId: user.id!,
                 });
-
-            return true;
         },
     },
 });

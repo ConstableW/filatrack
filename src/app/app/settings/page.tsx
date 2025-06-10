@@ -1,18 +1,19 @@
 "use client";
 
 import { useObjectState } from "@/app/lib/hooks";
-import { getUserId, getUserSettings, setUsername, setUserSettings } from "@/app/lib/settings";
-import Button from "@/components/Button";
+import { deleteUser, getUserId, getUserSettings, setUsername, setUserSettings } from "@/app/lib/settings";
+import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
 import MassPicker from "@/components/filament/MassPicker";
 import MaterialPicker from "@/components/filament/MaterialPicker";
 import Input from "@/components/Input";
-import Select from "@/components/Select";
+import Modal, { ModalFooter } from "@/components/Modal";
 import Spinner from "@/components/Spinner";
+import Subtext from "@/components/Subtext";
 import Tab from "@/components/tabs/Tab";
 import Tablist from "@/components/tabs/Tablist";
 import { userSettingsTable } from "@/db/schema/settings";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function SettingsPage() {
@@ -31,6 +32,9 @@ export default function SettingsPage() {
         defaultMaterial: "PLA",
         defaultMass: 1000,
     });
+
+    const [deleteAccountModal, setDeleteAccountModal] = useState(false);
+    const [deleteAccountConfirm, setDeleteAccountConfirm] = useState(false);
 
     useEffect(() => {
         if (!session)
@@ -75,6 +79,17 @@ export default function SettingsPage() {
         setSaveLoading(false);
     }
 
+    async function deleteAccount() {
+        setDeleteAccountModal(false);
+        setDeleteAccountConfirm(false);
+
+        setSaveLoading(false);
+
+        await deleteUser();
+
+        signOut();
+    }
+
     return (<>
         <Tablist tabs={["Account", "Preferences"]} activeTab="Account">
             <Tab name="Account" className="w-[200px]">
@@ -89,8 +104,41 @@ export default function SettingsPage() {
 
                     <Divider />
 
-                    <Button loading={saveLoading} onClick={saveUsername }>Save</Button>
+                    <Button look={ButtonStyles.danger} onClick={() => setDeleteAccountModal(true)}>Delete Account</Button>
+
+                    <Divider />
+
+                    <Button loading={saveLoading} onClick={saveUsername}>Save</Button>
                 </>}
+
+                <Modal open={deleteAccountModal} onClose={() => setDeleteAccountModal(false)} danger title="Delete Account">
+                    <Subtext>Delete all of your data involving Filatrack.</Subtext>
+                    <Divider />
+
+                    <p>
+                        Are you SURE you want to DELETE your Filatrack account?
+                        This will delete ALL data, including added filament and their logs.
+                        Your account will not be recoverable.
+                    </p>
+
+                    <Divider />
+
+                    <Input
+                        type="checkbox"
+                        label="I wish to delete all of my data from Filatrack."
+                        onChange={e => setDeleteAccountConfirm(e.target.checked)}
+                        checked={deleteAccountConfirm}
+                    />
+
+                    <ModalFooter>
+                        <Button onClick={() => setDeleteAccountModal(false)} look={ButtonStyles.secondary}>Cancel</Button>
+                        <Button
+                            onClick={deleteAccount}
+                            look={ButtonStyles.danger}
+                            disabled={!deleteAccountConfirm}
+                        >Continue</Button>
+                    </ModalFooter>
+                </Modal>
             </Tab>
             <Tab name="Preferences">
                 <h1>Preferences</h1>
@@ -98,7 +146,7 @@ export default function SettingsPage() {
                 {(!session || loading) && <Spinner />}
 
                 {!loading && <>
-                    <p>Time Format</p>
+                    {/* <p>Time Format</p>
                     <Select value={userSettings.timeFormat} onChange={e => setUserSettingsData({ timeFormat: e.target.value })}>
                         <option value="12-hour">12-hour</option>
                         <option value="24-hour">24-hour</option>
@@ -109,11 +157,9 @@ export default function SettingsPage() {
                         <option value="mm/dd/yyyy">mm/dd/yyyy</option>
                         <option value="dd/mm/yyyy">dd/mm/yyyy</option>
                         <option value="yyyy/mm/dd">yyyy/mm/dd</option>
-                    </Select>
+                    </Select> */}
 
                     <Divider />
-
-                    <h2>Defaults</h2>
 
                     <b>Default Material</b>
                     <div className="w-[400px]">

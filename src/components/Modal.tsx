@@ -8,8 +8,8 @@ export type ModalProps = {
     onClose: () => void
 }
 
-export default function Modal({ children, title, open, onClose, level }:
-{ title: string, open: boolean, onClose: () => void, level?: number } & React.PropsWithChildren) {
+export default function Modal({ children, title, open, onClose, level, danger }:
+{ title: string, open: boolean, onClose: () => void, level?: number, danger?: boolean } & React.PropsWithChildren) {
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export default function Modal({ children, title, open, onClose, level }:
 
         {visible && <div
             className={`absolute-center bg-bg-light rounded-lg min-w-[200px] min-h-[100px] 
-            border-2 border-primary px-4 py-3
+            border-2 ${danger ? "border-danger" : "border-primary"} px-4 py-3
             ${open ? "fade-in scale-in-center" : "fade-out scale-out-center"}`}
             style={{ zIndex: 20 * (level ?? 1) }}
             onAnimationEnd={() => {

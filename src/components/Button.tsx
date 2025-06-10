@@ -13,8 +13,8 @@ export default function Button({ look, loading, ...props }:
         <button
             {...props}
             className={`px-2 py-1 rounded-lg ${props.className ?? ""} ${look ?? ButtonStyles.primary} 
-            transition-all flex justify-center items-center text-sm cursor-pointer
-            hover:scale-105 active:scale-95`}
+            transition-all flex justify-center items-center text-sm enabled:cursor-pointer disabled:cursor-not-allowed
+            hover:enabled:scale-105 active:enabled:scale-95 `}
             disabled={loading || props.disabled}
         >
             {loading && <Spinner />} {props.children}

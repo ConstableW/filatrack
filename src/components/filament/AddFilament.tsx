@@ -12,11 +12,15 @@ import { useObjectState } from "@/app/lib/hooks";
 import { DBCreateParams } from "@/app/lib/types";
 import MaterialPicker from "./MaterialPicker";
 import MassPicker from "./MassPicker";
-import { Filament } from "@/db/types";
+import { Filament, UserSettings } from "@/db/types";
+import { getUserSettings } from "@/app/lib/settings";
+import Spinner from "../Spinner";
 
-export default function AddFilament({ onAdd, currentFilament, open, onClose }:
+export default function AddFilamentModal({ onAdd, currentFilament, open, onClose }:
     ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament) => void }) {
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(-1);
+
+    const [settings, setSettings] = useState<UserSettings>();
 
     const [filamentData, setFilamentData] = useObjectState<DBCreateParams<Filament>>(currentFilament ?? {
         name: "",
@@ -36,11 +40,11 @@ export default function AddFilament({ onAdd, currentFilament, open, onClose }:
             name: "",
             brand: "",
             color: "#09f",
-            material: "PLA",
+            material: settings?.defaultMaterial ?? "PLA",
             note: "",
 
-            currentMass: 1000,
-            startingMass: 1000,
+            currentMass: settings?.defaultMass ?? 1000,
+            startingMass: settings?.defaultMass ?? 1000,
 
             lastUsed: new Date(0),
         });
@@ -81,6 +85,19 @@ export default function AddFilament({ onAdd, currentFilament, open, onClose }:
     }
 
     useEffect(() => {
+        if (currentFilament)
+            return;
+
+        getUserSettings().then(r => {
+            if (r.error)
+                return;
+
+            setSettings(r.data);
+            reset();
+        });
+    }, []);
+
+    useEffect(() => {
         reset();
 
         if (currentFilament)
@@ -93,6 +110,8 @@ export default function AddFilament({ onAdd, currentFilament, open, onClose }:
                 {currentFilament ? "Edit this filament's properties." : "Add a new filament to start tracking it's usage."}
             </Subtext>
             <Divider />
+
+            {step === -1 && <Spinner />}
 
             {step === 0 && <>
                 <Input
@@ -125,12 +144,14 @@ export default function AddFilament({ onAdd, currentFilament, open, onClose }:
             </>}
 
             <ModalFooter error={error}>
-                <Button onClick={() => setStep(Math.max(0, step - 1))} look={ButtonStyles.secondary}>
+                {step >= 0 && <>
+                    <Button onClick={() => setStep(Math.max(0, step - 1))} look={ButtonStyles.secondary}>
                     Previous
-                </Button>
-                <Button onClick={() => (step === 2 ? addFilament() : setStep(step + 1))} loading={loading}>
-                    {step === 2 ? (currentFilament ? "Edit" : "Add") : "Next"}
-                </Button>
+                    </Button>
+                    <Button onClick={() => (step === 2 ? addFilament() : setStep(step + 1))} loading={loading}>
+                        {step === 2 ? (currentFilament ? "Edit" : "Add") : "Next"}
+                    </Button>
+                </>}
             </ModalFooter>
         </Modal>
     </>);

@@ -1,10 +1,11 @@
 import ReactSkeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-export default function Skeleton({ width, height, count }: { width: number, height: number, count: number }) {
+export default function Skeleton({ width, height, count, className }:
+    { width: number, height: number, count?: number, className?: string }) {
     return (
         <ReactSkeleton
-            containerClassName={`flex-1 leading-none max-w-[${width}px] max-h-[${height}px]`}
+            containerClassName={`leading-none ${className ?? ""}`}
             width={width}
             height={height}
             count={count}
