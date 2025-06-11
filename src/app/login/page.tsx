@@ -24,7 +24,7 @@ export default function LoginPage() {
     const searchParams = useSearchParams();
     const error = searchParams.get("error");
 
-    return (<main className="absolute-center bg-bg-light p-3 flex flex-col gap-2 rounded-lg">
+    return (<main className="absolute-center bg-bg-light p-3 flex flex-col gap-2 rounded-lg w-3/4 md:w-[unset]">
         <h2>Log In</h2>
         <LogInButton provider="github"><FaGithub size={32} /> Sign in with GitHub</LogInButton>
         {error && <p className="text-red-500">{getAuthErrorMessage(error)}</p>}

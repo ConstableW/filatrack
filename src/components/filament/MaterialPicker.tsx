@@ -13,7 +13,7 @@ export const filamentMaterials = [
 
 export default function MaterialPicker({ value, onChange }: { value: string, onChange: (val: string) => void }) {
     return (<>
-        <div className="grid grid-rows-2 grid-cols-4 gap-1 my-2">
+        <div className="grid grid-cols-3 md:grid-cols-4 gap-1 my-2">
             {filamentMaterials.map(f => <MaterialEntry key={f} selected={value === f} onClick={() => onChange(f)}>{f}</MaterialEntry>)}
         </div>
 

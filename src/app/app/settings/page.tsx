@@ -115,7 +115,7 @@ export default function SettingsPage() {
                     <Subtext>Delete all of your data involving Filatrack.</Subtext>
                     <Divider />
 
-                    <p>
+                    <p className="min-w-[300px] md:min-w-0">
                         Are you SURE you want to DELETE your Filatrack account?
                         This will delete ALL data, including added filament and their logs.
                         Your account will not be recoverable.
@@ -162,7 +162,7 @@ export default function SettingsPage() {
                     <Divider />
 
                     <b>Default Material</b>
-                    <div className="w-[400px]">
+                    <div>
                         <MaterialPicker
                             value={userSettings.defaultMaterial}
                             onChange={v => setUserSettingsData({ defaultMaterial: v })}
@@ -172,7 +172,7 @@ export default function SettingsPage() {
                     <Divider />
 
                     <b>Default Filament Mass</b>
-                    <div className="w-[400px]">
+                    <div>
                         <MassPicker
                             values={{ currentMass: userSettings.defaultMass, startingMass: userSettings.defaultMass }}
                             onChange={v => setUserSettingsData({ defaultMass: v.currentMass })}

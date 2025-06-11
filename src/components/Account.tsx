@@ -27,21 +27,22 @@ export default function AccountCard({ session }: { session: Session }) {
     }, [open]);
 
     return (
-        <div className="w-full flex flex-col">
+        <div className="md:w-full flex flex-col">
             <div
-                className={`w-full bg-bg p-1 flex flex-row rounded-lg items-center justify-between cursor-pointer transition-all
-                    ${visible && "rounded-b-none"}`}
+                className={`md:w-full md:bg-bg md:p-1 flex flex-row rounded-lg items-center 
+                    justify-between cursor-pointer transition-all ${visible && "rounded-b-none"}`}
                 onClick={() => setOpen(!open)}
             >
                 <div className="flex flex-row gap-2 items-center">
-                    <img src={session.user!.image!} className="rounded-full w-7" />
-                    <p className="text-nowrap truncate">{session.user!.name!}</p>
+                    <img src={session.user!.image!} className="rounded-full md:w-7 w-[48px]" />
+                    <p className="text-nowrap truncate hidden md:block">{session.user!.name!}</p>
                 </div>
-                <ChevronDown className={`text-gray-500 transition-all ${open && "rotate-180"}`} />
+                <ChevronDown className={`text-gray-500 transition-all ${open && "rotate-180"} hidden md:block`} />
             </div>
             {visible && <div
-                className={`w-full bg-bg p-1 flex flex-col gap-2 rounded-b-lg transition-all overflow-hidden
-                    ${open ? "expand-down" : "expand-up"}`}
+                className={`md:w-full bg-bg-lighter md:bg-bg p-1 flex flex-col gap-2 
+                    rounded-lg md:rounded-t-none md:rounded-b-lg transition-all overflow-hidden
+                    ${open ? "expand-down" : "expand-up"} md:static absolute top-[-50px] right-0`}
                 onAnimationEnd={() => {
                     if (!open)
                         setVisible(false);

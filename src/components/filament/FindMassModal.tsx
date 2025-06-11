@@ -29,7 +29,7 @@ export default function FindMassModal({ open, onClose }: { open: boolean, onClos
 
     return (
         <Modal open={open} title="Finding Filament Mass" onClose={onClose} level={2}>
-            <Subtext className="min-w-[500px]">
+            <Subtext className="md:min-w-[500px]">
                 Use this tool if the spool you're adding has been used and you don't know how much filament is currently on it.
             </Subtext>
             <Divider />
@@ -39,7 +39,7 @@ export default function FindMassModal({ open, onClose }: { open: boolean, onClos
             </p>
 
             {step === text.length && <>
-                <div className="flex flex-row gap-2 w-full *:w-full">
+                <div className="flex flex-col md:flex-row gap-2 w-full *:w-full">
                     <Input
                         placeholder="Empty Spool Mass (g)"
                         type="number"
@@ -56,7 +56,7 @@ export default function FindMassModal({ open, onClose }: { open: boolean, onClos
                 <p>The mass of the filament is {parseInt(totalSpoolMass ?? 0) - parseInt(emptySpoolMass ?? 0)}g</p>
             </>}
 
-            <div className="flex flex-row gap-2 mt-2">
+            <div className="flex flex-col md:flex-row gap-2 mt-2">
                 <Button onClick={() => setStep(step - 1)} className="w-full">Back</Button>
                 <Button onClick={() => setStep(step + 1)} className="w-full">Next</Button>
             </div>

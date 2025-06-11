@@ -18,7 +18,7 @@ export default function MassPicker({ values, onChange, noHelper }:
     const [infoModalOpen, setInfoModalOpen] = useState(false);
 
     return (<>
-        <div className="flex flex-row gap-2 w-full *:w-full">
+        <div className="flex flex-col md:flex-row gap-2 w-full *:w-full">
             <Input
                 type="number"
                 label="Current Mass (g)"
@@ -32,15 +32,12 @@ export default function MassPicker({ values, onChange, noHelper }:
                 onChange={e => onChange({ ...values, startingMass: parseInt(e.target.value) })}
             />
         </div>
-        {!noHelper && <Subtext className="text-tertiary cursor-pointer" onClick={() => setInfoModalOpen(true)}>
-                I don't know how much filament is left
-        </Subtext>}
 
-        <div className="flex flex-row gap-1 w-full">
+        <div className="flex flex-row gap-1 w-full flex-wrap mt-2 justify-center">
             {Object.keys(presets).map(k => (
                 <div
-                    className={`px-2 py-1 text-center w-full rounded-full bg-bg-lighter cursor-pointer 
-                        border-2 border-transparent hover:border-primary transition-all ${noHelper && "mt-2"}
+                    className={`px-3 py-1 text-center rounded-full bg-bg-lighter cursor-pointer 
+                        border-2 border-transparent hover:border-primary transition-all
                         ${values.startingMass === presets[k] && "!border-primary"}`}
                     onClick={() => onChange({ currentMass: presets[k], startingMass: presets[k] })}
                     key={k}
@@ -49,6 +46,10 @@ export default function MassPicker({ values, onChange, noHelper }:
                 </div>
             ))}
         </div>
+
+        {!noHelper && <Subtext className="text-tertiary cursor-pointer" onClick={() => setInfoModalOpen(true)}>
+                How do I find current mass?
+        </Subtext>}
 
         {!noHelper && <FindMassModal open={infoModalOpen} onClose={() => setInfoModalOpen(false)} />}
     </>);

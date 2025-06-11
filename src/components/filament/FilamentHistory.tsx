@@ -7,7 +7,7 @@ import { getFilamentLogs } from "@/app/lib/filament";
 import Spinner from "../Spinner";
 import { toDateString, toTimeString } from "@/app/lib/date";
 import { Filament, FilamentLog } from "@/db/types";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import { grams } from "@/app/lib/units";
 
 function FilamentHistoryEntry({ log, i }: { log: FilamentLog, i: number }) {
@@ -24,8 +24,8 @@ function FilamentHistoryEntry({ log, i }: { log: FilamentLog, i: number }) {
                             ({grams(log.previousMass)} <ArrowRight size={16} /> {grams(log.newMass)})
                         </Subtext>
                     </div>
-                    <Subtext className="flex flex-row items-center">
-                        Logged {toDateString(log.time)}, {toTimeString(log.time, false)}
+                    <Subtext className="flex flex-row items-center gap-1 text-xs">
+                        <Clock size={16} /> {toDateString(log.time)}, {toTimeString(log.time, false)}
                     </Subtext>
                 </div>
             </div>
@@ -60,7 +60,7 @@ export default function FilamentHistoryModal({ open, onClose, filament }: { fila
 
     return (
         <Modal open={open} onClose={onClose} title="Filament History">
-            <Subtext className="mb-2">See all the times this filament was used.</Subtext>
+            <Subtext className="mb-2 md:min-w-0 min-w-[300px]">See all the times this filament was used.</Subtext>
             <Divider />
             {loading && <Spinner />}
             <div className="flex flex-col gap-2">

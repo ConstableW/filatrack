@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, EllipsisVertical, Weight } from "lucide-react";
+import { Box, Clock, EllipsisVertical, Weight } from "lucide-react";
 import FilamentIcon from "../icons/Filament";
 import Subtext from "../Subtext";
 import Button, { ButtonStyles } from "../Button";
@@ -64,25 +64,29 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
 
     return (<>
         <div className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center 
-            justify-center relative border-2 border-transparent transition-all
+            justify-center relative border-2 border-transparent transition-all max-w-[175px]
             ${isPreview ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "}`}
         >
             <FilamentIcon
                 size={75}
                 color={filament.color}
-                stage={filament.currentMass <= 0 ? 5 : Math.floor(filament.currentMass / filament.startingMass * 5)}
+                stage={filament.currentMass <= 0 ? 5 : Math.max(1, Math.floor(filament.currentMass / filament.startingMass * 5))}
             />
 
             <p className="text-lg">{filament.name}</p>
 
-            {filament.brand && <Subtext>{filament.brand}</Subtext>}
-
-            <Subtext>Last Used {filament.lastUsed.getTime() === 0 ? "Never" : toDateString(filament.lastUsed)}</Subtext>
-            <div className="flex flex-row gap-2">
+            {/* {filament.brand && <Subtext className="mt-[-10px]">{filament.brand}</Subtext>} */}
+            <div className="flex flex-col flex-wrap md:flex-row md:gap-x-2 md:gap-y-1 w-full md:justify-center">
                 <Subtext className="text-xs flex flex-row gap-1 items-center">
                     <Weight size={16} /> {grams(filament.currentMass)} / {grams(filament.startingMass)}
                 </Subtext>
-                <Subtext className="text-xs flex flex-row gap-1 items-center"><Box size={16} /> {filament.material}</Subtext>
+                <Subtext className="text-xs flex flex-row gap-1 items-center">
+                    <Box size={16} /> {filament.material}
+                </Subtext>
+                <Subtext className="text-xs flex flex-row gap-1 items-center">
+                    <Clock size={16} />
+                    {filament.lastUsed.getTime() === 0 ? "Never" : toDateString(filament.lastUsed)}
+                </Subtext>
             </div>
             {(!isPreview && filament.currentMass > 0) &&
             <Button className="w-full mt-1" onClick={() => setOpenModal("log")}>Log</Button>

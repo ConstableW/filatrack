@@ -53,6 +53,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish }:
 
         setLoading(false);
         setError("");
+        setFilamentUsed(0);
         onClose();
         onFinish(editRes.data!);
     }
@@ -63,17 +64,18 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish }:
                     If you've used this filament, log how much was used so you'll know how much is left.
             </Subtext>
             <Divider />
-            <div className="flex flex-row justify-between items-center gap-2">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-2">
                 <Input
                     label="Filament Used (g)"
-                    className="w-1/2"
+                    className="md:w-1/2"
                     type="number"
                     value={filamentUsed}
                     onChange={e => setFilamentUsed(parseInt(e.target.value))}
+                    autoFocus={true}
                 />
                 <FilamentEntry filament={filament} isPreview />
             </div>
-            <p>
+            <p className="w-full text-center text-sm">
                 This will leave{" "}
                 {Math.max(0, filament.currentMass - (Number.isNaN(filamentUsed) ? 0 : filamentUsed))}g /{" "}
                 {filament.startingMass / 1000}kg

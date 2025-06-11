@@ -45,7 +45,7 @@ export default function Modal({ children, title, open, onClose, level, danger }:
 
 export function ModalTitle({ children, onClose }: { onClose: () => void } & React.PropsWithChildren) {
     return (<div className="flex flex-row gap-10 justify-between items-center">
-        <h2>{children}</h2>
+        <h2 className="text-lg md:text-xl">{children}</h2>
         <X size={32} className="rounded-lg p-1 cursor-pointer transition-all hover:bg-bg-lighter" onClick={onClose} />
     </div>);
 }
@@ -53,12 +53,12 @@ export function ModalTitle({ children, onClose }: { onClose: () => void } & Reac
 export function ModalFooter({ children, tip, error }: { tip?: string, error?: string } & React.PropsWithChildren) {
     return (<>
         <Divider />
-        <div className="flex flex-row justify-between w-full items-end">
+        <div className="flex flex-col gap-2 md:flex-row justify-between w-full items-end">
             <div className="flex flex-col gap-2">
                 {error && <Subtext className="text-xs flex flex-row gap-2 items-center">
                     <OctagonAlert className="text-danger min-w-[32px] min-h-[32px]" /> {error}
                 </Subtext>}
-                {tip && <Subtext className="text-xs flex flex-row gap-2 items-center">
+                {tip && <Subtext className="text-xs flex flex-row gap-2 items-center md:min-w-0 min-w-[300px]">
                     <Info className="text-primary min-w-[32px] min-h-[32px]" /> {tip}
                 </Subtext>}
             </div>

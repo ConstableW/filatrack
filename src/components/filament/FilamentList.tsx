@@ -31,8 +31,14 @@ export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean
         setFilaments([...filaments.slice(0, i), newData, ...filaments.slice(i + 1)]);
     }
 
-    return (<>
-        {loading && <Skeleton width={200} height={269} count={2} className="flex flex-row gap-2 flex-wrap" />}
+    return (<div className="grid grid-cols-2 md:flex md:flex-row gap-2 md:flex-wrap">
+
+        {loading && <Skeleton
+            width={175}
+            height={269}
+            count={2}
+            className="grid grid-cols-2 md:flex md:flex-row gap-1 md:flex-wrap"
+        />}
 
         {filaments
             .map((f, i) => {
@@ -46,8 +52,8 @@ export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean
 
         {(allowAdd && !loading) &&
             <div
-                className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center justify-center relative w-[175px] 
-                    cursor-pointer transition-all border-2 border-transparent hover:border-primary min-h-[269px]`}
+                className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center justify-center relative md:w-[175px] 
+                    cursor-pointer transition-all border-2 border-transparent hover:border-primary w-full`}
                 onClick={() => setAddFilamentOpen(true)}
             >
                 <Plus className="absolute-center text-gray-500" size={64} />
@@ -59,5 +65,5 @@ export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean
             onClose={() => setAddFilamentOpen(false)}
             onAdd={f => setFilaments([...filaments, f])}
         />
-    </>);
+    </div>);
 }
