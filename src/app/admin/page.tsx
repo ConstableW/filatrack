@@ -106,6 +106,7 @@ export default function AdminPage() {
                         },
                     ]}
                     loading={loading}
+                    yAxis={[{ label: "Filament Created" }]}
                     xAxis={[
                         {
                             scaleType: "point",

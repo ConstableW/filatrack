@@ -13,6 +13,33 @@ const lexend = Lexend({
 export const metadata: Metadata = {
     title: "Filatrack - Simple Filament Tracking",
     description: "Super-simple tracking of all your 3d printing filaments",
+    icons: [
+        {
+            url: "/favicon-96x96.png",
+            sizes: "96x96",
+            type: "image/png",
+        },
+        {
+            url: "/favicon.svg",
+            type: "image/svg+xml",
+        },
+        {
+            url: "/favicon.ico",
+            rel: "shortcut icon",
+        },
+        {
+            url: "/apple-touch-icon.png",
+            rel: "apple-touch-icon",
+            sizes: "180x180",
+        },
+    ],
+    applicationName: "Filatrack",
+    appleWebApp: {
+        capable: true,
+        title: "Filatrack",
+        startupImage: "/filament.png",
+    },
+    manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
