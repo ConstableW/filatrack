@@ -40,6 +40,24 @@ export const metadata: Metadata = {
         startupImage: "/filament.png",
     },
     manifest: "/site.webmanifest",
+    keywords: ["filament", "3d printing", "tracker", "spool", "pla"],
+    openGraph: {
+        title: "Filatrack",
+        description: "A super-simple way to keep inventory of your filament rolls.",
+        url: "https://filatrack.vercel.app/",
+        siteName: "Filatrack",
+        images: [
+            {
+                url: "https://filatrack.vercel.app/apple-touch-icon.png",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary",
+        site: "@drew_rat",
+        creator: "@drew_rat",
+        images: "https://filatrack.vercel.app/apple-touch-icon.png",
+    },
 };
 
 export default function RootLayout({
