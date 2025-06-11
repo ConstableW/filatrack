@@ -467,3 +467,17 @@ select, option {
 *::-webkit-scrollbar-thumb:hover {
   background-color: #777;
 }
+
+.MuiChartsAxis-root * {
+  fill: #777 !important;
+  stroke: #777 !important;
+}
+
+path.MuiLineElement-root {
+  stroke: var(--color-primary) !important;
+}
+
+g circle {
+  fill: var(--color-secondary) !important;
+  stroke: var(--color-primary) !important;
+}

@@ -6,6 +6,7 @@ import { db } from "@/db/drizzle";
 import { filamentLogTable, filamentTable } from "@/db/schema/filament";
 import { eq } from "drizzle-orm";
 import { Filament, FilamentLog } from "@/db/types";
+import { addOrUpdateAnalyticEntry } from "./analytics";
 
 export async function getAllFilaments(): Promise<DBRes<Filament[]>> {
     const session = await auth();
@@ -42,6 +43,10 @@ export async function createFilament(filament: DBCreateParams<Filament>): Promis
 
     if (filament.brand.length > 32)
         return { error: "Filament brand name too long" };
+
+    addOrUpdateAnalyticEntry(new Date(), {
+        filamentCreated: 1,
+    });
 
     return {
         data: (await db.insert(filamentTable).values({
@@ -135,6 +140,10 @@ export async function logFilamentUse(log: DBCreateParams<FilamentLog>): Promise<
 
     if (filament.userId !== session.user.id)
         return { error: "This is not your filament." };
+
+    addOrUpdateAnalyticEntry(new Date(), {
+        logsCreated: 1,
+    });
 
     return {
         data: (await db.insert(filamentLogTable).values({
