@@ -53,7 +53,7 @@ export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean
         {(allowAdd && !loading) &&
             <div
                 className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center justify-center relative md:w-[175px] 
-                    cursor-pointer transition-all border-2 border-transparent hover:border-primary w-full`}
+                    cursor-pointer transition-all border-2 border-transparent hover:border-primary w-full min-h-[230px]`}
                 onClick={() => setAddFilamentOpen(true)}
             >
                 <Plus className="absolute-center text-gray-500" size={64} />
