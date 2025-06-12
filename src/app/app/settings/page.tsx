@@ -1,6 +1,7 @@
 "use client";
 
 import { useObjectState } from "@/app/lib/hooks";
+import { sidebarWidth } from "@/app/lib/random";
 import { deleteUser, getUserId, getUserSettings, setUsername, setUserSettings } from "@/app/lib/settings";
 import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
@@ -90,7 +91,25 @@ export default function SettingsPage() {
         signOut();
     }
 
-    return (<>
+    const [width, setWidth] = useState(0);
+
+    function handleWindowSizeChange() {
+        setWidth(window.innerWidth);
+    }
+    useEffect(() => {
+        setWidth(window.innerWidth);
+        window.addEventListener("resize", handleWindowSizeChange);
+        return () => {
+            window.removeEventListener("resize", handleWindowSizeChange);
+        };
+    }, []);
+
+    const isMobile = !width ? false : width <= 768;
+
+    return (<div
+        className="bg-bg w-full md:rounded-lg md:rounded-b-none md:m-2 p-4 pt-2 mb-[75px] md:mb-0 h-full"
+        style={{ marginLeft: (!width || isMobile) ? undefined : sidebarWidth }}
+    >
         <Tablist tabs={["Account", "Preferences"]} activeTab="Account">
             <Tab name="Account" className="w-[200px]">
                 <h1>Account</h1>
@@ -186,5 +205,5 @@ export default function SettingsPage() {
                 </>}
             </Tab>
         </Tablist>
-    </>);
+    </div>);
 }
