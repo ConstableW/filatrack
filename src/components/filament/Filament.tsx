@@ -64,16 +64,18 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
 
     return (<>
         <div className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center 
-            justify-center relative border-2 border-transparent transition-all max-w-[175px]
+            justify-between relative border-2 border-transparent transition-all max-w-[175px]
             ${isPreview ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "}`}
         >
-            <FilamentIcon
-                size={75}
-                color={filament.color}
-                stage={filament.currentMass <= 0 ? 5 : Math.max(1, Math.floor(filament.currentMass / filament.startingMass * 5))}
-            />
+            <div className="flex flex-col justify-center items-center">
+                <FilamentIcon
+                    size={75}
+                    color={filament.color}
+                    stage={filament.currentMass <= 0 ? 5 : Math.max(1, Math.ceil(filament.currentMass / filament.startingMass * 5))}
+                />
 
-            <p className="text-lg">{filament.name}</p>
+                <p className="text-lg text-center">{filament.name}</p>
+            </div>
 
             {/* {filament.brand && <Subtext className="mt-[-10px]">{filament.brand}</Subtext>} */}
             <div className="flex flex-col flex-wrap md:flex-row md:gap-x-2 md:gap-y-1 w-full md:justify-center">
@@ -89,7 +91,7 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
                 </Subtext>
             </div>
             {(!isPreview && filament.currentMass > 0) &&
-            <Button className="w-full mt-1" onClick={() => setOpenModal("log")}>Log</Button>
+                    <Button className="w-full mt-1" onClick={() => setOpenModal("log")}>Log</Button>
             }
 
             {!isPreview && <button

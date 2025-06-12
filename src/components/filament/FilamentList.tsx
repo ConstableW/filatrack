@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import FilamentEntry from "./Filament";
 import { Filament } from "@/db/types";
 import Skeleton from "../Skeleton";
-import { getAllFilaments } from "@/app/lib/filament";
 import { Plus } from "lucide-react";
 import AddFilamentModal from "./AddFilament";
+import { getAllFilaments } from "@/app/lib/filament";
 
 export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean, isEmpty?: boolean }) {
     const [filaments, setFilaments] = useState<Filament[]>([]);
@@ -31,13 +31,12 @@ export default function FilamentList({ isEmpty, allowAdd }: { allowAdd?: boolean
         setFilaments([...filaments.slice(0, i), newData, ...filaments.slice(i + 1)]);
     }
 
-    return (<div className="grid grid-cols-2 md:flex md:flex-row gap-2 md:flex-wrap">
-
+    return (<div className={`${!loading && "grid grid-cols-2"} md:flex md:flex-row gap-2 md:flex-wrap`}>
         {loading && <Skeleton
-            width={175}
+            width="100%"
             height={269}
             count={2}
-            className="grid grid-cols-2 md:flex md:flex-row gap-1 md:flex-wrap"
+            className="flex flex-row gap-2 md:flex-wrap [&>br]:hidden md:w-full *:w-full md:*:!w-[175px]"
         />}
 
         {filaments

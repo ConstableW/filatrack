@@ -2,7 +2,7 @@ import ReactSkeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export default function Skeleton({ width, height, count, className }:
-    { width: number, height: number, count?: number, className?: string }) {
+    { width?: number | string, height?: number | string, count?: number, className?: string }) {
     return (
         <ReactSkeleton
             containerClassName={`leading-none ${className ?? ""}`}

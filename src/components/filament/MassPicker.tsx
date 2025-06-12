@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Input from "../Input";
 import Subtext from "../Subtext";
-import FindMassModal from "./FindMassModal";
+import GetMassModal from "./FindMassModal";
 
 type MassData = { currentMass: number, startingMass: number };
 
@@ -37,7 +37,7 @@ export default function MassPicker({ values, onChange, noHelper }:
             {Object.keys(presets).map(k => (
                 <div
                     className={`px-3 py-1 text-center rounded-full bg-bg-lighter cursor-pointer 
-                        border-2 border-transparent hover:border-primary transition-all
+                        border-2 border-transparent hover:border-primary transition-all mb-2
                         ${values.startingMass === presets[k] && "!border-primary"}`}
                     onClick={() => onChange({ currentMass: presets[k], startingMass: presets[k] })}
                     key={k}
@@ -47,10 +47,10 @@ export default function MassPicker({ values, onChange, noHelper }:
             ))}
         </div>
 
-        {!noHelper && <Subtext className="text-tertiary cursor-pointer" onClick={() => setInfoModalOpen(true)}>
-                How do I find current mass?
+        {!noHelper && <Subtext className="text-tertiary cursor-pointer text-center w-full" onClick={() => setInfoModalOpen(true)}>
+                Current Mass Calculator
         </Subtext>}
 
-        {!noHelper && <FindMassModal open={infoModalOpen} onClose={() => setInfoModalOpen(false)} />}
+        {!noHelper && <GetMassModal open={infoModalOpen} onClose={() => setInfoModalOpen(false)} />}
     </>);
 }

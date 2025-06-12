@@ -6,7 +6,6 @@ import Subtext from "../Subtext";
 import Divider from "../Divider";
 import Input from "../Input";
 import Button, { ButtonStyles } from "../Button";
-import PopoverColorPicker from "../ColorPicker";
 import { createFilament, editFilament } from "@/app/lib/filament";
 import { useObjectState } from "@/app/lib/hooks";
 import { DBCreateParams } from "@/app/lib/types";
@@ -15,6 +14,8 @@ import MassPicker from "./MassPicker";
 import { Filament, UserSettings } from "@/db/types";
 import { getUserSettings } from "@/app/lib/settings";
 import Spinner from "../Spinner";
+import FilamentColorPicker, { filamentColors } from "./ColorPicker";
+import { randomFrom } from "@/app/lib/random";
 
 export default function AddFilamentModal({ onAdd, currentFilament, open, onClose }:
     ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament) => void }) {
@@ -25,7 +26,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
     const [filamentData, setFilamentData] = useObjectState<DBCreateParams<Filament>>(currentFilament ?? {
         name: "",
         brand: "",
-        color: "#09f",
+        color: randomFrom(filamentColors),
         material: "PLA",
         note: "",
 
@@ -39,7 +40,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         setFilamentData({
             name: "",
             brand: "",
-            color: "#09f",
+            color: randomFrom(filamentColors),
             material: settings?.defaultMaterial ?? "PLA",
             note: "",
 
@@ -128,10 +129,10 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
                     maxLength={32}
                 />
 
-                <p>Color</p>
-                <PopoverColorPicker color={filamentData.color} onChange={c => setFilamentData({ color: c })} />
-
                 <Input label="Notes" value={filamentData.note} onChange={e => setFilamentData({ note: e.target.value })} />
+
+                <p>Color</p>
+                <FilamentColorPicker value={filamentData.color} onChange={c => setFilamentData({ color: c })} />
             </>}
 
             {step === 1 && <>
@@ -146,7 +147,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
             <ModalFooter error={error}>
                 {step >= 0 && <>
                     <Button onClick={() => setStep(Math.max(0, step - 1))} look={ButtonStyles.secondary}>
-                    Previous
+                        Previous
                     </Button>
                     <Button onClick={() => (step === 2 ? addFilament() : setStep(step + 1))} loading={loading}>
                         {step === 2 ? (currentFilament ? "Edit" : "Add") : "Next"}

@@ -3,10 +3,11 @@
 import { GiFilmSpool } from "react-icons/gi";
 import AccountCard from "./Account";
 import SidebarItem from "./SidebarItem";
-import { Cog, Heart } from "lucide-react";
+import { Cog, Heart, Lock } from "lucide-react";
 import { FaGithub } from "react-icons/fa6";
 import { Session } from "next-auth";
 import { useEffect, useState } from "react";
+import { sidebarWidth } from "@/app/lib/random";
 
 export default function Sidebar({ session }: { session: Session }) {
     const [width, setWidth] = useState(0);
@@ -22,10 +23,13 @@ export default function Sidebar({ session }: { session: Session }) {
         };
     }, []);
 
-    const isMobile = !width ? false : width <= 768;
+    const isMobile = width <= 768;
 
     return (<>
-        {!isMobile && <div className="bg-bg-light h-full flex flex-col gap-1 p-2 pr-0 md:min-w-[175px]">
+        {(!isMobile && !!width) && <div
+            className="bg-bg-light h-full flex flex-col gap-1 p-2 fixed top-0 bottom-0"
+            style={{ width: sidebarWidth }}
+        >
             <AccountCard session={session} />
             <SidebarItem href="/app">
                 <GiFilmSpool size={24} /> Filament
@@ -34,6 +38,11 @@ export default function Sidebar({ session }: { session: Session }) {
                 <Cog /> Settings
             </SidebarItem>
             <div className="mt-auto">
+                {session.user?.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID &&
+                    <SidebarItem href="/admin">
+                        <Lock /> Admin
+                    </SidebarItem>
+                }
                 <SidebarItem href="https://github.com/sponsors/mrdiamonddog/">
                     <Heart /> Support
                 </SidebarItem>
@@ -43,10 +52,10 @@ export default function Sidebar({ session }: { session: Session }) {
             </div>
         </div>}
 
-        {isMobile &&
+        {(isMobile && !!width) &&
         <div
             className={`bg-bg-light w-[95%] flex flex-row items-center justify-between 
-                gap-1 p-2 absolute left-1/2 -translate-x-1/2 bottom-2 h-[75px] z-10 rounded-full shadow-lg`}
+                gap-1 p-2 fixed left-1/2 -translate-x-1/2 bottom-2 h-[75px] z-10 rounded-full shadow-xl`}
         >
             <SidebarItem href="/app">
                 <GiFilmSpool size={48} />
@@ -54,6 +63,11 @@ export default function Sidebar({ session }: { session: Session }) {
             <SidebarItem href="/app/settings">
                 <Cog size={48} />
             </SidebarItem>
+            {session.user?.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID &&
+                <SidebarItem href="/admin">
+                    <Lock size={48} />
+                </SidebarItem>
+            }
             <AccountCard session={session} />
         </div>
         }
