@@ -19,14 +19,14 @@ export default function Modal({ children, title, open, onClose, level, danger }:
 
     return (<>
         {visible && <div
-            className={`${open ? "fade-in-75" : "fade-out-75"} opacity-75 absolute inset-0 bg-black
+            className={`${open ? "fade-in-75" : "fade-out-75"} opacity-75 fixed inset-0 bg-black
             ${!level ? "" : "rounded-lg"}`}
             style={{ zIndex: 10 * (level ?? 1) }}
             onClick={onClose}
         />}
 
         {visible && <div
-            className={`absolute-center bg-bg-light rounded-lg min-w-[200px] min-h-[100px] 
+            className={`fixed top-1/2 left-1/2 bg-bg-light rounded-lg min-w-[200px] min-h-[100px] 
             border-2 ${danger ? "border-danger" : "border-primary"} px-4 py-3
             ${open ? "fade-in scale-in-center" : "fade-out scale-out-center"}`}
             style={{ zIndex: 20 * (level ?? 1) }}
