@@ -55,7 +55,7 @@ export default function Sidebar({ session }: { session: Session }) {
         {(isMobile && !!width) &&
         <div
             className={`bg-bg-light w-[95%] flex flex-row items-center justify-between 
-                gap-1 p-2 fixed left-1/2 -translate-x-1/2 bottom-2 h-[75px] z-10 rounded-full shadow-xl`}
+                gap-1 p-2 fixed left-1/2 -translate-x-1/2 bottom-4 h-[75px] z-10 rounded-full shadow-xl`}
         >
             <SidebarItem href="/app">
                 <GiFilmSpool size={48} />

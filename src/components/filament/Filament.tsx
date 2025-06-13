@@ -75,6 +75,7 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
                 />
 
                 <p className="text-lg text-center">{filament.name}</p>
+                {filament.brand && <Subtext>{filament.brand}</Subtext>}
             </div>
 
             {/* {filament.brand && <Subtext className="mt-[-10px]">{filament.brand}</Subtext>} */}
