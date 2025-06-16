@@ -2,7 +2,7 @@
 
 A super-duper simple way to track your 3d printing filament!
 
-![image](https://github.com/user-attachments/assets/8cbc6a6d-ae8d-4c46-ae13-3d59f7e47f2f)
+![image](https://github.com/user-attachments/assets/77670737-8a6e-48b0-a05b-28bda650244c)
 
 Made with Next.JS, Auth.JS, Drizzle ORM, and Supabase!
 
