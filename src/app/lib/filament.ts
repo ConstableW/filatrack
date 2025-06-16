@@ -126,7 +126,7 @@ export async function getFilamentLogs(filamentId: string): Promise<DBRes<Filamen
     };
 }
 
-export async function logFilamentUse(log: DBCreateParams<FilamentLog>): Promise<DBRes<FilamentLog>> {
+export async function createFilamentLog(log: DBCreateParams<FilamentLog>): Promise<DBRes<FilamentLog>> {
     const session = await auth();
 
     if (!session || !session.user)
@@ -149,6 +149,48 @@ export async function logFilamentUse(log: DBCreateParams<FilamentLog>): Promise<
         data: (await db.insert(filamentLogTable).values({
             ...log,
         })
+            .returning())[0],
+    };
+}
+
+export async function deleteFilamentLog(log: DBCreateParams<FilamentLog>): Promise<DBRes<undefined>> {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    const filament = (await db.select().from(filamentTable)
+        .where(eq(filamentTable.id, log.filamentId)))[0];
+
+    if (!filament)
+        return { error: "That filament does not exist." };
+
+    if (filament.userId !== session.user.id)
+        return { error: "This is not your filament." };
+
+    await db.delete(filamentLogTable).where(eq(filamentLogTable.time, log.time));
+
+    return { };
+}
+
+export async function editFilamentLog(newLog: Partial<DBCreateParams<FilamentLog>>): Promise<DBRes<FilamentLog>> {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    const filament = (await db.select().from(filamentTable)
+        .where(eq(filamentTable.id, newLog.filamentId!)))[0];
+
+    if (!filament)
+        return { error: "That filament does not exist." };
+
+    if (filament.userId !== session.user.id)
+        return { error: "This is not your filament." };
+
+    return {
+        data: (await db.update(filamentLogTable).set(newLog)
+            .where(eq(filamentLogTable.time, newLog.time!))
             .returning())[0],
     };
 }

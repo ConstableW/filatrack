@@ -5,15 +5,16 @@ import Input from "../Input";
 import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
 import FilamentEntry from "./Filament";
-import { editFilament, logFilamentUse } from "@/app/lib/filament";
-import { Filament } from "@/db/types";
+import { createFilamentLog, editFilament, editFilamentLog } from "@/app/lib/filament";
+import { Filament, FilamentLog } from "@/db/types";
+import { DBRes } from "@/app/lib/types";
 
-export default function LogFilamentModal({ open, onClose, filament, onFinish }:
-    { filament: Filament, onFinish: (newFilament: Filament) => void } & ModalProps) {
+export default function LogFilamentModal({ open, onClose, filament, onFinish, currentLog }:
+    { filament: Filament, onFinish: (newFilament: Filament, newLog: FilamentLog) => void, currentLog?: FilamentLog } & ModalProps) {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
-    const [filamentUsed, setFilamentUsed] = useState(0);
+    const [filamentUsed, setFilamentUsed] = useState(currentLog?.filamentUsed ?? 0);
 
     async function logFilament() {
         if (filamentUsed === 0) {
@@ -24,15 +25,24 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish }:
         setLoading(true);
         setError("");
 
-        const res = await logFilamentUse({
-            filamentUsed,
+        let res: DBRes<FilamentLog> | null = null;
+        if (currentLog) {
+            res = await editFilamentLog({
+                filamentUsed,
+                filamentId: currentLog.filamentId,
+                time: currentLog.time,
+            });
+        } else {
+            res = await createFilamentLog({
+                filamentUsed,
 
-            previousMass: filament.currentMass,
-            newMass: filament.currentMass - filamentUsed,
-            time: new Date(),
+                previousMass: filament.currentMass,
+                newMass: filament.currentMass - filamentUsed,
 
-            filamentId: filament.id,
-        });
+                filamentId: filament.id,
+                time: new Date(),
+            });
+        }
 
         if (res.error) {
             setError(res.error);
@@ -41,8 +51,8 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish }:
         }
 
         const editRes = await editFilament(filament.id, {
-            currentMass: filament.currentMass - filamentUsed,
-            lastUsed: new Date(),
+            currentMass: (currentLog ? currentLog.previousMass : filament.currentMass) - filamentUsed,
+            lastUsed: new Date(Math.max((currentLog ? currentLog.time : new Date()).getTime(), filament.lastUsed.getTime())),
         });
 
         if (editRes.error) {
@@ -55,7 +65,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish }:
         setError("");
         setFilamentUsed(0);
         onClose();
-        onFinish(editRes.data!);
+        onFinish(editRes.data!, res.data!);
     }
 
     return (
@@ -77,9 +87,12 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish }:
             </div>
             <p className="w-full text-center text-sm">
                 This will leave{" "}
-                {Math.max(0, filament.currentMass - (Number.isNaN(filamentUsed) ? 0 : filamentUsed))}g /{" "}
-                {filament.startingMass / 1000}kg
-                remaining.
+                {Math.max(
+                    0,
+                    (currentLog ? currentLog.previousMass : filament.currentMass) -
+                    (Number.isNaN(filamentUsed) ? 0 : filamentUsed)
+                )}
+                    g / {filament.startingMass / 1000}kg remaining.
             </p>
 
             {(filament.currentMass - (Number.isNaN(filamentUsed) ? 0 : filamentUsed)) <= 0 &&

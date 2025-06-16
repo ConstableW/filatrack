@@ -75,6 +75,8 @@ export default function RootLayout({
                 </SessionProvider>
                 <Analytics />
                 <SpeedInsights />
+
+                <div id="portal-root" />
             </body>
         </html>
     );
