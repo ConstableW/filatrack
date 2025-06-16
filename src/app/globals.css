@@ -298,11 +298,7 @@ select, option {
   stroke: #777 !important;
 }
 
-path.MuiLineElement-root {
-  stroke: var(--color-primary) !important;
-}
-
-g circle {
-  fill: var(--color-secondary) !important;
-  stroke: var(--color-primary) !important;
+.MuiChartsLegend-series span {
+  color: white;
+  font-family: "Lexend";
 }

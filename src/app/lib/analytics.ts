@@ -6,6 +6,9 @@ import { between, eq } from "drizzle-orm";
 import { analyticsTable } from "@/db/schema/analytics";
 import { filamentLogTable, filamentTable } from "@/db/schema/filament";
 import { usersTable } from "@/db/schema/user";
+import { DBRes } from "./types";
+
+export type AnalyticEntry = typeof analyticsTable.$inferSelect;
 
 export async function getTotalUsers() {
     const session = await auth();
@@ -50,7 +53,7 @@ function toDbDate(date: Date) {
     return `${date.getUTCFullYear()}-${monthStr}-${dayStr}`;
 }
 
-export async function getAnalyticEntry(date: Date) {
+export async function getAnalyticEntry(date: Date): Promise<DBRes<AnalyticEntry | undefined>> {
     const session = await auth();
 
     if (!session || !session.user)
@@ -62,18 +65,12 @@ export async function getAnalyticEntry(date: Date) {
     let entry = (await db.select().from(analyticsTable)
         .where(eq(analyticsTable.date, toDbDate(date))))[0];
 
-    if (!entry) {
-        entry = (await db.insert(analyticsTable).values({ date: toDbDate(date) })
-            .returning())[0];
-        console.log(`no entry for ${toDbDate(date)}, creating`);
-    }
-
     return {
         data: entry,
     };
 }
 
-export async function getBatchAnalyticEntries(startDate: Date, endDate: Date) {
+export async function getBatchAnalyticEntries(startDate: Date, endDate: Date): Promise<DBRes<AnalyticEntry[] | undefined>> {
     const session = await auth();
 
     if (!session || !session.user)
@@ -85,34 +82,8 @@ export async function getBatchAnalyticEntries(startDate: Date, endDate: Date) {
     const start = toDbDate(startDate);
     const end = toDbDate(endDate);
 
-    const exisitingEntries = await db.select().from(analyticsTable)
+    const entries = await db.select().from(analyticsTable)
         .where(between(analyticsTable.date, start, end));
-
-    const existingDates = new Set(exisitingEntries.map(entry => entry.date));
-
-    const entries: typeof analyticsTable.$inferSelect[] = [];
-    const entriesToInsert: Date[] = [];
-
-    let currentDate = new Date(startDate);
-    while (currentDate <= endDate) {
-        const dbDate = toDbDate(currentDate);
-
-        if (!existingDates.has(dbDate))
-            entriesToInsert.push(currentDate);
-        else
-            entries.push(exisitingEntries.find(entry => entry.date === dbDate)!);
-
-        currentDate = new Date(currentDate.getTime() + 24 * 60 * 60 * 1000);
-    }
-
-    if (entriesToInsert.length > 0) {
-        console.log(`inserting ${entriesToInsert.length} new entries`);
-
-        const newEntries = await db.insert(analyticsTable).values(entriesToInsert.map(date => ({ date: toDbDate(date) })))
-            .returning();
-
-        entries.push(...newEntries);
-    }
 
     entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -121,14 +92,7 @@ export async function getBatchAnalyticEntries(startDate: Date, endDate: Date) {
     };
 }
 
-export async function addOrUpdateAnalyticEntry(date: Date, data: Omit<typeof analyticsTable.$inferInsert, "date">) {
-    data = {
-        ...data,
-        totalUsers: (await getTotalUsers()).data!,
-        totalFilament: (await getTotalFilament()).data!,
-        totalLogs: (await getTotalLogs()).data!,
-    };
-
+export async function addOrUpdateAnalyticEntry(date: Date, data: Partial<Omit<AnalyticEntry, "date">>) {
     let entry = (await db.select().from(analyticsTable)
         .where(eq(analyticsTable.date, toDbDate(date))))[0];
 

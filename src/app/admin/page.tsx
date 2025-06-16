@@ -6,9 +6,8 @@
 import Divider from "@/components/Divider";
 import { LineChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
-import { getBatchAnalyticEntries, getTotalFilament, getTotalLogs, getTotalUsers } from "../lib/analytics";
-import { analyticsTable } from "@/db/schema/analytics";
 import Select from "@/components/Select";
+import { AnalyticEntry, getBatchAnalyticEntries, getTotalFilament, getTotalLogs, getTotalUsers } from "../lib/analytics";
 
 const dateFormatter = Intl.DateTimeFormat(undefined, {
     month: "2-digit",
@@ -25,16 +24,16 @@ export default function AdminPage() {
         totalLogs: 0,
     });
 
-    const [entries, setEntries] = useState<(typeof analyticsTable.$inferSelect)[]>([]);
-    const [selectedTimeSpan, setSelectedTimeSpan] = useState(timeSpanOptions[0]);
+    const [entries, setEntries] = useState<AnalyticEntry[]>([]);
 
+    const [timespan, setTimespan] = useState(timeSpanOptions[0]);
     const [loading, setLoading] = useState(false);
 
     async function getEntries() {
         setEntries([]);
         setLoading(true);
 
-        getBatchAnalyticEntries(new Date(new Date().getTime() - (selectedTimeSpan - 1) * day), new Date())
+        getBatchAnalyticEntries(new Date(new Date().getTime() - (timespan - 1) * day), new Date())
             .then(r => setEntries(r.data!.reverse()));
 
         setLoading(false);
@@ -42,7 +41,7 @@ export default function AdminPage() {
 
     useEffect(() => {
         getEntries();
-    }, [selectedTimeSpan]);
+    }, [timespan]);
 
     useEffect(() => {
         (async() => {
@@ -60,7 +59,7 @@ export default function AdminPage() {
         <div className="rounded-lg bg-bg-light p-4 m-10 mb-2">
             <h1>Analytics</h1>
 
-            <Select value={selectedTimeSpan} onChange={e => setSelectedTimeSpan(parseInt(e.target.value))}>
+            <Select value={timespan} onChange={e => setTimespan(parseInt(e.target.value))}>
                 {timeSpanOptions.map(o => <option key={o} value={o}>{o} days</option>)}
             </Select>
         </div>
@@ -75,16 +74,16 @@ export default function AdminPage() {
                     height={300}
                     series={[
                         {
-                            data: entries.map(e => e.signUps).reverse(),
+                            data: Array.from({ length: timespan }).map((_, i) => entries[i]?.signUps ?? 0)
+                                .reverse(),
                         },
                     ]}
-                    loading={loading}
                     yAxis={[{ label: "Sign-Ups" }]}
                     xAxis={[
                         {
                             scaleType: "point",
                             data: Array
-                                .from({ length: entries.length })
+                                .from({ length: timespan })
                                 .map((_, i) => new Date(new Date().getTime() - i * day))
                                 .reverse(),
                             valueFormatter: (value: Date) => dateFormatter.format(value),
@@ -95,23 +94,36 @@ export default function AdminPage() {
             <div className="w-full bg-bg-light p-5 rounded-lg">
                 <h1 className="text-gray-500">Filament</h1>
                 <Divider />
-                <p>Total Filament</p>
-                <h1>{currentStats.totalFilament}</h1>
+                <div className="flex flex-row gap-2 items-center">
+                    <div className="pr-2 border-r-2 border-r-bg-lighter">
+                        <p>Total Filament</p>
+                        <h1>{currentStats.totalFilament}</h1>
+                    </div>
+                    <div>
+                        <p>Total Logs</p>
+                        <h1>{currentStats.totalLogs}</h1>
+                    </div>
+                </div>
 
                 <LineChart
                     height={300}
                     series={[
                         {
-                            data: entries.map(e => e.filamentCreated).reverse(),
+                            data: Array.from({ length: timespan }).map((_, i) => entries[i]?.filamentCreated ?? 0)
+                                .reverse(),
+                            label: "Filament Created",
+                        },
+                        {
+                            data: Array.from({ length: timespan }).map((_, i) => entries[i]?.logsCreated ?? 0)
+                                .reverse(),
+                            label: "Logs Created",
                         },
                     ]}
-                    loading={loading}
-                    yAxis={[{ label: "Filament Created" }]}
                     xAxis={[
                         {
                             scaleType: "point",
                             data: Array
-                                .from({ length: entries.length })
+                                .from({ length: timespan })
                                 .map((_, i) => new Date(new Date().getTime() - i * day))
                                 .reverse(),
                             valueFormatter: (value: Date) => dateFormatter.format(value),
