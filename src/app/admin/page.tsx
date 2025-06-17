@@ -7,7 +7,8 @@ import Divider from "@/components/Divider";
 import { LineChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
 import Select from "@/components/Select";
-import { AnalyticEntry, getBatchAnalyticEntries, getTotalFilament, getTotalLogs, getTotalUsers } from "../lib/analytics";
+import { app } from "../lib/db";
+import { AnalyticEntry } from "../lib/db/analytics";
 
 const dateFormatter = Intl.DateTimeFormat(undefined, {
     month: "2-digit",
@@ -33,7 +34,7 @@ export default function AdminPage() {
         setEntries([]);
         setLoading(true);
 
-        getBatchAnalyticEntries(new Date(new Date().getTime() - (timespan - 1) * day), new Date())
+        app.analytics.getBatchAnalyticEntries(new Date(new Date().getTime() - (timespan - 1) * day), new Date())
             .then(r => setEntries(r.data!.reverse()));
 
         setLoading(false);
@@ -46,9 +47,9 @@ export default function AdminPage() {
     useEffect(() => {
         (async() => {
             setCurrentStats({
-                totalUsers: (await getTotalUsers()).data!,
-                totalFilament: (await getTotalFilament()).data!,
-                totalLogs: (await getTotalLogs()).data!,
+                totalUsers: (await app.analytics.getTotalUsers()).data!,
+                totalFilament: (await app.analytics.getTotalFilament()).data!,
+                totalLogs: (await app.analytics.getTotalLogs()).data!,
             });
 
             getEntries();

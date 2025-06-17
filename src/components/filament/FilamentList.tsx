@@ -6,9 +6,9 @@ import { Filament } from "@/db/types";
 import Skeleton from "../Skeleton";
 import { Plus } from "lucide-react";
 import AddFilamentModal from "./AddFilament";
-import { getAllFilaments } from "@/app/lib/filament";
 import Divider from "../Divider";
 import { toast } from "sonner";
+import { app } from "@/app/lib/db";
 
 export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search }:
     { allowAdd?: boolean, isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string }) {
@@ -64,7 +64,7 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
     }
 
     useEffect(() => {
-        getAllFilaments().then(res => {
+        app.filament.getAllFilaments().then(res => {
             if (res.error) {
                 toast.error(`Error retrieving filament: ${res.error}`);
                 return;

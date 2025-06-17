@@ -3,7 +3,7 @@ import GitHub from "next-auth/providers/github";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { db } from "./db/drizzle";
 import { userSettingsTable } from "./db/schema/settings";
-import { addOrUpdateAnalyticEntry } from "./app/lib/analytics";
+import { app } from "./app/lib/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: DrizzleAdapter(db),
@@ -27,7 +27,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     userId: user.id!,
                 });
 
-                addOrUpdateAnalyticEntry(new Date(), {
+                app.analytics.addOrUpdateAnalyticEntry(new Date(), {
                     signUps: 1,
                 });
             }

@@ -6,16 +6,15 @@ import Subtext from "../Subtext";
 import Divider from "../Divider";
 import Input from "../Input";
 import Button, { ButtonStyles } from "../Button";
-import { createFilament, editFilament } from "@/app/lib/filament";
 import { useObjectState } from "@/app/lib/hooks";
-import { DBCreateParams } from "@/app/lib/types";
 import MaterialPicker from "./MaterialPicker";
 import MassPicker from "./MassPicker";
 import { Filament, UserSettings } from "@/db/types";
-import { getUserSettings } from "@/app/lib/settings";
 import Spinner from "../Spinner";
 import FilamentColorPicker, { filamentColors } from "./ColorPicker";
 import { randomFrom } from "@/app/lib/random";
+import { DBCreateParams } from "@/app/lib/db/types";
+import { app } from "@/app/lib/db";
 
 export default function AddFilamentModal({ onAdd, currentFilament, open, onClose }:
     ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament) => void }) {
@@ -70,8 +69,8 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         setLoading(true);
 
         const res = currentFilament ?
-            await editFilament(currentFilament.id, filamentData) :
-            await createFilament(filamentData);
+            await app.filament.editFilament(currentFilament.id, filamentData) :
+            await app.filament.createFilament(filamentData);
 
         if (res.error) {
             setError(res.error);
@@ -89,7 +88,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         if (currentFilament)
             return;
 
-        getUserSettings().then(r => {
+        app.settings.getUserSettings().then(r => {
             if (r.error)
                 return;
 

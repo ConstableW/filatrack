@@ -3,13 +3,13 @@ import Divider from "../Divider";
 import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
 import { useEffect, useState } from "react";
-import { deleteFilamentLog, getFilamentLogs } from "@/app/lib/filament";
 import Spinner from "../Spinner";
 import { toDateString, toTimeString } from "@/app/lib/date";
 import { Filament, FilamentLog } from "@/db/types";
 import { ArrowRight, Clock, Pencil, Trash2 } from "lucide-react";
 import { grams } from "@/app/lib/units";
 import LogFilamentModal from "./LogFilament";
+import { app } from "@/app/lib/db";
 
 function FilamentHistoryEntry({ log, i, onDelete, onEdit, preview, filament }:
     {
@@ -85,7 +85,7 @@ export default function FilamentHistoryModal({ open, onClose, filament }: { fila
         setLoading(true);
 
         setLogs([]);
-        getFilamentLogs(filament.id).then(r => {
+        app.filament.getFilamentLogs(filament.id).then(r => {
             setLoading(false);
 
             if (r.error) {
@@ -102,7 +102,7 @@ export default function FilamentHistoryModal({ open, onClose, filament }: { fila
     }
 
     function onDeleteLog(i: number) {
-        deleteFilamentLog(logs[i]);
+        app.filament.deleteFilamentLog(logs[i]);
         setLogs([...logs.slice(0, i), ...logs.slice(i + 1)]);
     }
 

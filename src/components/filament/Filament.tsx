@@ -8,13 +8,13 @@ import { useEffect, useState } from "react";
 import Modal, { ModalFooter } from "../Modal";
 import Divider from "../Divider";
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../Dropdown";
-import { deleteFilament, editFilament } from "@/app/lib/filament";
 import LogFilamentModal from "./LogFilament";
 import FilamentHistoryModal from "./FilamentHistory";
 import { toDateString } from "@/app/lib/date";
 import { Filament } from "@/db/types";
 import { grams } from "@/app/lib/units";
 import AddFilamentModal from "./AddFilament";
+import { app } from "@/app/lib/db";
 
 export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
     { filament: Filament, isPreview?: boolean, onDelete?: () => void, onEdit?: (filament: Filament) => void }) {
@@ -33,7 +33,7 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
     async function onDeleteConfirm() {
         setLoading(true);
 
-        const res = await deleteFilament(filament.id);
+        const res = await app.filament.deleteFilament(filament.id);
         if (res.error) {
             setError(res.error);
             setLoading(false);
@@ -48,7 +48,7 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
     async function onMoveConfirm() {
         setLoading(true);
 
-        const res = await editFilament(filament.id, {
+        const res = await app.filament.editFilament(filament.id, {
             currentMass: 0,
         });
         if (res.error) {

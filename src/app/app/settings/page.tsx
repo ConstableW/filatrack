@@ -1,8 +1,8 @@
 "use client";
 
+import { app } from "@/app/lib/db";
 import { useObjectState } from "@/app/lib/hooks";
 import { sidebarWidth } from "@/app/lib/random";
-import { deleteUser, getUserSettings, setUsername, updateUserSettings } from "@/app/lib/settings";
 import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
 import MassPicker from "@/components/filament/MassPicker";
@@ -45,7 +45,7 @@ export default function SettingsPage() {
 
         setUsernameInput(session.user!.name!);
 
-        getUserSettings().then(r => setUserSettingsData(r.data ?? {}));
+        app.settings.getUserSettings().then(r => setUserSettingsData(r.data ?? {}));
 
         setLoading(false);
     }, [session]);
@@ -53,7 +53,7 @@ export default function SettingsPage() {
     async function saveUsername() {
         setSaveLoading(true);
 
-        const res = await setUsername(username);
+        const res = await app.settings.setUsername(username);
 
         if (res.error)
             console.error(res.error);
@@ -64,7 +64,7 @@ export default function SettingsPage() {
     async function saveSettings() {
         setSaveLoading(true);
 
-        const res = await updateUserSettings(userSettings);
+        const res = await app.settings.updateUserSettings(userSettings);
 
         if (res.error)
             console.error(res.error);
@@ -80,7 +80,7 @@ export default function SettingsPage() {
 
         setSaveLoading(false);
 
-        await deleteUser();
+        await app.settings.deleteUser();
 
         signOut();
     }

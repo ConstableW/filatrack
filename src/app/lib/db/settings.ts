@@ -8,15 +8,6 @@ import { eq } from "drizzle-orm";
 import { usersTable } from "@/db/schema/user";
 import { UserSettings } from "@/db/types";
 
-export async function getUserId(): Promise<DBRes<string>> {
-    const session = await auth();
-
-    if (!session || !session.user)
-        return { error: "Not authenticated" };
-
-    return { data: session.user.id };
-}
-
 export async function setUsername(username: string): Promise<DBRes<undefined>> {
     const session = await auth();
 

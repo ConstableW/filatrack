@@ -5,9 +5,9 @@ import Input from "../Input";
 import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
 import FilamentEntry from "./Filament";
-import { createFilamentLog, editFilament, editFilamentLog } from "@/app/lib/filament";
 import { Filament, FilamentLog } from "@/db/types";
-import { DBRes } from "@/app/lib/types";
+import { DBRes } from "@/app/lib/db/types";
+import { app } from "@/app/lib/db";
 
 export default function LogFilamentModal({ open, onClose, filament, onFinish, currentLog }:
     { filament: Filament, onFinish: (newFilament: Filament, newLog: FilamentLog) => void, currentLog?: FilamentLog } & ModalProps) {
@@ -27,13 +27,13 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
 
         let res: DBRes<FilamentLog> | null = null;
         if (currentLog) {
-            res = await editFilamentLog({
+            res = await app.filament.editFilamentLog({
                 filamentUsed,
                 filamentId: currentLog.filamentId,
                 time: currentLog.time,
             });
         } else {
-            res = await createFilamentLog({
+            res = await app.filament.createFilamentLog({
                 filamentUsed,
 
                 previousMass: filament.currentMass,
@@ -50,7 +50,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
             return;
         }
 
-        const editRes = await editFilament(filament.id, {
+        const editRes = await app.filament.editFilament(filament.id, {
             currentMass: (currentLog ? currentLog.previousMass : filament.currentMass) - filamentUsed,
             lastUsed: new Date(Math.max((currentLog ? currentLog.time : new Date()).getTime(), filament.lastUsed.getTime())),
         });

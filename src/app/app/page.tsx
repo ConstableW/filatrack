@@ -11,7 +11,7 @@ import Modal, { ModalFooter } from "@/components/Modal";
 import Subtext from "@/components/Subtext";
 import Divider from "@/components/Divider";
 import Button from "@/components/Button";
-import { getUserSettings, updateUserSettings } from "../lib/settings";
+import { app } from "../lib/db";
 
 export default function HomePage() {
     const [width, setWidth] = useState(0);
@@ -36,7 +36,7 @@ export default function HomePage() {
     const [userSettings, setUserSettings] = useState<UserSettings>();
 
     useEffect(() => {
-        getUserSettings().then(r => {
+        app.settings.getUserSettings().then(r => {
             if (r.error)
                 return;
 
@@ -82,7 +82,7 @@ export default function HomePage() {
             <ModalFooter tip="This modal won't show again. If you want to see the tips again, go to settings.">
                 <Button onClick={() => {
                     setUserSettings({ ...userSettings!, seenSearchTips: true });
-                    updateUserSettings({ seenSearchTips: true });
+                    app.settings.updateUserSettings({ seenSearchTips: true });
                     setSearchTipsOpen(false);
                 }}>Ok</Button>
             </ModalFooter>
