@@ -32,7 +32,7 @@ export async function setUsername(username: string): Promise<DBRes<undefined>> {
     return {};
 }
 
-export async function getUserSettings(userId?: string): Promise<DBRes<UserSettings>> {
+export async function getUserSettings(): Promise<DBRes<UserSettings>> {
     const session = await auth();
 
     if (!session || !session.user)
@@ -40,18 +40,18 @@ export async function getUserSettings(userId?: string): Promise<DBRes<UserSettin
 
     return {
         data: (await db.select().from(userSettingsTable)
-            .where(eq(userSettingsTable.userId, userId ?? session.user.id!)))[0],
+            .where(eq(userSettingsTable.userId, session.user.id!)))[0],
     };
 }
 
-export async function setUserSettings(userId: string, newSettings: Partial<UserSettings>): Promise<DBRes<UserSettings>> {
+export async function updateUserSettings(newSettings: Partial<UserSettings>): Promise<DBRes<UserSettings>> {
     const session = await auth();
 
     if (!session || !session.user)
         return { error: "Not authenticated" };
 
     const userSettings = (await db.select().from(userSettingsTable)
-        .where(eq(userSettingsTable.userId, userId)))[0];
+        .where(eq(userSettingsTable.userId, session.user.id!)))[0];
 
     if (!userSettings) {
         console.error("no user settings???");
@@ -63,7 +63,7 @@ export async function setUserSettings(userId: string, newSettings: Partial<UserS
 
     return {
         data: (await db.update(userSettingsTable).set(newSettings)
-            .where(eq(userSettingsTable.userId, userId))
+            .where(eq(userSettingsTable.userId, session.user.id!))
             .returning())[0],
     };
 }

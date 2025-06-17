@@ -1,4 +1,4 @@
-import { integer, pgTable, text } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, text } from "drizzle-orm/pg-core";
 import { usersTable } from "./user";
 
 export const userSettingsTable = pgTable("userSettings", {
@@ -14,5 +14,8 @@ export const userSettingsTable = pgTable("userSettings", {
     defaultMaterial: text().default("PLA")
         .notNull(),
     defaultMass: integer().default(1000)
+        .notNull(),
+
+    seenSearchTips: boolean().default(false)
         .notNull(),
 });

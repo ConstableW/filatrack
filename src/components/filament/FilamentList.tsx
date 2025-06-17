@@ -8,24 +8,18 @@ import { Plus } from "lucide-react";
 import AddFilamentModal from "./AddFilament";
 import { getAllFilaments } from "@/app/lib/filament";
 import Divider from "../Divider";
+import { toast } from "sonner";
 
-export default function FilamentList({ isEmpty, allowAdd, title, sortBy }:
-    { allowAdd?: boolean, isEmpty?: boolean, title: string, sortBy?: keyof Filament }) {
+export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search }:
+    { allowAdd?: boolean, isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string }) {
     const [filaments, setFilaments] = useState<Filament[]>([]);
+    const [filamentsToShow, setFilamentsToShow] = useState<number[] | null>(null);
+
     const [loading, setLoading] = useState(true);
 
     const [addFilamentOpen, setAddFilamentOpen] = useState(false);
 
-    useEffect(() => {
-        getAllFilaments().then(res => {
-            if (!res.error)
-                setFilaments(res.data!);
-
-            setLoading(false);
-        });
-    }, []);
-
-    useEffect(() => {
+    function sort() {
         if (!sortBy)
             return;
 
@@ -40,7 +34,63 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy }:
                     return 1;
                 return 0;
             })]);
+    }
+
+    function updateSearch() {
+        if (!search) {
+            setFilamentsToShow(null);
+            return;
+        }
+
+        let searchField = "name";
+
+        if (search.startsWith("b:"))
+            searchField = "brand";
+        else if (search.startsWith("m:"))
+            searchField = "material";
+
+        search = search.replace(/^.:/, "").trim();
+
+        const toShow = [];
+
+        for (const filament of filaments) {
+            if ((filament[searchField as keyof Filament] as string).toLowerCase().includes(search.toLowerCase()))
+                toShow.push(filaments.indexOf(filament));
+        }
+
+        setFilamentsToShow(toShow);
+
+        sort();
+    }
+
+    useEffect(() => {
+        getAllFilaments().then(res => {
+            if (res.error) {
+                toast.error(`Error retrieving filament: ${res.error}`);
+                return;
+            }
+
+            setFilaments(res.data!);
+
+            setLoading(false);
+        });
+    }, []);
+
+    useEffect(() => {
+        if (!filaments.length)
+            return;
+
+        updateSearch();
+        sort();
+    }, [loading]);
+
+    useEffect(() => {
+        sort();
     }, [sortBy]);
+
+    useEffect(() => {
+        updateSearch();
+    }, [search]);
 
     function deleteFilament(i: number) {
         setFilaments([...filaments.slice(0, i), ...filaments.slice(i + 1)]);
@@ -64,6 +114,8 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy }:
 
             {filaments
                 .map((f, i) => {
+                    if (filamentsToShow !== null && !filamentsToShow.includes(i))
+                        return null;
                     if (f.currentMass <= 0 && !isEmpty)
                         return null;
                     if (f.currentMass > 0 && isEmpty)

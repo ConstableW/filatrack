@@ -2,7 +2,7 @@
 
 import { useObjectState } from "@/app/lib/hooks";
 import { sidebarWidth } from "@/app/lib/random";
-import { deleteUser, getUserId, getUserSettings, setUsername, setUserSettings } from "@/app/lib/settings";
+import { deleteUser, getUserSettings, setUsername, updateUserSettings } from "@/app/lib/settings";
 import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
 import MassPicker from "@/components/filament/MassPicker";
@@ -13,7 +13,7 @@ import Spinner from "@/components/Spinner";
 import Subtext from "@/components/Subtext";
 import Tab from "@/components/tabs/Tab";
 import Tablist from "@/components/tabs/Tablist";
-import { userSettingsTable } from "@/db/schema/settings";
+import { UserSettings } from "@/db/types";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -24,14 +24,14 @@ export default function SettingsPage() {
     const [saveLoading, setSaveLoading] = useState(false);
 
     const [username, setUsernameInput] = useState("");
-    const [userId, setUserId] = useState("");
 
-    const [userSettings, setUserSettingsData] = useObjectState<typeof userSettingsTable.$inferSelect>({
+    const [userSettings, setUserSettingsData] = useObjectState<UserSettings>({
         userId: "",
         timeFormat: "12-hour",
         dateFormat: "mm/dd/yyyy",
         defaultMaterial: "PLA",
         defaultMass: 1000,
+        seenSearchTips: false,
     });
 
     const [deleteAccountModal, setDeleteAccountModal] = useState(false);
@@ -45,15 +45,9 @@ export default function SettingsPage() {
 
         setUsernameInput(session.user!.name!);
 
-        getUserId().then(r => {
-            if (r.error)
-                return;
+        getUserSettings().then(r => setUserSettingsData(r.data ?? {}));
 
-            setUserId(r.data ?? "");
-            getUserSettings(r.data!).then(r => setUserSettingsData(r.data ?? {}));
-
-            setLoading(false);
-        });
+        setLoading(false);
     }, [session]);
 
     async function saveUsername() {
@@ -70,7 +64,7 @@ export default function SettingsPage() {
     async function saveSettings() {
         setSaveLoading(true);
 
-        const res = await setUserSettings(userId, userSettings);
+        const res = await updateUserSettings(userSettings);
 
         if (res.error)
             console.error(res.error);
