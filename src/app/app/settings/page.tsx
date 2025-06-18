@@ -1,7 +1,7 @@
 "use client";
 
 import { app } from "@/app/lib/db";
-import { useObjectState } from "@/app/lib/hooks";
+import { useDevice, useObjectState } from "@/app/lib/hooks";
 import { sidebarWidth } from "@/app/lib/random";
 import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
@@ -18,6 +18,8 @@ import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function SettingsPage() {
+    const [isMobile, width] = useDevice();
+
     const { data: session } = useSession();
 
     const [loading, setLoading] = useState(false);
@@ -84,21 +86,6 @@ export default function SettingsPage() {
 
         signOut();
     }
-
-    const [width, setWidth] = useState(0);
-
-    function handleWindowSizeChange() {
-        setWidth(window.innerWidth);
-    }
-    useEffect(() => {
-        setWidth(window.innerWidth);
-        window.addEventListener("resize", handleWindowSizeChange);
-        return () => {
-            window.removeEventListener("resize", handleWindowSizeChange);
-        };
-    }, []);
-
-    const isMobile = !width ? false : width <= 768;
 
     return (<div
         className="bg-bg w-full md:rounded-lg md:rounded-b-none md:m-2 p-4 pt-2 mb-[75px] md:mb-0 h-full"

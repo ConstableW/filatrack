@@ -12,22 +12,10 @@ import Subtext from "@/components/Subtext";
 import Divider from "@/components/Divider";
 import Button from "@/components/Button";
 import { app } from "../lib/db";
+import { useDevice } from "../lib/hooks";
 
 export default function HomePage() {
-    const [width, setWidth] = useState(0);
-
-    function handleWindowSizeChange() {
-        setWidth(window.innerWidth);
-    }
-    useEffect(() => {
-        setWidth(window.innerWidth);
-        window.addEventListener("resize", handleWindowSizeChange);
-        return () => {
-            window.removeEventListener("resize", handleWindowSizeChange);
-        };
-    }, []);
-
-    const isMobile = !width ? false : width <= 768;
+    const [isMobile, width] = useDevice();
 
     const [sortBy, setSortBy] = useState<keyof Filament>("name");
     const [search, setSearch] = useState("");
