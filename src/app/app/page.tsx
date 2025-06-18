@@ -49,16 +49,18 @@ export default function HomePage() {
             className="bg-bg w-full md:rounded-lg md:rounded-b-none md:m-2 p-4 pt-2 mb-[75px] md:mb-0 h-full"
             style={{ marginLeft: (!width || isMobile) ? undefined : sidebarWidth }}
         >
-            <div className="w-full bg-bg-light rounded-lg p-2 flex flex-row items-center gap-1">
-                <ListFilter className="min-w-[24px]" />
-                <Select value={sortBy} onChange={e => setSortBy(e.target.value as keyof Filament)} className="h-full">
-                    <option value="name">Name</option>
-                    <option value="brand">Brand</option>
-                    <option value="material">Material</option>
-                    <option value="lastUsed">Last Used</option>
-                    <option value="currentMass">Current Mass</option>
-                    <option value="startingMass">Starting Mass</option>
-                </Select>
+            <div className="w-full bg-bg-light rounded-lg p-2 flex flex-col md:flex-row md:items-center gap-1">
+                <div className="flex flex-row items-center gap-1 w-full md:w-[unset]">
+                    <ListFilter className="min-w-[24px]" />
+                    <Select value={sortBy} onChange={e => setSortBy(e.target.value as keyof Filament)} className="h-full w-full">
+                        <option value="name">Name</option>
+                        <option value="brand">Brand</option>
+                        <option value="material">Material</option>
+                        <option value="lastUsed">Last Used</option>
+                        <option value="currentMass">Current Mass</option>
+                        <option value="startingMass">Starting Mass</option>
+                    </Select>
+                </div>
                 <Input
                     placeholder="Search Filament..."
                     value={search}
@@ -71,7 +73,11 @@ export default function HomePage() {
             <FilamentList isEmpty title="Empty Filament" sortBy={sortBy} search={search} />
         </div>
 
-        <Modal open={searchTipsOpen} onClose={() => setSearchTipsOpen(false)} title="Search Tips">
+        <Modal open={searchTipsOpen} onClose={() => {
+            setUserSettings({ ...userSettings!, seenSearchTips: true });
+            app.settings.updateUserSettings({ seenSearchTips: true });
+            setSearchTipsOpen(false);
+        }} title="Search Tips">
             <Subtext>Some shorthands for searching your filament.</Subtext>
             <Divider />
 

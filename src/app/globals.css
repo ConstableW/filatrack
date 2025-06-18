@@ -305,3 +305,7 @@ select, option {
   color: white;
   font-family: "Lexend";
 }
+
+path.MuiChartsAxisHighlight-root {
+  stroke: #777 !important;
+}

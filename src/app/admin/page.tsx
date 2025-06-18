@@ -51,20 +51,18 @@ export default function AdminPage() {
                 totalFilament: (await app.analytics.getTotalFilament()).data!,
                 totalLogs: (await app.analytics.getTotalLogs()).data!,
             });
-
-            getEntries();
         })();
     }, []);
 
     return (<>
-        <div className="rounded-lg bg-bg-light p-4 m-10 mb-2">
+        <div className="rounded-lg bg-bg-light p-4 m-3 md:m-10 mb-2 md:mb-2">
             <h1>Analytics</h1>
 
             <Select value={timespan} onChange={e => setTimespan(parseInt(e.target.value))}>
                 {timeSpanOptions.map(o => <option key={o} value={o}>{o} days</option>)}
             </Select>
         </div>
-        <div className="w-full flex flex-row gap-2 p-10 pt-0">
+        <div className="w-full flex flex-col md:flex-row gap-2 p-3 md:p-10 md:pt-0 pt-0">
             <div className="w-full bg-bg-light p-5 rounded-lg">
                 <h1 className="text-gray-500">Users</h1>
                 <Divider />

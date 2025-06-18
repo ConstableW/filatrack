@@ -63,23 +63,23 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
     }
 
     return (<>
-        <div className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center 
-            justify-between relative border-2 border-transparent transition-all max-w-[175px]
+        <div className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center
+            justify-between relative border-2 border-transparent transition-all md:w-[175px]
             ${isPreview ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "}`}
         >
-            <div className="flex flex-col justify-center items-center">
+            <div className="flex flex-col justify-center items-center w-full">
                 <FilamentIcon
                     size={75}
                     color={filament.color}
                     stage={filament.currentMass <= 0 ? 5 : Math.max(1, Math.ceil(filament.currentMass / filament.startingMass * 5))}
                 />
 
-                <p className="text-lg text-center">{filament.name}</p>
+                <p className="text-lg text-center truncate max-w-[100%]">{filament.name}</p>
                 {filament.brand && <Subtext>{filament.brand}</Subtext>}
             </div>
 
             {/* {filament.brand && <Subtext className="mt-[-10px]">{filament.brand}</Subtext>} */}
-            <div className="flex flex-col flex-wrap md:flex-row md:gap-x-2 md:gap-y-1 w-full md:justify-center">
+            <div className="flex flex-col items-center w-full md:justify-center">
                 <Subtext className="text-xs flex flex-row gap-1 items-center">
                     <Weight size={16} /> {grams(filament.currentMass)} / {grams(filament.startingMass)}
                 </Subtext>

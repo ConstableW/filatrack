@@ -23,17 +23,24 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
         if (!sortBy)
             return;
 
+        let newFilaments: Filament[] = [...filaments];
+
         if (sortBy === "currentMass" || sortBy === "startingMass")
-            setFilaments([...filaments.sort((a, b) => b[sortBy] - a[sortBy])]);
+            newFilaments = [...filaments.sort((a, b) => b[sortBy] - a[sortBy])];
 
         if (sortBy === "name" || sortBy === "brand" || sortBy === "material" || sortBy === "lastUsed")
-            setFilaments([...filaments.sort((a, b) => {
+            newFilaments = [...filaments.sort((a, b) => {
                 if (a[sortBy] < b[sortBy])
                     return -1;
                 if (a[sortBy] > b[sortBy])
                     return 1;
                 return 0;
-            })]);
+            })];
+
+        if (sortBy === "lastUsed")
+            newFilaments.reverse();
+
+        setFilaments(newFilaments);
     }
 
     function updateSearch() {
