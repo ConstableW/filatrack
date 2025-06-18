@@ -3,7 +3,7 @@
 import { GiFilmSpool } from "react-icons/gi";
 import AccountCard from "./Account";
 import SidebarItem from "./SidebarItem";
-import { Cog, Heart, Lock, Printer } from "lucide-react";
+import { Cog, Heart, Lock } from "lucide-react";
 import { FaGithub } from "react-icons/fa6";
 import { Session } from "next-auth";
 import { sidebarWidth } from "@/app/lib/random";
@@ -21,9 +21,9 @@ export default function Sidebar({ session }: { session: Session }) {
             <SidebarItem href="/app">
                 <GiFilmSpool size={24} /> Filament
             </SidebarItem>
-            <SidebarItem href="/app/printers">
+            {/* <SidebarItem href="/app/printers">
                 <Printer size={24} /> Printers
-            </SidebarItem>
+            </SidebarItem> */}
             <SidebarItem href="/app/settings">
                 <Cog /> Settings
             </SidebarItem>
