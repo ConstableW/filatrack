@@ -64,7 +64,7 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
 
     return (<>
         <div className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center
-            justify-between relative border-2 border-transparent transition-all md:w-[175px]
+            justify-between relative border-2 border-transparent transition-all md:max-w-[175px] md:min-w-[175px]
             ${isPreview ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "}`}
         >
             <div className="flex flex-col justify-center items-center w-full">

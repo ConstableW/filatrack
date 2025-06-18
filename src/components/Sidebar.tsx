@@ -3,27 +3,14 @@
 import { GiFilmSpool } from "react-icons/gi";
 import AccountCard from "./Account";
 import SidebarItem from "./SidebarItem";
-import { Cog, Heart, Lock } from "lucide-react";
+import { Cog, Heart, Lock, Printer } from "lucide-react";
 import { FaGithub } from "react-icons/fa6";
 import { Session } from "next-auth";
-import { useEffect, useState } from "react";
 import { sidebarWidth } from "@/app/lib/random";
+import { useDevice } from "@/app/lib/hooks";
 
 export default function Sidebar({ session }: { session: Session }) {
-    const [width, setWidth] = useState(0);
-
-    function handleWindowSizeChange() {
-        setWidth(window.innerWidth);
-    }
-    useEffect(() => {
-        setWidth(window.innerWidth);
-        window.addEventListener("resize", handleWindowSizeChange);
-        return () => {
-            window.removeEventListener("resize", handleWindowSizeChange);
-        };
-    }, []);
-
-    const isMobile = width <= 768;
+    const [isMobile, width] = useDevice();
 
     return (<>
         {(!isMobile && !!width) && <div
@@ -33,6 +20,9 @@ export default function Sidebar({ session }: { session: Session }) {
             <AccountCard session={session} />
             <SidebarItem href="/app">
                 <GiFilmSpool size={24} /> Filament
+            </SidebarItem>
+            <SidebarItem href="/app/printers">
+                <Printer size={24} /> Printers
             </SidebarItem>
             <SidebarItem href="/app/settings">
                 <Cog /> Settings

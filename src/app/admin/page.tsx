@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Select from "@/components/Select";
 import { app } from "../lib/db";
 import { AnalyticEntry } from "../lib/db/analytics";
+import { day } from "../lib/date";
 
 const dateFormatter = Intl.DateTimeFormat(undefined, {
     month: "2-digit",
@@ -16,7 +17,6 @@ const dateFormatter = Intl.DateTimeFormat(undefined, {
 });
 
 const timeSpanOptions = [7, 14, 30, 60, 365];
-const day = 1000 * 60 * 60 * 24;
 
 export default function AdminPage() {
     const [currentStats, setCurrentStats] = useState({
