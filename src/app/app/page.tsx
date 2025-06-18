@@ -7,12 +7,9 @@ import Select from "@/components/Select";
 import { Filament, UserSettings } from "@/db/types";
 import { ListFilter } from "lucide-react";
 import Input from "@/components/Input";
-import Modal, { ModalFooter } from "@/components/Modal";
-import Subtext from "@/components/Subtext";
-import Divider from "@/components/Divider";
-import Button from "@/components/Button";
 import { app } from "../lib/db";
 import { useDevice } from "../lib/hooks";
+import SearchTipsModal from "@/components/filament/SearchTips";
 
 export default function HomePage() {
     const [isMobile, width] = useDevice();
@@ -57,29 +54,14 @@ export default function HomePage() {
                     onFocus={() => setSearchTipsOpen(!(userSettings?.seenSearchTips ?? true))}
                 />
             </div>
+
             <FilamentList allowAdd title="Your Filament" sortBy={sortBy} search={search} />
             <FilamentList isEmpty title="Empty Filament" sortBy={sortBy} search={search} />
         </div>
 
-        <Modal open={searchTipsOpen} onClose={() => {
+        <SearchTipsModal open={searchTipsOpen} onClose={() => {
             setUserSettings({ ...userSettings!, seenSearchTips: true });
-            app.settings.updateUserSettings({ seenSearchTips: true });
             setSearchTipsOpen(false);
-        }} title="Search Tips">
-            <Subtext>Some shorthands for searching your filament.</Subtext>
-            <Divider />
-
-            <p>By default, the search will search for title. Prefix your search with any one of these to search a different field.</p>
-            <p><code>b:</code> Brand</p>
-            <p><code>m:</code> Material</p>
-
-            <ModalFooter tip="This modal won't show again. If you want to see the tips again, go to settings.">
-                <Button onClick={() => {
-                    setUserSettings({ ...userSettings!, seenSearchTips: true });
-                    app.settings.updateUserSettings({ seenSearchTips: true });
-                    setSearchTipsOpen(false);
-                }}>Ok</Button>
-            </ModalFooter>
-        </Modal>
+        }} />
     </>;
 }

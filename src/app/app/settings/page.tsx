@@ -7,6 +7,7 @@ import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
 import MassPicker from "@/components/filament/MassPicker";
 import MaterialPicker from "@/components/filament/MaterialPicker";
+import SearchTipsModal from "@/components/filament/SearchTips";
 import Input from "@/components/Input";
 import Modal, { ModalFooter } from "@/components/Modal";
 import Spinner from "@/components/Spinner";
@@ -36,7 +37,7 @@ export default function SettingsPage() {
         seenSearchTips: false,
     });
 
-    const [deleteAccountModal, setDeleteAccountModal] = useState(false);
+    const [modal, setModal] = useState("");
     const [deleteAccountConfirm, setDeleteAccountConfirm] = useState(false);
 
     useEffect(() => {
@@ -77,7 +78,7 @@ export default function SettingsPage() {
     }
 
     async function deleteAccount() {
-        setDeleteAccountModal(false);
+        setModal("");
         setDeleteAccountConfirm(false);
 
         setSaveLoading(false);
@@ -104,14 +105,14 @@ export default function SettingsPage() {
 
                     <Divider />
 
-                    <Button look={ButtonStyles.danger} onClick={() => setDeleteAccountModal(true)}>Delete Account</Button>
+                    <Button look={ButtonStyles.danger} onClick={() => setModal("delete")}>Delete Account</Button>
 
                     <Divider />
 
                     <Button loading={saveLoading} onClick={saveUsername}>Save</Button>
                 </>}
 
-                <Modal open={deleteAccountModal} onClose={() => setDeleteAccountModal(false)} danger title="Delete Account">
+                <Modal open={modal === "delete"} onClose={() => setModal("")} danger title="Delete Account">
                     <Subtext>Delete all of your data involving Filatrack.</Subtext>
                     <Divider />
 
@@ -131,7 +132,7 @@ export default function SettingsPage() {
                     />
 
                     <ModalFooter>
-                        <Button onClick={() => setDeleteAccountModal(false)} look={ButtonStyles.secondary}>Cancel</Button>
+                        <Button onClick={() => setModal("")} look={ButtonStyles.secondary}>Cancel</Button>
                         <Button
                             onClick={deleteAccount}
                             look={ButtonStyles.danger}
@@ -158,6 +159,11 @@ export default function SettingsPage() {
                         <option value="dd/mm/yyyy">dd/mm/yyyy</option>
                         <option value="yyyy/mm/dd">yyyy/mm/dd</option>
                     </Select> */}
+
+                    <Divider />
+
+                    <Button onClick={() => setModal("search")}>View Search Tips</Button>
+                    <SearchTipsModal open={modal === "search"} onClose={() => setModal("")} />
 
                     <Divider />
 
