@@ -17,12 +17,15 @@ type Dialog = {
 
 export const dialogs: Record<string, Dialog> = {
     feedback: {
-        toast: openModal => toast.info("Feedback", {
+        toast: (openModal, closeToast) => toast.info("Feedback", {
             description: <div className="flex flex-col gap-2">
                 <p>We're always looking for ways to improve Filatrack. Please give us some feedback!</p>
                 <div className="flex flex-row gap-2">
                     <Button onClick={openModal} className="text-xs">Give Feedback</Button>
-                    <Button onClick={() => setUserSeenDialog("feedback")} className="text-xs" look={ButtonStyles.secondary}>
+                    <Button onClick={() => {
+                        setUserSeenDialog("feedback");
+                        closeToast?.();
+                    }} className="text-xs" look={ButtonStyles.secondary}>
                         Don't Show Again
                     </Button>
                 </div>
@@ -101,7 +104,7 @@ export function RandomDialogs() {
         if (!selectedDialog)
             return;
 
-        if (randomInt(0, 10) < 8)
+        if (randomInt(0, 100) < 90)
             return;
 
         hasUserSeenDialog(selectedDialog).then(res => {

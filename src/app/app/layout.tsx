@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import Sidebar from "@/components/Sidebar";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { RandomDialogs } from "../lib/dialogs";
 
 export const metadata: Metadata = {
     title: "Filatrack App",
@@ -21,6 +22,8 @@ export default async function AppLayout({
     return (<>
         <main className="flex flex-col-reverse md:flex-row w-screen md:bg-bg-light overflow-x-hidden">
             <Sidebar session={session} />
+
+            <RandomDialogs />
 
             {children}
         </main>
