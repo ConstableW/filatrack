@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { eq } from "drizzle-orm";
 import { db } from "./db/drizzle";
 import { userSettingsTable } from "./db/schema/settings";
 import { app } from "./app/lib/db";
@@ -30,13 +31,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     events: {
         async signIn({ user, account, profile, isNewUser }) {
             if (isNewUser) {
-                const res = await db.insert(userSettingsTable).values({
+                await db.insert(userSettingsTable).values({
                     userId: user.id!,
                 });
 
                 await app.analytics.addOrUpdateAnalyticEntry(new Date(), {
                     signUps: 1,
                 });
+            } else {
+                // fix users that don't have userSettings
+                const res = await db.select().from(userSettingsTable)
+                    .where(eq(userSettingsTable.userId, user.id!));
+
+                if (!res.length)
+                    await db.insert(userSettingsTable).values({
+                        userId: user.id!,
+                    });
             }
         },
     },
