@@ -15,8 +15,6 @@ import { Filament } from "@/db/types";
 import { grams } from "@/app/lib/units";
 import AddFilamentModal from "./AddFilament";
 import { app } from "@/app/lib/db";
-import LoadFilamentModal from "./LoadFilament";
-import UnloadFilamentModal from "./UnloadFilament";
 
 export default function FilamentEntry({ filament, isPreview, noLog, light, onDelete, onEdit }:
     { filament: Filament, isPreview?: boolean, noLog?: boolean, light?: boolean,
@@ -97,13 +95,6 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
             </div>
             {(!isPreview && filament.currentMass > 0) && <div className="flex flex-row gap-1 w-full">
                 {!noLog && <Button className="w-full mt-1" onClick={() => setOpenModal("log")}>Log</Button>}
-                <Button
-                    className="w-full mt-1"
-                    look={noLog ? ButtonStyles.primary : ButtonStyles.secondary}
-                    onClick={() => setOpenModal(filament.printer ? "unload" : "load")}
-                >
-                    {filament.printer ? "Unload" : "Load"}
-                </Button>
             </div>}
 
             {!isPreview && <button
@@ -128,19 +119,6 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
         </div>
 
         {!isPreview && <>
-            <LoadFilamentModal
-                open={openModal === "load"}
-                onClose={() => setOpenModal("")}
-                filament={filament}
-                onEdit={onEdit}
-            />
-            <UnloadFilamentModal
-                open={openModal === "unload"}
-                onClose={() => setOpenModal("")}
-                filament={filament}
-                onEdit={onEdit}
-            />
-
             <LogFilamentModal
                 open={openModal === "log"}
                 onClose={() => setOpenModal("")}

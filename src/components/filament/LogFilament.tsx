@@ -41,8 +41,6 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
 
                 filamentId: filament.id,
                 time: new Date(),
-
-                print: null,
             });
         }
 
