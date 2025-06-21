@@ -75,10 +75,33 @@ export const dialogs: Record<string, Dialog> = {
                     donations. If you would like to help Filatrack keep running, please consider supporting the project!
                 </p>
                 <div className="flex flex-row gap-2">
-                    <a href="https://mrdiamond.is-a.dev/support"><Button className="text-xs">Support</Button></a>
+                    <a href="https://mrdiamond.is-a.dev/support" target="_blank"><Button className="text-xs">Support</Button></a>
                     <Button
                         onClick={() => {
                             setUserSeenDialog("support");
+                            closeToast?.();
+                        }}
+                        className="text-xs"
+                        look={ButtonStyles.secondary}
+                    >
+                        Don't Show Again
+                    </Button>
+                </div>
+            </div>,
+            duration: 99999,
+        }),
+    },
+    discord: {
+        toast: (_, closeToast) => toast.info("Discord", {
+            description: <div className="flex flex-col gap-2">
+                <p>
+                    We have a Discord! Feel free to come chat or suggest stuff!
+                </p>
+                <div className="flex flex-row gap-2">
+                    <a href="https://discord.gg/8DKjWsGCPq" target="_blank"><Button className="text-xs">Join</Button></a>
+                    <Button
+                        onClick={() => {
+                            setUserSeenDialog("discord");
                             closeToast?.();
                         }}
                         className="text-xs"
@@ -104,7 +127,7 @@ export function RandomDialogs() {
         if (!selectedDialog)
             return;
 
-        if (randomInt(0, 100) < 90)
+        if (randomInt(0, 100) < 92)
             return;
 
         hasUserSeenDialog(selectedDialog).then(res => {

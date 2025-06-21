@@ -4,7 +4,7 @@ import { GiFilmSpool } from "react-icons/gi";
 import AccountCard from "./Account";
 import SidebarItem from "./SidebarItem";
 import { Cog, Heart, Lock } from "lucide-react";
-import { FaGithub } from "react-icons/fa6";
+import { FaDiscord, FaGithub } from "react-icons/fa6";
 import { Session } from "next-auth";
 import { sidebarWidth } from "@/app/lib/random";
 import { useDevice } from "@/app/lib/hooks";
@@ -35,6 +35,9 @@ export default function Sidebar({ session }: { session: Session }) {
                 </SidebarItem>
                 <SidebarItem href="https://github.com/mrdiamonddog/filatrack">
                     <FaGithub /> GitHub
+                </SidebarItem>
+                <SidebarItem href="https://discord.gg/8DKjWsGCPq">
+                    <FaDiscord /> Discord
                 </SidebarItem>
             </div>
         </div>}

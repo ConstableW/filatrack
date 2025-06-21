@@ -6,17 +6,12 @@ A super-duper simple way to track your 3d printing filament!
 
 Made with Next.JS, Auth.JS, Drizzle ORM, and Supabase!
 
+Join the [Discord server](https://discord.gg/8DKjWsGCPq) for more info and feature requests!
+
+## Bugs
+
+There definitely are bugs. Please report bugs in the issues on this repo instead of Discord.
+
 ## Contributing
 
-I will always take contributions! If you decide to make a PR, please be open to code review.
-
-Please also make sure you install the ESLint VSCode plugin or your PRs witll fail checks!
-
-## Installation
-
-1. Install [PNPM](https://pnpm.io/)
-2. Clone the repo: `git clone https://github.com/MrDiamondDog/filatrack/`
-3. Install dependencies: `pnpm i`
-4. Copy `.env.example` to `.env` and fill out values
-6. Run dev server: `pnpm dev`
-7. Success!
+See [CONTRIBUTING.md](CONTRIBUTING.md)
