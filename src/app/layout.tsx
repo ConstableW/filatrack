@@ -79,7 +79,7 @@ export default function RootLayout({
                 <Analytics />
                 <SpeedInsights />
 
-                <RandomDialogs />
+                {/* <RandomDialogs /> */}
 
                 <Toaster
                     className="toaster group"
