@@ -108,6 +108,7 @@ export async function addOrUpdateAnalyticEntry(date: Date, data: Partial<Omit<An
         }
 
         entry = (await db.update(analyticsTable).set(newData)
+            .where(eq(analyticsTable.date, toDbDate(date)))
             .returning())[0];
     }
 

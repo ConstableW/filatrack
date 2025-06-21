@@ -53,13 +53,13 @@ const filamentMaterials = [
 
 const filamentMaxMass = [2000, 1000, 500, 250, 200];
 
-function randomFilament(): Filament {
+export function randomFilament(): Filament {
     const name = randomFrom(Object.keys(filamentNames));
     const maxMass = randomFrom(filamentMaxMass);
 
     return {
         name,
-        id: "",
+        id: `${randomInt(1, 10000000)}`,
         userId: "",
         brand: randomFrom(filamentBrands),
         color: filamentNames[name as keyof typeof filamentNames]!,

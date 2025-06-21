@@ -37,14 +37,19 @@ export default function HomePage() {
             <div className="w-full bg-bg-light rounded-lg p-2 flex flex-col md:flex-row md:items-center gap-1">
                 <div className="flex flex-row items-center gap-1 w-full md:w-[unset]">
                     <ListFilter className="min-w-[24px]" />
-                    <Select value={sortBy} onChange={e => setSortBy(e.target.value as keyof Filament)} className="h-full w-full">
-                        <option value="name">Name</option>
-                        <option value="brand">Brand</option>
-                        <option value="material">Material</option>
-                        <option value="lastUsed">Last Used</option>
-                        <option value="currentMass">Current Mass</option>
-                        <option value="startingMass">Starting Mass</option>
-                    </Select>
+                    <Select
+                        value={sortBy}
+                        onChange={v => setSortBy(v as keyof Filament)}
+                        className="h-full w-full"
+                        options={{
+                            name: "Name",
+                            brand: "Brand",
+                            material: "Material",
+                            lastUsed: "Last Used",
+                            currentMass: "Current Mass",
+                            startingMass: "Starting Mass",
+                        }}
+                    />
                 </div>
                 <Input
                     placeholder="Search Filament..."

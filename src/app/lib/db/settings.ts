@@ -59,11 +59,50 @@ export async function updateUserSettings(newSettings: Partial<UserSettings>): Pr
     };
 }
 
-export async function deleteUser() {
+export async function deleteUser(): Promise<DBRes<void>> {
     const session = await auth();
 
     if (!session || !session.user)
         return { error: "Not authenticated" };
 
     await db.delete(usersTable).where(eq(usersTable.id, session.user.id!));
+
+    return { };
+}
+
+export async function hasUserSeenDialog(id: string): Promise<DBRes<boolean>> {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    const userSettings = await getUserSettings();
+
+    if (userSettings.error)
+        return { error: userSettings.error };
+
+    return {
+        data: (userSettings.data!.seenDialogs ?? []).includes(id),
+    };
+}
+
+export async function setUserSeenDialog(id: string): Promise<DBRes<void>> {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    const userSettings = await getUserSettings();
+
+    if (userSettings.error)
+        return { error: userSettings.error };
+
+    if ((userSettings.data?.seenDialogs ?? []).includes(id))
+        return { };
+
+    await db.update(userSettingsTable).set({
+        seenDialogs: [...(userSettings.data!.seenDialogs ?? []), id],
+    });
+
+    return { };
 }

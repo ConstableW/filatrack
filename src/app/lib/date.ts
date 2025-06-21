@@ -1,6 +1,8 @@
 export const day = 1000 * 60 * 60 * 24;
 
 export function toDateString(date: Date) {
+    if (date.getTime() === 0)
+        return "Never";
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 }
 

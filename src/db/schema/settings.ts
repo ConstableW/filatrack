@@ -18,4 +18,6 @@ export const userSettingsTable = pgTable("userSettings", {
 
     seenSearchTips: boolean().default(false)
         .notNull(),
+    seenDialogs: text().array()
+        .default([]),
 });

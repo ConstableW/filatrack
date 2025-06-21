@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db-push-prod": "set NODE_ENV=production&& drizzle-kit push"
+    "drizzle-prod": "set NODE_ENV=production&& drizzle-kit "
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.9.1",

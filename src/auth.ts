@@ -30,11 +30,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     events: {
         async signIn({ user, account, profile, isNewUser }) {
             if (isNewUser) {
-                db.insert(userSettingsTable).values({
+                const res = await db.insert(userSettingsTable).values({
                     userId: user.id!,
                 });
 
-                app.analytics.addOrUpdateAnalyticEntry(new Date(), {
+                await app.analytics.addOrUpdateAnalyticEntry(new Date(), {
                     signUps: 1,
                 });
             }
