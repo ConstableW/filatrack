@@ -15,9 +15,13 @@ import { Filament } from "@/db/types";
 import { grams } from "@/app/lib/units";
 import AddFilamentModal from "./AddFilament";
 import { app } from "@/app/lib/db";
+import LoadFilamentModal from "./LoadFilament";
+import UnloadFilamentModal from "./UnloadFilament";
 
-export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
-    { filament: Filament, isPreview?: boolean, onDelete?: () => void, onEdit?: (filament: Filament) => void }) {
+export default function FilamentEntry({ filament, isPreview, noLog, light, onDelete, onEdit }:
+    { filament: Filament, isPreview?: boolean, noLog?: boolean, light?: boolean,
+        onDelete?: () => void, onEdit?: (filament: Filament) => void
+    }) {
     const [openModal, setOpenModal] = useState("");
 
     const [loading, setLoading] = useState(false);
@@ -65,7 +69,7 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
     return (<>
         <div className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center
             justify-between relative border-2 border-transparent transition-all md:max-w-[175px] md:min-w-[175px]
-            ${isPreview ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "}`}
+            ${(isPreview || light) ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "}`}
         >
             <div className="flex flex-col justify-center items-center w-full">
                 <FilamentIcon
@@ -91,9 +95,16 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
                     {filament.lastUsed.getTime() === 0 ? "Never" : toDateString(filament.lastUsed)}
                 </Subtext>
             </div>
-            {(!isPreview && filament.currentMass > 0) &&
-                    <Button className="w-full mt-1" onClick={() => setOpenModal("log")}>Log</Button>
-            }
+            {(!isPreview && filament.currentMass > 0) && <div className="flex flex-row gap-1 w-full">
+                {!noLog && <Button className="w-full mt-1" onClick={() => setOpenModal("log")}>Log</Button>}
+                <Button
+                    className="w-full mt-1"
+                    look={noLog ? ButtonStyles.primary : ButtonStyles.secondary}
+                    onClick={() => setOpenModal(filament.printer ? "unload" : "load")}
+                >
+                    {filament.printer ? "Unload" : "Load"}
+                </Button>
+            </div>}
 
             {!isPreview && <button
                 className="absolute top-1 right-1 p-1 rounded-full cursor-pointer transition-all bg-bg-light hover:bg-bg-lighter"
@@ -117,6 +128,19 @@ export default function FilamentEntry({ filament, isPreview, onDelete, onEdit }:
         </div>
 
         {!isPreview && <>
+            <LoadFilamentModal
+                open={openModal === "load"}
+                onClose={() => setOpenModal("")}
+                filament={filament}
+                onEdit={onEdit}
+            />
+            <UnloadFilamentModal
+                open={openModal === "unload"}
+                onClose={() => setOpenModal("")}
+                filament={filament}
+                onEdit={onEdit}
+            />
+
             <LogFilamentModal
                 open={openModal === "log"}
                 onClose={() => setOpenModal("")}

@@ -1,6 +1,7 @@
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { AnyPgColumn, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { id, timestamps } from "./columns.helpers";
 import { usersTable } from "./user";
+import { printersTable, printsTable } from "./printers";
 
 export const filamentTable = pgTable("filament", {
     ...id,
@@ -16,6 +17,8 @@ export const filamentTable = pgTable("filament", {
 
     currentMass: integer().notNull(),
     startingMass: integer().notNull(),
+
+    printer: text().references((): AnyPgColumn => printersTable.id),
 
     lastUsed: timestamp().default(new Date(0))
         .notNull(),
@@ -33,4 +36,6 @@ export const filamentLogTable = pgTable("filamentLog", {
     newMass: integer().notNull(),
     time: timestamp().defaultNow()
         .notNull(),
+
+    print: text().references(() => printsTable.id),
 });
