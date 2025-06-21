@@ -169,7 +169,7 @@ export default function PrivacyPolicyPage() {
             <h2>Contact Us</h2>
             <p>If you have any questions about this Privacy Policy, You can contact us:</p>
             <ul>
-                <li>By visiting this page on our website: <a href="https://filatrack.vercel.app/contact" rel="external nofollow noopener" target="_blank">https://filatrack.vercel.app/contact</a></li>
+                <li>By visiting this page on our website: <a href="https://filatrack.vercel.app/about/contact" rel="external nofollow noopener" target="_blank" className="style">https://filatrack.vercel.app/about/contact</a></li>
             </ul>
         </div>
     </div>);
