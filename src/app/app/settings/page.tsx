@@ -193,5 +193,6 @@ export default function SettingsPage() {
                 </>}
             </Tab>
         </Tablist>
+        <a href="/about/privacy-policy" className="style">Privacy Policy</a>
     </div>);
 }

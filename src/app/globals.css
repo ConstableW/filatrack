@@ -309,3 +309,25 @@ select, option {
 path.MuiChartsAxisHighlight-root {
   stroke: #777 !important;
 }
+
+ul, ol {
+  padding-left: 1.5rem;
+}
+
+li {
+  list-style: circle;
+}
+
+a.style {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+
+  &:hover {
+    color: var(--color-secondary);
+    text-decoration: underline;
+    text-decoration-color: var(--color-secondary);
+    text-underline-offset: 0.2rem;
+    text-decoration-thickness: 0.1rem;
+  }
+}
