@@ -23,6 +23,7 @@ export default function AdminPage() {
         totalUsers: 0,
         totalFilament: 0,
         totalLogs: 0,
+        authenticationMethods: {},
     });
 
     const [entries, setEntries] = useState<AnalyticEntry[]>([]);
@@ -50,6 +51,8 @@ export default function AdminPage() {
                 totalUsers: (await app.analytics.getTotalUsers()).data!,
                 totalFilament: (await app.analytics.getTotalFilament()).data!,
                 totalLogs: (await app.analytics.getTotalLogs()).data!,
+
+                authenticationMethods: (await app.analytics.getAuthenticationMethodStats()).data!,
             });
         })();
     }, []);
@@ -92,6 +95,23 @@ export default function AdminPage() {
                         },
                     ]}
                 />
+                <Divider />
+                <h2 className="text-gray-500">Authentication Methods</h2>
+                <Divider />
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Method</td>
+                            <td>Users</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {Object.keys(currentStats.authenticationMethods).map(method => <tr>
+                            <td>{method}</td>
+                            <td>{currentStats.authenticationMethods[method as keyof typeof currentStats.authenticationMethods]}</td>
+                        </tr>)}
+                    </tbody>
+                </table>
             </div>
             <div className="w-full bg-bg-light p-5 rounded-lg">
                 <h1 className="text-gray-500">Filament</h1>

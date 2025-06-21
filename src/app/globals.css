@@ -331,3 +331,31 @@ a.style {
     text-decoration-thickness: 0.1rem;
   }
 }
+
+table {
+  border: 2px solid var(--color-bg-lighter);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+thead * {
+  font-weight: 600;
+}
+
+tbody {
+  border-top: 2px solid var(--color-bg-lighter);
+}
+
+tr {
+  border-bottom: 1px solid var(--color-bg-lighter);
+}
+
+td, th {
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+}
+
+td:not(:last-child), th:not(:last-child) {
+  border-right: 2px solid var(--color-bg-lighter);
+}

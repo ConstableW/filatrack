@@ -5,7 +5,7 @@ import { db } from "@/db/drizzle";
 import { between, eq } from "drizzle-orm";
 import { analyticsTable } from "@/db/schema/analytics";
 import { filamentLogTable, filamentTable } from "@/db/schema/filament";
-import { usersTable } from "@/db/schema/user";
+import { accountsTable, usersTable } from "@/db/schema/user";
 import { DBRes } from "./types";
 
 export type AnalyticEntry = typeof analyticsTable.$inferSelect;
@@ -114,5 +114,26 @@ export async function addOrUpdateAnalyticEntry(date: Date, data: Partial<Omit<An
 
     return {
         data: entry,
+    };
+}
+
+export async function getAuthenticationMethodStats(): Promise<DBRes<Record<string, number>>> {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    if (session.user.id! !== process.env.ADMIN_USER_ID)
+        return { error: "Unauthorized" };
+
+    const allAccounts = await db.select().from(accountsTable);
+
+    const providers: Record<string, number> = {};
+
+    for (const acc of allAccounts)
+        providers[acc.provider] = (providers[acc.provider] ?? 0) + 1;
+
+    return {
+        data: providers,
     };
 }
