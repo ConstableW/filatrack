@@ -11,7 +11,7 @@ import { randomFrom, randomInt } from "./random";
 import { hasUserSeenDialog, setUserSeenDialog } from "./db/settings";
 
 type Dialog = {
-    toast: (openModal?: () => void) => number | string,
+    toast: (openModal?: () => void, closeToast?: () => void) => number | string,
     modal?: (props: ModalProps) => React.ReactNode
 }
 
@@ -65,7 +65,7 @@ export const dialogs: Record<string, Dialog> = {
         </Modal>,
     },
     support: {
-        toast: () => toast.info("Support", {
+        toast: (_, closeToast) => toast.info("Support", {
             description: <div className="flex flex-col gap-2">
                 <p>
                     Filatrack is entirely ad-free and makes no money by itself. It is entirely based on free software and
@@ -73,7 +73,14 @@ export const dialogs: Record<string, Dialog> = {
                 </p>
                 <div className="flex flex-row gap-2">
                     <a href="https://mrdiamond.is-a.dev/support"><Button className="text-xs">Support</Button></a>
-                    <Button onClick={() => setUserSeenDialog("support")} className="text-xs" look={ButtonStyles.secondary}>
+                    <Button
+                        onClick={() => {
+                            setUserSeenDialog("support");
+                            closeToast?.();
+                        }}
+                        className="text-xs"
+                        look={ButtonStyles.secondary}
+                    >
                         Don't Show Again
                     </Button>
                 </div>
@@ -101,7 +108,7 @@ export function RandomDialogs() {
             if (res.error || !!res.data)
                 return;
 
-            setToastId(dialogs[selectedDialog].toast(() => setModalOpen(true)));
+            setToastId(dialogs[selectedDialog].toast(() => setModalOpen(true), () => toast.dismiss(toastId)));
         });
     }, [selectedDialog]);
 

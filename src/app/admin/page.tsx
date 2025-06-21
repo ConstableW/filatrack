@@ -58,9 +58,12 @@ export default function AdminPage() {
         <div className="rounded-lg bg-bg-light p-4 m-3 md:m-10 mb-2 md:mb-2">
             <h1>Analytics</h1>
 
-            <Select value={timespan} onChange={e => setTimespan(parseInt(e.target.value))}>
-                {timeSpanOptions.map(o => <option key={o} value={o}>{o} days</option>)}
-            </Select>
+            <Select value={`${timespan}`} onChange={v => setTimespan(parseInt(v))} options={
+                timeSpanOptions.reduce((acc, val) => {
+                    acc[`${val}`] = `${val} days`;
+                    return acc;
+                }, {} as Record<string, string>)
+            } />
         </div>
         <div className="w-full flex flex-col md:flex-row gap-2 p-3 md:p-10 md:pt-0 pt-0">
             <div className="w-full bg-bg-light p-5 rounded-lg">
