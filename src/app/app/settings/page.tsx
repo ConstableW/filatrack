@@ -35,6 +35,7 @@ export default function SettingsPage() {
         defaultMaterial: "PLA",
         defaultMass: 1000,
         seenSearchTips: false,
+        seenDialogs: [],
     });
 
     const [modal, setModal] = useState("");
