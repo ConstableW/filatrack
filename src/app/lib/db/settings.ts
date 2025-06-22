@@ -23,15 +23,34 @@ export async function setUsername(username: string): Promise<DBRes<undefined>> {
     return {};
 }
 
-export async function getUserSettings(): Promise<DBRes<UserSettings>> {
+export async function createUserSettings(): Promise<DBRes<UserSettings>> {
     const session = await auth();
 
     if (!session || !session.user)
         return { error: "Not authenticated" };
 
     return {
-        data: (await db.select().from(userSettingsTable)
-            .where(eq(userSettingsTable.userId, session.user.id!)))[0],
+        data: (await db.insert(userSettingsTable).values({
+            userId: session.user.id!,
+        })
+            .returning())[0],
+    };
+}
+
+export async function getUserSettings(): Promise<DBRes<UserSettings>> {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    let settings = (await db.select().from(userSettingsTable)
+        .where(eq(userSettingsTable.userId, session.user.id!)))[0];
+
+    if (!settings)
+        settings = (await createUserSettings()).data!;
+
+    return {
+        data: settings,
     };
 }
 

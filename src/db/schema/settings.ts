@@ -4,7 +4,8 @@ import { usersTable } from "./user";
 export const userSettingsTable = pgTable("userSettings", {
     userId: text("userId")
         .notNull()
-        .references(() => usersTable.id, { onDelete: "cascade" }),
+        .references(() => usersTable.id, { onDelete: "cascade" })
+        .primaryKey(),
 
     timeFormat: text().default("12-hour")
         .notNull(),
