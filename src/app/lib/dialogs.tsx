@@ -127,7 +127,7 @@ export function RandomDialogs() {
         if (!selectedDialog)
             return;
 
-        if (randomInt(0, 100) < 92)
+        if (randomInt(0, 100) < 50)
             return;
 
         hasUserSeenDialog(selectedDialog).then(res => {
