@@ -136,7 +136,7 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                 open={openModal === "edit"}
                 onClose={() => setOpenModal("")}
                 currentFilament={filament}
-                onAdd={onEdit}
+                onAdd={f => onEdit?.(Array.isArray(f) ? f[0] : f)}
             />
 
             <Modal open={openModal === "move"} onClose={() => setOpenModal("")} title="Move Filament">

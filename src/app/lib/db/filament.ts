@@ -57,6 +57,37 @@ export async function createFilament(filament: DBCreateParams<Filament>): Promis
     };
 }
 
+export async function createMultipleFilament(filament: DBCreateParams<Filament>, amount: number): Promise<DBRes<Filament[]>> {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    if (filament.name.length > 32)
+        return { error: "Filament name too long" };
+
+    if (filament.brand.length > 32)
+        return { error: "Filament brand name too long" };
+
+    addOrUpdateAnalyticEntry(new Date(), {
+        filamentCreated: amount,
+    });
+
+    const newFilament: Filament[] = [];
+
+    for (let i = 0; i < amount; i++) {
+        newFilament.push((await db.insert(filamentTable).values({
+            ...filament,
+            userId: session.user.id!,
+        })
+            .returning())[0]);
+    }
+
+    return {
+        data: newFilament,
+    };
+}
+
 export async function editFilament(filamentId: string, newData: Partial<DBCreateParams<Filament>>): Promise<DBRes<Filament>> {
     const session = await auth();
 

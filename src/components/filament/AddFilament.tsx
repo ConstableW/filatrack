@@ -13,14 +13,15 @@ import { Filament, UserSettings } from "@/db/types";
 import Spinner from "../Spinner";
 import FilamentColorPicker, { filamentColors } from "./ColorPicker";
 import { randomFrom } from "@/app/lib/random";
-import { DBCreateParams } from "@/app/lib/db/types";
+import { DBCreateParams, DBRes } from "@/app/lib/db/types";
 import { app } from "@/app/lib/db";
 
 export default function AddFilamentModal({ onAdd, currentFilament, open, onClose }:
-    ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament) => void }) {
+    ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament | Filament[]) => void }) {
     const [step, setStep] = useState(-1);
 
     const [settings, setSettings] = useState<UserSettings>();
+    const [copiesToAdd, setCopiesToAdd] = useState("0");
 
     const [filamentData, setFilamentData] = useObjectState<DBCreateParams<Filament>>(currentFilament ?? {
         name: "",
@@ -72,8 +73,12 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
             await app.filament.editFilament(currentFilament.id, filamentData) :
             await app.filament.createFilament(filamentData);
 
-        if (res.error) {
-            setError(res.error);
+        let copiesRes: DBRes<Filament[]> | null = null;
+        if (!currentFilament && parseInt(copiesToAdd) > 0 && !Number.isNaN(parseInt(copiesToAdd)))
+            copiesRes = await app.filament.createMultipleFilament(filamentData, parseInt(copiesToAdd));
+
+        if (res.error || copiesRes?.error) {
+            setError(res.error ?? copiesRes?.error!);
             setLoading(false);
             return;
         }
@@ -81,7 +86,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         setLoading(false);
         onClose();
 
-        onAdd?.(res.data!);
+        onAdd?.([res.data!, ...(copiesRes?.data! ?? [])]);
     }
 
     useEffect(() => {
@@ -129,6 +134,15 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
                 />
 
                 <Input label="Notes" value={filamentData.note} onChange={e => setFilamentData({ note: e.target.value })} />
+                {!currentFilament && <>
+                    <Input
+                        label="Copies To Add"
+                        type="number"
+                        value={copiesToAdd}
+                        onChange={e => setCopiesToAdd(e.target.value)}
+                    />
+                    <Subtext>The amount of copies of this filament to add as well as the original.</Subtext>
+                </>}
 
                 <p>Color</p>
                 <FilamentColorPicker value={filamentData.color} onChange={c => setFilamentData({ color: c })} />
