@@ -121,7 +121,8 @@ export async function setUserSeenDialog(id: string): Promise<DBRes<void>> {
 
     await db.update(userSettingsTable).set({
         seenDialogs: [...(userSettings.data!.seenDialogs ?? []), id],
-    });
+    })
+        .where(eq(userSettingsTable.userId, session.user.id!));
 
     return { };
 }
