@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Input from "../Input";
 
 export const filamentMaterials = [
@@ -12,16 +13,30 @@ export const filamentMaterials = [
 ];
 
 export default function MaterialPicker({ value, onChange }: { value: string, onChange: (val: string) => void }) {
+    const [otherMat, setOtherMat] = useState(false);
+
     return (<>
         <div className="grid grid-cols-3 md:grid-cols-4 gap-1 my-2">
-            {filamentMaterials.map(f => <MaterialEntry key={f} selected={value === f} onClick={() => onChange(f)}>{f}</MaterialEntry>)}
+            {filamentMaterials.map(f => <MaterialEntry
+                key={f}
+                selected={!otherMat && value === f}
+                onClick={() => {
+                    setOtherMat(false);
+                    onChange(f);
+                }}
+            >
+                {f}
+            </MaterialEntry>)}
         </div>
 
         <Input
             placeholder="Other..."
-            className={filamentMaterials.includes(value) ? "" : "!border-primary"}
-            value={filamentMaterials.includes(value) ? "" : value}
-            onChange={e => onChange(e.target.value)}
+            className={!otherMat && filamentMaterials.includes(value) ? "" : "!border-primary"}
+            value={!otherMat && filamentMaterials.includes(value) ? "" : value}
+            onChange={e => {
+                setOtherMat(true);
+                onChange(e.target.value);
+            }}
             maxLength={32}
         />
     </>);
