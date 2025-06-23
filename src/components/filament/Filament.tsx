@@ -11,13 +11,13 @@ import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../Dro
 import LogFilamentModal from "./LogFilament";
 import FilamentHistoryModal from "./FilamentHistory";
 import { toDateString } from "@/app/lib/date";
-import { Filament } from "@/db/types";
+import { Filament, UserSettings } from "@/db/types";
 import { grams } from "@/app/lib/units";
 import AddFilamentModal from "./AddFilament";
 import { app } from "@/app/lib/db";
 
-export default function FilamentEntry({ filament, isPreview, noLog, light, onDelete, onEdit }:
-    { filament: Filament, isPreview?: boolean, noLog?: boolean, light?: boolean,
+export default function FilamentEntry({ filament, isPreview, noLog, light, onDelete, onEdit, userSettings }:
+    { filament: Filament, isPreview?: boolean, noLog?: boolean, light?: boolean, userSettings?: UserSettings,
         onDelete?: () => void, onEdit?: (filament: Filament) => void
     }) {
     const [openModal, setOpenModal] = useState("");
@@ -124,6 +124,7 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                 onClose={() => setOpenModal("")}
                 filament={filament}
                 onFinish={f => onEdit?.(f)}
+                userSettings={userSettings}
             />
 
             <FilamentHistoryModal
@@ -137,6 +138,7 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                 onClose={() => setOpenModal("")}
                 currentFilament={filament}
                 onAdd={f => onEdit?.(Array.isArray(f) ? f[0] : f)}
+                userSettings={userSettings}
             />
 
             <Modal open={openModal === "move"} onClose={() => setOpenModal("")} title="Move Filament">

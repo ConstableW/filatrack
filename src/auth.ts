@@ -32,9 +32,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 await app.analytics.addOrUpdateAnalyticEntry(new Date(), {
                     signUps: 1,
                 });
-            } else {
-                // fix users that don't have userSettings
-                await app.settings.getUserSettings();
             }
         },
     },

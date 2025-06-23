@@ -16,11 +16,10 @@ import { randomFrom } from "@/app/lib/random";
 import { DBCreateParams, DBRes } from "@/app/lib/db/types";
 import { app } from "@/app/lib/db";
 
-export default function AddFilamentModal({ onAdd, currentFilament, open, onClose }:
-    ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament | Filament[]) => void }) {
+export default function AddFilamentModal({ onAdd, currentFilament, open, onClose, userSettings }:
+    ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament | Filament[]) => void, userSettings?: UserSettings }) {
     const [step, setStep] = useState(-1);
 
-    const [settings, setSettings] = useState<UserSettings>();
     const [copiesToAdd, setCopiesToAdd] = useState("0");
 
     const [filamentData, setFilamentData] = useObjectState<DBCreateParams<Filament>>(currentFilament ?? {
@@ -41,11 +40,11 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
             name: "",
             brand: "",
             color: randomFrom(filamentColors),
-            material: settings?.defaultMaterial ?? "PLA",
+            material: userSettings?.defaultMaterial ?? "PLA",
             note: "",
 
-            currentMass: settings?.defaultMass ?? 1000,
-            startingMass: settings?.defaultMass ?? 1000,
+            currentMass: userSettings?.defaultMass ?? 1000,
+            startingMass: userSettings?.defaultMass ?? 1000,
 
             lastUsed: new Date(0),
         });
@@ -88,19 +87,6 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
 
         onAdd?.([res.data!, ...(copiesRes?.data! ?? [])]);
     }
-
-    useEffect(() => {
-        if (currentFilament)
-            return;
-
-        app.settings.getUserSettings().then(r => {
-            if (r.error)
-                return;
-
-            setSettings(r.data);
-            reset();
-        });
-    }, []);
 
     useEffect(() => {
         reset();

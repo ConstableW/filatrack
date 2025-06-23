@@ -5,16 +5,23 @@ import Input from "../Input";
 import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
 import FilamentEntry from "./Filament";
-import { Filament, FilamentLog } from "@/db/types";
+import { Filament, FilamentLog, UserSettings } from "@/db/types";
 import { DBRes } from "@/app/lib/db/types";
 import { app } from "@/app/lib/db";
 
-export default function LogFilamentModal({ open, onClose, filament, onFinish, currentLog }:
-    { filament: Filament, onFinish: (newFilament: Filament, newLog: FilamentLog) => void, currentLog?: FilamentLog } & ModalProps) {
+export default function LogFilamentModal({ open, onClose, filament, onFinish, currentLog, userSettings }:
+    { filament: Filament, onFinish: (newFilament: Filament, newLog: FilamentLog) => void, userSettings?: UserSettings,
+        currentLog?: FilamentLog } & ModalProps) {
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
 
     const [filamentUsed, setFilamentUsed] = useState(currentLog?.filamentUsed ?? 0);
+
+    function calculateActualFilamentUsed(input: number) {
+        return (currentLog ? currentLog.previousMass : filament.currentMass) -
+        input -
+        ((currentLog ? 0 : userSettings?.additionalFilamentModifier) ?? 0);
+    }
 
     async function logFilament() {
         if (filamentUsed === 0) {
@@ -37,7 +44,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
                 filamentUsed,
 
                 previousMass: filament.currentMass,
-                newMass: filament.currentMass - filamentUsed,
+                newMass: calculateActualFilamentUsed(filamentUsed),
 
                 filamentId: filament.id,
                 time: new Date(),
@@ -51,7 +58,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
         }
 
         const editRes = await app.filament.editFilament(filament.id, {
-            currentMass: (currentLog ? currentLog.previousMass : filament.currentMass) - filamentUsed,
+            currentMass: calculateActualFilamentUsed(filamentUsed),
             lastUsed: new Date(Math.max((currentLog ? currentLog.time : new Date()).getTime(), filament.lastUsed.getTime())),
         });
 
@@ -74,23 +81,27 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
                     If you've used this filament, log how much was used so you'll know how much is left.
             </Subtext>
             <Divider />
-            <div className="flex flex-col md:flex-row justify-between items-center gap-2">
+            <div className="flex flex-col items-center gap-2">
+                <FilamentEntry filament={filament} isPreview />
                 <Input
                     label="Filament Used (g)"
-                    className="md:w-1/2"
                     type="number"
                     value={filamentUsed}
                     onChange={e => setFilamentUsed(parseInt(e.target.value))}
                     autoFocus={true}
                 />
-                <FilamentEntry filament={filament} isPreview />
             </div>
+
+            <Divider />
+
+            {userSettings?.additionalFilamentModifier && <Subtext className="w-full text-center text-xs">
+                Additional Filament Modifier: {userSettings.additionalFilamentModifier}g
+            </Subtext>}
             <p className="w-full text-center text-sm">
                 This will leave{" "}
                 {Math.max(
                     0,
-                    (currentLog ? currentLog.previousMass : filament.currentMass) -
-                    (Number.isNaN(filamentUsed) ? 0 : filamentUsed)
+                    calculateActualFilamentUsed(filamentUsed)
                 )}
                     g / {filament.startingMass / 1000}kg remaining.
             </p>

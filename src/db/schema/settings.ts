@@ -7,6 +7,9 @@ export const userSettingsTable = pgTable("userSettings", {
         .references(() => usersTable.id, { onDelete: "cascade" })
         .primaryKey(),
 
+    additionalFilamentModifier: integer().default(0)
+        .notNull(),
+
     timeFormat: text().default("12-hour")
         .notNull(),
     dateFormat: text().default("mm/dd/yyyy")

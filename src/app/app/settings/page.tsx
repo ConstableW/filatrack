@@ -36,6 +36,7 @@ export default function SettingsPage() {
         defaultMass: 1000,
         seenSearchTips: false,
         seenDialogs: [],
+        additionalFilamentModifier: 0,
     });
 
     const [modal, setModal] = useState("");
@@ -165,6 +166,16 @@ export default function SettingsPage() {
 
                     <Button onClick={() => setModal("search")}>View Search Tips</Button>
                     <SearchTipsModal open={modal === "search"} onClose={() => setModal("")} />
+
+                    <Divider />
+
+                    <Input
+                        label="Additional Filament Modifier (g)"
+                        type="number"
+                        value={userSettings.additionalFilamentModifier}
+                        onChange={e => setUserSettingsData({ additionalFilamentModifier: parseInt(e.target.value) })}
+                    />
+                    <Subtext>When you log filament, this value will be added to account for purge material or waste.</Subtext>
 
                     <Divider />
 

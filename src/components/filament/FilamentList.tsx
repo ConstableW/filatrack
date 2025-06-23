@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import FilamentEntry from "./Filament";
-import { Filament } from "@/db/types";
+import { Filament, UserSettings } from "@/db/types";
 import Skeleton from "../Skeleton";
 import { Plus } from "lucide-react";
 import AddFilamentModal from "./AddFilament";
@@ -18,6 +18,8 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
     const [loading, setLoading] = useState(true);
 
     const [addFilamentOpen, setAddFilamentOpen] = useState(false);
+
+    const [userSettings, setUserSettings] = useState<UserSettings>();
 
     function sort() {
         if (!sortBy)
@@ -71,6 +73,15 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
     }
 
     useEffect(() => {
+        app.settings.getUserSettings().then(res => {
+            if (res.error) {
+                toast.error(`Error retrieving filament: ${res.error}`);
+                return;
+            }
+
+            setUserSettings(res.data!);
+        });
+
         app.filament.getAllFilaments().then(res => {
             if (res.error) {
                 toast.error(`Error retrieving filament: ${res.error}`);
@@ -132,6 +143,7 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
                         filament={f}
                         onDelete={() => deleteFilament(i)}
                         onEdit={f => editFilament(i, f)}
+                        userSettings={userSettings}
                     />;
                 })
             }
