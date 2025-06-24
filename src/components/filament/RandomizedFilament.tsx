@@ -60,6 +60,7 @@ export function randomFilament(): Filament {
     return {
         name,
         id: `${randomInt(1, 10000000)}`,
+        shortId: "",
         userId: "",
         brand: randomFrom(filamentBrands),
         color: filamentNames[name as keyof typeof filamentNames]!,
