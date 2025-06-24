@@ -15,7 +15,7 @@ export default function QRCodeModal({ filament, ...props }: { filament: Filament
             return;
 
         app.filament.editFilament(filament.id, { shortId: crypto.randomUUID().slice(0, 8) });
-    }, []);
+    }, [props.open]);
 
     const [options, setOptions] = useObjectState<Record<string, boolean>>({
         border: true,
