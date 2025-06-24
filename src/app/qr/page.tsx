@@ -4,12 +4,12 @@ import { Filament } from "@/db/types";
 import { Box, Weight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { getFilamentByShortId } from "../lib/db/filament";
 import { toast } from "sonner";
 import Spinner from "@/components/Spinner";
 
-export default function QRPage() {
+function QRPageComponent() {
     const searchParams = useSearchParams();
 
     const [filament, setFilament] = useState<Filament[]>([]);
@@ -73,4 +73,12 @@ export default function QRPage() {
             </div>}
         </div>)}
     </>);
+}
+
+export default function QRPage() {
+    return (
+        <Suspense fallback={<Spinner />}>
+            <QRPageComponent />
+        </Suspense>
+    );
 }
