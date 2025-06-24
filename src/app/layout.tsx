@@ -73,7 +73,9 @@ export default function RootLayout({
             <body
                 className={`${lexend.variable} antialiased bg-bg`}
             >
-                <SessionProvider>
+                <SessionProvider
+                    refetchOnWindowFocus={false}
+                >
                     {children}
                 </SessionProvider>
                 <Analytics />
