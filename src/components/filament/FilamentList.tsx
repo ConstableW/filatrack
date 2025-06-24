@@ -7,31 +7,29 @@ import Skeleton from "../Skeleton";
 import { Plus } from "lucide-react";
 import AddFilamentModal from "./AddFilament";
 import Divider from "../Divider";
-import { toast } from "sonner";
-import { app } from "@/app/lib/db";
 
-export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search }:
-    { allowAdd?: boolean, isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string }) {
-    const [filaments, setFilaments] = useState<Filament[]>([]);
+export default function FilamentList({ allFilament, userSettings, isEmpty, allowAdd, title, sortBy, search }:
+    { allFilament?: Filament[], userSettings?: UserSettings, allowAdd?: boolean,
+        isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string
+}) {
+    const [filament, setFilament] = useState<Filament[]>([]);
     const [filamentsToShow, setFilamentsToShow] = useState<number[] | null>(null);
 
     const [loading, setLoading] = useState(true);
 
     const [addFilamentOpen, setAddFilamentOpen] = useState(false);
 
-    const [userSettings, setUserSettings] = useState<UserSettings>();
-
     function sort() {
         if (!sortBy)
             return;
 
-        let newFilaments: Filament[] = [...filaments];
+        let newFilaments: Filament[] = [...filament];
 
         if (sortBy === "currentMass" || sortBy === "startingMass")
-            newFilaments = [...filaments.sort((a, b) => b[sortBy] - a[sortBy])];
+            newFilaments = [...filament.sort((a, b) => b[sortBy] - a[sortBy])];
 
         if (sortBy === "name" || sortBy === "brand" || sortBy === "material" || sortBy === "lastUsed")
-            newFilaments = [...filaments.sort((a, b) => {
+            newFilaments = [...filament.sort((a, b) => {
                 if (a[sortBy] < b[sortBy])
                     return -1;
                 if (a[sortBy] > b[sortBy])
@@ -42,7 +40,7 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
         if (sortBy === "lastUsed")
             newFilaments.reverse();
 
-        setFilaments(newFilaments);
+        setFilament(newFilaments);
     }
 
     function updateSearch() {
@@ -62,9 +60,9 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
 
         const toShow = [];
 
-        for (const filament of filaments) {
-            if ((filament[searchField as keyof Filament] as string).toLowerCase().includes(search.toLowerCase()))
-                toShow.push(filaments.indexOf(filament));
+        for (const f of filament) {
+            if ((f[searchField as keyof Filament] as string).toLowerCase().includes(search.toLowerCase()))
+                toShow.push(filament.indexOf(f));
         }
 
         setFilamentsToShow(toShow);
@@ -73,34 +71,20 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
     }
 
     useEffect(() => {
-        app.settings.getUserSettings().then(res => {
-            if (res.error) {
-                toast.error(`Error retrieving filament: ${res.error}`);
-                return;
-            }
-
-            setUserSettings(res.data!);
-        });
-
-        app.filament.getAllFilaments().then(res => {
-            if (res.error) {
-                toast.error(`Error retrieving filament: ${res.error}`);
-                return;
-            }
-
-            setFilaments(res.data!);
-
-            setLoading(false);
-        });
-    }, []);
-
-    useEffect(() => {
-        if (!filaments.length)
+        if (!filament.length)
             return;
 
         updateSearch();
         sort();
     }, [loading]);
+
+    useEffect(() => {
+        if (!userSettings || !allFilament?.length)
+            return;
+
+        setLoading(false);
+        setFilament(allFilament);
+    }, [userSettings, allFilament]);
 
     useEffect(() => {
         sort();
@@ -111,11 +95,11 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
     }, [search]);
 
     function deleteFilament(i: number) {
-        setFilaments([...filaments.slice(0, i), ...filaments.slice(i + 1)]);
+        setFilament([...filament.slice(0, i), ...filament.slice(i + 1)]);
     }
 
     function editFilament(i: number, newData: Filament) {
-        setFilaments([...filaments.slice(0, i), newData, ...filaments.slice(i + 1)]);
+        setFilament([...filament.slice(0, i), newData, ...filament.slice(i + 1)]);
     }
 
     return (<>
@@ -130,7 +114,7 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
                 className="flex flex-row gap-2 md:flex-wrap [&>br]:hidden md:w-full *:w-full md:*:!w-[175px]"
             />}
 
-            {filaments
+            {filament
                 .map((f, i) => {
                     if (filamentsToShow !== null && !filamentsToShow.includes(i))
                         return null;
@@ -161,7 +145,7 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
             {userSettings && <AddFilamentModal
                 open={addFilamentOpen}
                 onClose={() => setAddFilamentOpen(false)}
-                onAdd={f => setFilaments([...filaments, ...(Array.isArray(f) ? f : [f])])}
+                onAdd={f => setFilament([...filament, ...(Array.isArray(f) ? f : [f])])}
                 userSettings={userSettings}
             />}
         </div>

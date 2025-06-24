@@ -20,12 +20,21 @@ export default function HomePage() {
 
     const [userSettings, setUserSettings] = useState<UserSettings>();
 
+    const [allFilament, setAllFilament] = useState<Filament[]>([]);
+
     useEffect(() => {
         app.settings.getUserSettings().then(r => {
             if (r.error)
                 return;
 
             setUserSettings(r.data!);
+        });
+
+        app.filament.getAllFilaments().then(r => {
+            if (r.error)
+                return;
+
+            setAllFilament(r.data!);
         });
     }, []);
 
@@ -60,8 +69,22 @@ export default function HomePage() {
                 />
             </div>
 
-            <FilamentList allowAdd title="Your Filament" sortBy={sortBy} search={search} />
-            <FilamentList isEmpty title="Empty Filament" sortBy={sortBy} search={search} />
+            <FilamentList
+                allowAdd
+                title="Your Filament"
+                sortBy={sortBy}
+                search={search}
+                allFilament={allFilament}
+                userSettings={userSettings}
+            />
+            <FilamentList
+                isEmpty
+                title="Empty Filament"
+                sortBy={sortBy}
+                search={search}
+                allFilament={allFilament}
+                userSettings={userSettings}
+            />
         </div>
 
         <SearchTipsModal open={searchTipsOpen} onClose={() => {
