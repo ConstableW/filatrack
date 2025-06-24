@@ -24,7 +24,8 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
     }) {
     const searchParams = useSearchParams();
 
-    const [openModal, setOpenModal] = useState(searchParams.get("f") === filament.shortId ? "details" : "");
+    const [openModal, setOpenModal] = useState(filament.shortId !== null &&
+        searchParams.get("f") === filament.shortId ? "details" : "");
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
