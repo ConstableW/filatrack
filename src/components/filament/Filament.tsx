@@ -15,6 +15,7 @@ import { Filament, UserSettings } from "@/db/types";
 import { grams } from "@/app/lib/units";
 import AddFilamentModal from "./AddFilament";
 import { app } from "@/app/lib/db";
+import QRCodeModal from "./QRCodeModal";
 
 export default function FilamentEntry({ filament, isPreview, noLog, light, onDelete, onEdit, userSettings }:
     { filament: Filament, isPreview?: boolean, noLog?: boolean, light?: boolean, userSettings?: UserSettings,
@@ -106,12 +107,10 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                     </DropdownTrigger>
                     <DropdownContent>
                         <DropdownItem onClick={() => setOpenModal("history")}>History</DropdownItem>
-
                         <DropdownItem onClick={() => setOpenModal("edit")}>Edit</DropdownItem>
-
+                        <DropdownItem onClick={() => setOpenModal("qrcode")}>QR Code</DropdownItem>
                         {filament.currentMass > 0 &&
                         <DropdownItem onClick={() => setOpenModal("move")}>Move to Empty</DropdownItem>}
-
                         <DropdownItem onClick={() => setOpenModal("delete")} danger>Delete</DropdownItem>
                     </DropdownContent>
                 </Dropdown>
@@ -139,6 +138,12 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                 currentFilament={filament}
                 onAdd={f => onEdit?.(Array.isArray(f) ? f[0] : f)}
                 userSettings={userSettings}
+            />
+
+            <QRCodeModal
+                open={openModal === "qrcode"}
+                onClose={() => setOpenModal("")}
+                filament={filament}
             />
 
             <Modal open={openModal === "move"} onClose={() => setOpenModal("")} title="Move Filament">

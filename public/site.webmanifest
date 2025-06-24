@@ -17,5 +17,11 @@
   ],
   "theme_color": "#254fa8",
   "background_color": "#0d0e10",
-  "display": "standalone"
+  "display": "standalone",
+  "protocol_handlers": [
+    {
+      "protocol": "web+filatrack",
+      "url": "/app?p="
+    }
+  ]
 }

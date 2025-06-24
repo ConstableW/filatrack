@@ -4,6 +4,8 @@ import { usersTable } from "./user";
 
 export const filamentTable = pgTable("filament", {
     ...id,
+    shortId: text().unique()
+        .$defaultFn(() => crypto.randomUUID().slice(0, 8)),
 
     userId: text().notNull()
         .references(() => usersTable.id, { onDelete: "cascade" }),

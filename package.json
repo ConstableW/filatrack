@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "drizzle-prod": "set NODE_ENV=production&& drizzle-kit "
+    "drizzle-prod": "echo YOU ARE IN PROD && set NODE_ENV=production&& drizzle-kit "
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.9.1",
@@ -24,6 +24,7 @@
     "next": "15.3.3",
     "next-auth": "5.0.0-beta.28",
     "postgres": "^3.4.7",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-colorful": "^5.6.1",
     "react-dom": "^19.0.0",

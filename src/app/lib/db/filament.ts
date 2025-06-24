@@ -32,6 +32,23 @@ export async function getFilament(id: string): Promise<DBRes<Filament | null>> {
     };
 }
 
+export async function getFilamentByShortId(shortId: string): Promise<DBRes<Filament | null>> {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    const filament = (await db.select().from(filamentTable)
+        .where(eq(filamentTable.shortId, shortId)))[0];
+
+    if (filament.userId !== session.user.id!)
+        return { error: "Not your filament" };
+
+    return {
+        data: filament,
+    };
+}
+
 export async function createFilament(filament: DBCreateParams<Filament>): Promise<DBRes<Filament>> {
     const session = await auth();
 

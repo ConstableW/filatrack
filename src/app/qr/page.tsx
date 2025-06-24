@@ -1,0 +1,76 @@
+"use client";
+
+import { Filament } from "@/db/types";
+import { Box, Weight } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { QRCodeSVG } from "qrcode.react";
+import { useEffect, useState } from "react";
+import { getFilamentByShortId } from "../lib/db/filament";
+import { toast } from "sonner";
+import Spinner from "@/components/Spinner";
+
+export default function QRPage() {
+    const searchParams = useSearchParams();
+
+    const [filament, setFilament] = useState<Filament[]>([]);
+
+    if (!searchParams.has("filament") || !searchParams.has("options"))
+        return null;
+
+    const filamentList = searchParams.get("filament")!.split(",");
+    const options = searchParams.get("options")!.split(",");
+
+    useEffect(() => {
+        const filamentData: Filament[] = [];
+
+        (async() => {
+            for (const f of filamentList) {
+                await getFilamentByShortId(f).then(res => {
+                    if (res.error)
+                        toast.error(`Error retireving filament: ${res.error}`);
+
+                    filamentData.push(res.data!);
+                });
+            }
+            setFilament(filamentData);
+        })();
+    }, []);
+
+    useEffect(() => {
+        if (filament.length !== filamentList.length)
+            return;
+
+        print();
+    }, [filament]);
+
+    return (<>
+        {!filament.length && <Spinner />}
+        {filament.map(f => <div
+            className={`${options.includes("border") && "border-2 border-black"}
+            rounded-lg p-3 bg-white inline-block text-black mr-1`}
+            key={f.shortId}
+        >
+            <QRCodeSVG
+                value={`https://filatrack.vercel.app/app?f=${f.shortId}`}
+                imageSettings={{
+                    src: "/filament-black.png",
+                    width: 35,
+                    height: 35,
+                    excavate: true,
+                }}
+                width="100%"
+                level="M"
+            />
+            {options.includes("name") && <h3 className="text-wrap text-center leading-5 my-1">{f.name}</h3>}
+            {options.includes("brand") && <p className="text-wrap text-center leading-5 my-1">{f.brand}</p>}
+            {options.includes("mass") && <div className="flex flex-row w-full justify-center items-center gap-1 text-sm">
+                <Weight size={20} />
+                1kg
+            </div>}
+            {options.includes("mat") && <div className="flex flex-row w-full justify-center items-center gap-1 text-sm">
+                <Box size={20} />
+                PLA
+            </div>}
+        </div>)}
+    </>);
+}
