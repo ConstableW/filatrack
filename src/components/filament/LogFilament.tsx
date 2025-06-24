@@ -24,7 +24,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
     }
 
     async function logFilament() {
-        if (filamentUsed === 0) {
+        if (filamentUsed === 0 || Number.isNaN(filamentUsed)) {
             setError("Last time I checked, you can't 3d print anything with 0 grams of filament.");
             return;
         }

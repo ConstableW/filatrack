@@ -1,6 +1,6 @@
 import Button, { ButtonStyles } from "../Button";
 import Divider from "../Divider";
-import Modal, { ModalFooter, ModalProps } from "../Modal";
+import Modal, { ModalFooter } from "../Modal";
 import Subtext from "../Subtext";
 import { useEffect, useState } from "react";
 import Spinner from "../Spinner";
@@ -72,7 +72,7 @@ function FilamentHistoryEntry({ log, i, onDelete, onEdit, preview, filament }:
     </>);
 }
 
-export default function FilamentHistoryModal({ open, onClose, filament }: { filament: Filament } & ModalProps) {
+export default function FilamentHistoryList({ filament }: { filament: Filament }) {
     const [logs, setLogs] = useState<FilamentLog[]>([]);
 
     const [error, setError] = useState("");
@@ -106,29 +106,22 @@ export default function FilamentHistoryModal({ open, onClose, filament }: { fila
         setLogs([...logs.slice(0, i), ...logs.slice(i + 1)]);
     }
 
-    return (
-        <Modal open={open} onClose={onClose} title="Filament History">
-            <Subtext className="mb-2 md:min-w-0 min-w-[300px]">See all the times this filament was used.</Subtext>
-            <Divider />
-            {loading && <Spinner />}
-            <div className="flex flex-col gap-2">
-                {logs.map((l, i) => <FilamentHistoryEntry
-                    log={l}
-                    i={i + 1}
-                    key={l.id}
-                    onEdit={l => onEditLog(l, i)}
-                    onDelete={() => onDeleteLog(i)}
-                    filament={filament}
-                />)}
-            </div>
-            {(logs.length === 0 && !loading) &&
-                <p className="w-full text-center">
-                    Looks like you haven't logged anything for this filament yet. Get printing!
-                </p>
-            }
-            <ModalFooter error={error}>
-                <Button onClick={onClose}>Done</Button>
-            </ModalFooter>
-        </Modal>
-    );
+    return (<>
+        {loading && <Spinner />}
+        <div className="flex flex-col gap-2">
+            {logs.map((l, i) => <FilamentHistoryEntry
+                log={l}
+                i={i + 1}
+                key={l.id}
+                onEdit={l => onEditLog(l, i)}
+                onDelete={() => onDeleteLog(i)}
+                filament={filament}
+            />)}
+        </div>
+        {(logs.length === 0 && !loading) &&
+            <p className="w-full text-center">
+                Looks like you haven't logged anything for this filament yet. Get printing!
+            </p>
+        }
+    </>);
 }

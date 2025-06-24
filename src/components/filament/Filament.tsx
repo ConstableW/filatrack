@@ -9,19 +9,22 @@ import Modal, { ModalFooter } from "../Modal";
 import Divider from "../Divider";
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../Dropdown";
 import LogFilamentModal from "./LogFilament";
-import FilamentHistoryModal from "./FilamentHistory";
 import { toDateString } from "@/app/lib/date";
 import { Filament, UserSettings } from "@/db/types";
 import { grams } from "@/app/lib/units";
 import AddFilamentModal from "./AddFilament";
 import { app } from "@/app/lib/db";
 import QRCodeModal from "./QRCodeModal";
+import FilamentDetailsModal from "./FilamentDetails";
+import { useSearchParams } from "next/navigation";
 
 export default function FilamentEntry({ filament, isPreview, noLog, light, onDelete, onEdit, userSettings }:
     { filament: Filament, isPreview?: boolean, noLog?: boolean, light?: boolean, userSettings?: UserSettings,
         onDelete?: () => void, onEdit?: (filament: Filament) => void
     }) {
-    const [openModal, setOpenModal] = useState("");
+    const searchParams = useSearchParams();
+
+    const [openModal, setOpenModal] = useState(searchParams.get("f") === filament.shortId ? "details" : "");
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -66,9 +69,11 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
     }
 
     return (<>
-        <div className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center
+        <div
+            className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center
             justify-between relative border-2 border-transparent transition-all md:max-w-[175px] md:min-w-[175px]
             ${(isPreview || light) ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "}`}
+            onClick={(!isPreview && (() => setOpenModal("details"))) || undefined}
         >
             <div className="flex flex-col justify-center items-center w-full">
                 <FilamentIcon
@@ -81,7 +86,6 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                 {filament.brand && <Subtext>{filament.brand}</Subtext>}
             </div>
 
-            {/* {filament.brand && <Subtext className="mt-[-10px]">{filament.brand}</Subtext>} */}
             <div className="flex flex-col items-center w-full md:justify-center">
                 <Subtext className="text-xs flex flex-row gap-1 items-center">
                     <Weight size={16} /> {grams(filament.currentMass)} / {grams(filament.startingMass)}
@@ -95,7 +99,10 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                 </Subtext>
             </div>
             {(!isPreview && filament.currentMass > 0) && <div className="flex flex-row gap-1 w-full">
-                {!noLog && <Button className="w-full mt-1" onClick={() => setOpenModal("log")}>Log</Button>}
+                {!noLog && <Button className="w-full mt-1" onClick={e => {
+                    e.stopPropagation();
+                    setOpenModal("log");
+                }}>Log</Button>}
             </div>}
 
             {!isPreview && <button
@@ -106,7 +113,6 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                         <EllipsisVertical className="text-gray-500" />
                     </DropdownTrigger>
                     <DropdownContent>
-                        <DropdownItem onClick={() => setOpenModal("history")}>History</DropdownItem>
                         <DropdownItem onClick={() => setOpenModal("edit")}>Edit</DropdownItem>
                         <DropdownItem onClick={() => setOpenModal("qrcode")}>QR Code</DropdownItem>
                         {filament.currentMass > 0 &&
@@ -118,18 +124,19 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
         </div>
 
         {!isPreview && <>
+            <FilamentDetailsModal
+                open={openModal === "details"}
+                onClose={() => openModal !== "log" && setOpenModal("")}
+                filament={filament}
+                openLogModal={() => setOpenModal("log")}
+            />
+
             <LogFilamentModal
                 open={openModal === "log"}
                 onClose={() => setOpenModal("")}
                 filament={filament}
                 onFinish={f => onEdit?.(f)}
                 userSettings={userSettings}
-            />
-
-            <FilamentHistoryModal
-                open={openModal === "history"}
-                onClose={() => setOpenModal("")}
-                filament={filament}
             />
 
             <AddFilamentModal
@@ -171,6 +178,7 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                     <FilamentEntry isPreview filament={filament} />
                 </div>
                 <p className="w-full text-center">This will also delete all of the logs made with this filament.</p>
+                <p className="w-full text-center">Any QR codes you've made with this filament will also stop working.</p>
                 <ModalFooter
                     tip={`Don't delete the filament if you just used it all up. 
                         Instead, press the 'Move to Empty' button in the filament's menu.`}

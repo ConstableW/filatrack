@@ -49,7 +49,7 @@ export async function getFilamentByShortId(shortId: string): Promise<DBRes<Filam
     };
 }
 
-export async function createFilament(filament: DBCreateParams<Filament>): Promise<DBRes<Filament>> {
+export async function createFilament(filament: DBCreateParams<Omit<Filament, "shortId">>): Promise<DBRes<Filament>> {
     const session = await auth();
 
     if (!session || !session.user)
@@ -74,7 +74,8 @@ export async function createFilament(filament: DBCreateParams<Filament>): Promis
     };
 }
 
-export async function createMultipleFilament(filament: DBCreateParams<Filament>, amount: number): Promise<DBRes<Filament[]>> {
+export async function createMultipleFilament(filament: DBCreateParams<Omit<Filament, "shortId">>, amount: number)
+: Promise<DBRes<Filament[]>> {
     const session = await auth();
 
     if (!session || !session.user)

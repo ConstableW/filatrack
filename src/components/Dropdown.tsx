@@ -39,7 +39,10 @@ export function DropdownItem({ children, danger, onClick, ...props }: { danger?:
                 cursor-pointer outline-none transition-all hover:bg-bg-lightest ${props.className}`
             }
             style={props.style}
-            onClick={onClick}
+            onClick={e => {
+                e.stopPropagation();
+                onClick?.();
+            }}
         >
             {children}
         </DropdownMenuItem>

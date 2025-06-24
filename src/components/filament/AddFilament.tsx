@@ -22,7 +22,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
 
     const [copiesToAdd, setCopiesToAdd] = useState("0");
 
-    const [filamentData, setFilamentData] = useObjectState<DBCreateParams<Filament>>(currentFilament ?? {
+    const [filamentData, setFilamentData] = useObjectState<DBCreateParams<Omit<Filament, "shortId">>>(currentFilament ?? {
         name: "",
         brand: "",
         color: randomFrom(filamentColors),
