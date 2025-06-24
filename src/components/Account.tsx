@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { Session } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
@@ -33,11 +33,10 @@ export default function AccountCard({ session }: { session: Session }) {
                     justify-between cursor-pointer transition-all ${visible && "rounded-b-none"}`}
                 onClick={() => setOpen(!open)}
             >
-                <div className="flex flex-row gap-2 items-center">
+                <div className="flex flex-row gap-2 items-center w-full">
                     <img src={session.user!.image!} className="rounded-full md:w-7 w-[48px]" />
-                    <p className="text-nowrap truncate hidden md:block">{session.user!.name!}</p>
+                    <p className="text-nowrap truncate hidden md:block text-sm">{session.user!.name!}</p>
                 </div>
-                <ChevronDown className={`text-gray-500 transition-all ${open && "rotate-180"} hidden md:block`} />
             </div>
             {visible && <div
                 className={`md:w-full bg-bg-lighter md:bg-bg p-1 flex flex-col gap-2 
