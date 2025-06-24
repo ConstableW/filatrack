@@ -26,9 +26,16 @@ export async function getFilament(id: string): Promise<DBRes<Filament | null>> {
     if (!session || !session.user)
         return { error: "Not authenticated" };
 
+    let filament = (await db.select().from(filamentTable)
+        .where(eq(filamentTable.id, id)))[0];
+
+    if (!filament.shortId)
+        filament = (await db.update(filamentTable).set({ shortId: crypto.randomUUID().slice(0, 8) })
+            .where(eq(filamentTable.id, filament.id))
+            .returning())[0];
+
     return {
-        data: (await db.select().from(filamentTable)
-            .where(eq(filamentTable.id, id)))[0],
+        data: filament,
     };
 }
 

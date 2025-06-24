@@ -3,20 +3,11 @@ import Divider from "../Divider";
 import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
 import { QRCodeSVG } from "qrcode.react";
-import { useEffect } from "react";
-import { app } from "@/app/lib/db";
 import Button from "../Button";
 import Input from "../Input";
 import { useObjectState } from "@/app/lib/hooks";
 
 export default function QRCodeModal({ filament, ...props }: { filament: Filament } & ModalProps) {
-    useEffect(() => {
-        if (filament.shortId || !props.open)
-            return;
-
-        app.filament.editFilament(filament.id, { shortId: crypto.randomUUID().slice(0, 8) });
-    }, [props.open]);
-
     const [options, setOptions] = useObjectState<Record<string, boolean>>({
         border: true,
         name: true,
