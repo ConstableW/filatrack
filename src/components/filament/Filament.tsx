@@ -140,13 +140,13 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                 userSettings={userSettings}
             />
 
-            <AddFilamentModal
+            {userSettings && <AddFilamentModal
                 open={openModal === "edit"}
                 onClose={() => setOpenModal("")}
                 currentFilament={filament}
                 onAdd={f => onEdit?.(Array.isArray(f) ? f[0] : f)}
                 userSettings={userSettings}
-            />
+            />}
 
             <QRCodeModal
                 open={openModal === "qrcode"}

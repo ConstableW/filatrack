@@ -17,7 +17,7 @@ import { DBCreateParams, DBRes } from "@/app/lib/db/types";
 import { app } from "@/app/lib/db";
 
 export default function AddFilamentModal({ onAdd, currentFilament, open, onClose, userSettings }:
-    ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament | Filament[]) => void, userSettings?: UserSettings }) {
+    ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament | Filament[]) => void, userSettings: UserSettings }) {
     const [step, setStep] = useState(-1);
 
     const [copiesToAdd, setCopiesToAdd] = useState("0");
@@ -26,11 +26,11 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         name: "",
         brand: "",
         color: randomFrom(filamentColors),
-        material: "PLA",
+        material: userSettings.defaultMaterial,
         note: "",
 
-        currentMass: 1000,
-        startingMass: 1000,
+        currentMass: userSettings.defaultMass,
+        startingMass: userSettings.defaultMass,
 
         lastUsed: new Date(0),
     });

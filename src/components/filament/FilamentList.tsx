@@ -158,11 +158,12 @@ export default function FilamentList({ isEmpty, allowAdd, title, sortBy, search 
             </div>
             }
 
-            <AddFilamentModal
+            {userSettings && <AddFilamentModal
                 open={addFilamentOpen}
                 onClose={() => setAddFilamentOpen(false)}
                 onAdd={f => setFilaments([...filaments, ...(Array.isArray(f) ? f : [f])])}
-            />
+                userSettings={userSettings}
+            />}
         </div>
     </>);
 }
