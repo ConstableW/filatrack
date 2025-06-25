@@ -7,12 +7,15 @@ import Skeleton from "../Skeleton";
 import { Plus } from "lucide-react";
 import AddFilamentModal from "./AddFilament";
 import Divider from "../Divider";
+import Subtext from "../Subtext";
+import Button from "../Button";
 
 export default function FilamentList({ allFilament, userSettings, isEmpty, allowAdd, title, sortBy, search }:
     { allFilament?: Filament[], userSettings?: UserSettings, allowAdd?: boolean,
         isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string
 }) {
     const [filament, setFilament] = useState<Filament[]>([]);
+    const [filteredFilament, setFilteredFilament] = useState<Filament[]>([]);
     const [filamentsToShow, setFilamentsToShow] = useState<number[] | null>(null);
 
     const [loading, setLoading] = useState(true);
@@ -94,6 +97,18 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
         updateSearch();
     }, [search]);
 
+    useEffect(() => {
+        setFilteredFilament(filament.filter((f, i) => {
+            if (filamentsToShow !== null && !filamentsToShow.includes(i))
+                return false;
+            if (f.currentMass <= 0 && !isEmpty)
+                return false;
+            if (f.currentMass > 0 && isEmpty)
+                return false;
+            return true;
+        }));
+    }, [filament]);
+
     function deleteFilament(i: number) {
         setFilament([...filament.slice(0, i), ...filament.slice(i + 1)]);
     }
@@ -103,7 +118,14 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
     }
 
     return (<>
-        <h2>{title}</h2>
+        <div className="flex flex-row items-center justify-between mt-1">
+            <h2>{title}</h2>
+            {allowAdd && <Button
+                onClick={() => setAddFilamentOpen(true)}
+            >
+                <Plus size={32} />
+            </Button>}
+        </div>
         <Divider />
 
         <div className={`${!loading && "grid grid-cols-2"} md:flex md:flex-row gap-2 md:flex-wrap`}>
@@ -114,22 +136,17 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
                 className="flex flex-row gap-2 md:flex-wrap [&>br]:hidden md:w-full *:w-full md:*:!w-[175px]"
             />}
 
-            {filament
-                .map((f, i) => {
-                    if (filamentsToShow !== null && !filamentsToShow.includes(i))
-                        return null;
-                    if (f.currentMass <= 0 && !isEmpty)
-                        return null;
-                    if (f.currentMass > 0 && isEmpty)
-                        return null;
-                    return <FilamentEntry
+            {!filteredFilament.length && !loading ?
+                <Subtext>Nothing to see here.</Subtext> :
+                filteredFilament.map((f, i) => (
+                    <FilamentEntry
                         key={f.id}
                         filament={f}
                         onDelete={() => deleteFilament(i)}
                         onEdit={f => editFilament(i, f)}
                         userSettings={userSettings}
-                    />;
-                })
+                    />
+                ))
             }
 
             {(allowAdd && !loading) &&
