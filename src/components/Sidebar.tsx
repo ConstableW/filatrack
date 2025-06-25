@@ -8,6 +8,7 @@ import { FaDiscord, FaGithub } from "react-icons/fa6";
 import { Session } from "next-auth";
 import { sidebarWidth } from "@/app/lib/random";
 import { useDevice } from "@/app/lib/hooks";
+import Divider from "./Divider";
 
 export default function Sidebar({ session }: { session: Session }) {
     const [isMobile, width] = useDevice();
@@ -17,6 +18,11 @@ export default function Sidebar({ session }: { session: Session }) {
             className="bg-bg-light h-full flex flex-col gap-1 p-2 fixed top-0 bottom-0"
             style={{ width: sidebarWidth }}
         >
+            <div className="flex flex-row gap-1 items-center px-2 pt-2">
+                <img src="/filament.svg" width="32" height="32" />
+                <p className="text-lg">Filatrack</p>
+            </div>
+            <Divider className="!my-1" />
             <AccountCard session={session} />
             <SidebarItem href="/app">
                 <GiFilmSpool size={24} /> Filament
