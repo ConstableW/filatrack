@@ -101,6 +101,9 @@ export async function createMultipleFilament(filament: DBCreateParams<Omit<Filam
     if (filament.brand.length > 32)
         return { error: "Filament brand name too long" };
 
+    if (amount > 50)
+        return { error: "You can only make up to 100 copies" };
+
     addOrUpdateAnalyticEntry(new Date(), {
         filamentCreated: amount,
     });

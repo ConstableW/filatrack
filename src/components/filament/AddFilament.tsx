@@ -101,6 +101,11 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
             setFilamentData(currentFilament);
     }, [open]);
 
+    useEffect(() => {
+        if (parseInt(amountToCreate) > 50)
+            setAmountToCreate("50");
+    }, [amountToCreate]);
+
     return (<>
         <Modal open={open} onClose={onClose} title={`${currentFilament ? "Edit" : "Add"} Filament`}>
             <Subtext>
@@ -135,7 +140,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
                         value={amountToCreate}
                         onChange={e => setAmountToCreate(e.target.value)}
                     />
-                    <Subtext>The amount of this filament to create, total.</Subtext>
+                    <Subtext>The amount of this filament to create, total. (max 50)</Subtext>
                 </>}
 
                 <p>Color</p>
