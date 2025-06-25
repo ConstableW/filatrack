@@ -67,6 +67,11 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
             return;
         }
 
+        if (!(/^#(?:[0-9a-fA-F]{3}){1,2}$/).test(filamentData.color)) {
+            setError("Invalid color hex code.");
+            return;
+        }
+
         setLoading(true);
 
         const res = currentFilament ?

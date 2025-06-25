@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { HexColorPicker } from "react-colorful";
+import Input from "./Input";
 
 // https://codesandbox.io/p/sandbox/opmco
 function useClickOutside(ref: React.RefObject<HTMLDivElement | null>, handler: Function) {
@@ -51,8 +52,9 @@ export default function PopoverColorPicker({ color, onChange }: { color: string,
             </div>
 
             {isOpen && (
-                <div className="popover" ref={popover}>
+                <div className="popover flex flex-col items-center gap-2" ref={popover}>
                     <HexColorPicker color={color} onChange={onChange} />
+                    <Input placeholder="Hex Code" value={color} onChange={e => onChange(e.target.value)} />
                 </div>
             )}
         </div>
