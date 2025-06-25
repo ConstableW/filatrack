@@ -20,7 +20,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
     ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament | Filament[]) => void, userSettings: UserSettings }) {
     const [step, setStep] = useState(-1);
 
-    const [copiesToAdd, setCopiesToAdd] = useState("0");
+    const [amountToCreate, setAmountToCreate] = useState("1");
 
     const [filamentData, setFilamentData] = useObjectState<DBCreateParams<Omit<Filament, "shortId">>>(currentFilament ?? {
         name: "",
@@ -50,7 +50,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         });
         setStep(0);
         setError("");
-        setCopiesToAdd("0");
+        setAmountToCreate("1");
     }
 
     const [error, setError] = useState("");
@@ -79,8 +79,8 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
             await app.filament.createFilament(filamentData);
 
         let copiesRes: DBRes<Filament[]> | null = null;
-        if (!currentFilament && parseInt(copiesToAdd) > 0 && !Number.isNaN(parseInt(copiesToAdd)))
-            copiesRes = await app.filament.createMultipleFilament(filamentData, parseInt(copiesToAdd));
+        if (!currentFilament && parseInt(amountToCreate) > 1 && !Number.isNaN(parseInt(amountToCreate)))
+            copiesRes = await app.filament.createMultipleFilament(filamentData, parseInt(amountToCreate));
 
         if (res.error || copiesRes?.error) {
             setError(res.error ?? copiesRes?.error!);
@@ -130,12 +130,12 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
                 <Input label="Notes" value={filamentData.note} onChange={e => setFilamentData({ note: e.target.value })} />
                 {!currentFilament && <>
                     <Input
-                        label="Copies To Add"
+                        label="Amount To Create (total)"
                         type="number"
-                        value={copiesToAdd}
-                        onChange={e => setCopiesToAdd(e.target.value)}
+                        value={amountToCreate}
+                        onChange={e => setAmountToCreate(e.target.value)}
                     />
-                    <Subtext>The amount of copies of this filament to add as well as the original.</Subtext>
+                    <Subtext>The amount of this filament to create, total.</Subtext>
                 </>}
 
                 <p>Color</p>

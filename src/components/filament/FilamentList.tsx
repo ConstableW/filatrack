@@ -7,8 +7,8 @@ import Skeleton from "../Skeleton";
 import { Plus } from "lucide-react";
 import AddFilamentModal from "./AddFilament";
 import Divider from "../Divider";
-import Subtext from "../Subtext";
 import Button from "../Button";
+import Subtext from "../Subtext";
 
 export default function FilamentList({ allFilament, userSettings, isEmpty, allowAdd, title, sortBy, search }:
     { allFilament?: Filament[], userSettings?: UserSettings, allowAdd?: boolean,
@@ -82,11 +82,11 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
     }, [loading]);
 
     useEffect(() => {
-        if (!userSettings || !allFilament?.length)
+        if (!userSettings)
             return;
 
         setLoading(false);
-        setFilament(allFilament);
+        setFilament(allFilament ?? []);
     }, [userSettings, allFilament]);
 
     useEffect(() => {
@@ -136,8 +136,7 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
                 className="flex flex-row gap-2 md:flex-wrap [&>br]:hidden md:w-full *:w-full md:*:!w-[175px]"
             />}
 
-            {!filteredFilament.length && !loading ?
-                <Subtext>Nothing to see here.</Subtext> :
+            {(!!filteredFilament.length && !loading) &&
                 filteredFilament.map((f, i) => (
                     <FilamentEntry
                         key={f.id}
@@ -159,6 +158,8 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
                 <Plus className="absolute-center text-gray-500" size={64} />
             </div>
             }
+
+            {(!filteredFilament.length && !loading && !allowAdd) && <Subtext>Nothing to see here.</Subtext>}
 
             {userSettings && <AddFilamentModal
                 open={addFilamentOpen}
