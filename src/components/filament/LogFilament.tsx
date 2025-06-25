@@ -94,7 +94,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
 
             <Divider />
 
-            {userSettings?.additionalFilamentModifier && <Subtext className="w-full text-center text-xs">
+            {!!userSettings?.additionalFilamentModifier && <Subtext className="w-full text-center text-xs">
                 Additional Filament Modifier: {userSettings.additionalFilamentModifier}g
             </Subtext>}
             <p className="w-full text-center text-sm">
