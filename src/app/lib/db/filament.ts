@@ -72,6 +72,13 @@ export async function createFilament(filament: DBCreateParams<Omit<Filament, "sh
         filamentCreated: 1,
     });
 
+    // very hacky fix for duplicating filament
+    if ((filament as Filament).id)
+        delete (filament as Partial<Filament>).id;
+
+    if ((filament as Filament).shortId)
+        delete (filament as Partial<Filament>).shortId;
+
     return {
         data: (await db.insert(filamentTable).values({
             ...filament,

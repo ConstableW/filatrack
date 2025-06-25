@@ -144,6 +144,7 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
                         filament={f}
                         onDelete={() => deleteFilament(i)}
                         onEdit={f => editFilament(i, f)}
+                        onAdd={f => setFilament([...filament, f])}
                         userSettings={userSettings}
                     />
                 ))

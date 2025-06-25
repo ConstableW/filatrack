@@ -17,10 +17,11 @@ import { app } from "@/app/lib/db";
 import QRCodeModal from "./QRCodeModal";
 import FilamentDetailsModal from "./FilamentDetails";
 import { useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
-export default function FilamentEntry({ filament, isPreview, noLog, light, onDelete, onEdit, userSettings }:
+export default function FilamentEntry({ filament, isPreview, noLog, light, onDelete, onEdit, onAdd, userSettings }:
     { filament: Filament, isPreview?: boolean, noLog?: boolean, light?: boolean, userSettings?: UserSettings,
-        onDelete?: () => void, onEdit?: (filament: Filament) => void
+        onDelete?: () => void, onEdit?: (filament: Filament) => void, onAdd?: (newFilament: Filament) => void
     }) {
     const searchParams = useSearchParams();
 
@@ -115,6 +116,15 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
                     </DropdownTrigger>
                     <DropdownContent>
                         <DropdownItem onClick={() => setOpenModal("edit")}>Edit</DropdownItem>
+                        <DropdownItem onClick={() => {
+                            app.filament.createFilament({ ...filament })
+                                .then(res => (
+                                    res.error ? toast.error(`Error duplicating filament: ${res.error}`) :
+                                        onAdd?.(res.data!)
+                                ));
+                        }}>
+                            Duplicate
+                        </DropdownItem>
                         <DropdownItem onClick={() => setOpenModal("qrcode")}>QR Code</DropdownItem>
                         {filament.currentMass > 0 &&
                         <DropdownItem onClick={() => setOpenModal("move")}>Move to Empty</DropdownItem>}
