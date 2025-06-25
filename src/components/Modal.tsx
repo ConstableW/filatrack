@@ -27,7 +27,8 @@ export default function Modal({ children, title, open, onClose, level, danger }:
         />}
 
         {visible && <div
-            className={`fixed top-1/2 left-1/2 bg-bg-light rounded-lg min-w-[200px] min-h-[100px] 
+            className={`fixed top-1/2 left-1/2 bg-bg-light rounded-lg w-[95%] 
+                md:w-[unset] md:min-w-[200px] min-h-[100px] max-h-[95vh] overflow-scroll
             border-2 ${danger ? "border-danger" : "border-primary"} px-4 py-3
             ${open ? "fade-in scale-in-center" : "fade-out scale-out-center"}`}
             style={{ zIndex: (level ?? 0) + 2 }}
