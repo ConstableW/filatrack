@@ -5,6 +5,7 @@ import { useDevice, useObjectState } from "@/app/lib/hooks";
 import { sidebarWidth } from "@/app/lib/random";
 import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
+import ImportFilamentModal from "@/components/filament/ImportFilament";
 import MassPicker from "@/components/filament/MassPicker";
 import MaterialPicker from "@/components/filament/MaterialPicker";
 import SearchTipsModal from "@/components/filament/SearchTips";
@@ -90,11 +91,13 @@ export default function SettingsPage() {
         signOut();
     }
 
+    const [importMethod, setImportMethod] = useState("");
+
     return (<div
         className="bg-bg w-full md:rounded-lg md:rounded-b-none md:m-2 p-4 pt-2 mb-[75px] md:mb-0 h-full"
         style={{ marginLeft: (!width || isMobile) ? undefined : sidebarWidth }}
     >
-        <Tablist tabs={["Account", "Preferences"]} activeTab="Account">
+        <Tablist tabs={["Account", "Preferences", "Import"]} activeTab="Account">
             <Tab name="Account" className="w-[200px]">
                 <h1>Account</h1>
 
@@ -202,6 +205,19 @@ export default function SettingsPage() {
 
                     <Button loading={saveLoading} onClick={saveSettings}>Save</Button>
                 </>}
+            </Tab>
+            <Tab name="Import">
+                <Subtext>
+                    Import your filament data from other sites. If you don't see the site you want here,
+                    suggest it in the <a href="https://discord.gg/8DKjWsGCPq" className="style">Discord server</a>!
+                </Subtext>
+                <Divider />
+                <Button onClick={() => {
+                    setModal("import");
+                    setImportMethod("3dfilamentprofiles");
+                }}>Import from 3dFilamentProfiles</Button>
+
+                <ImportFilamentModal open={modal === "import"} onClose={() => setModal("")} method={importMethod} />
             </Tab>
         </Tablist>
         <a href="/about/privacy-policy" className="style">Privacy Policy</a>

@@ -117,12 +117,14 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
                     onChange={e => setFilamentData({ name: e.target.value })}
                     error={(requiredError && !filamentData.name) && "This field is required"}
                     maxLength={32}
+                    placeholder="Basic Green, Matte Black, etc."
                 />
                 <Input
                     label="Brand"
                     value={filamentData.brand}
                     onChange={e => setFilamentData({ brand: e.target.value })}
                     maxLength={32}
+                    placeholder="Bambu Lab, Elegoo, etc."
                 />
 
                 <Input label="Notes" value={filamentData.note} onChange={e => setFilamentData({ note: e.target.value })} />
