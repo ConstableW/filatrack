@@ -40,7 +40,7 @@ function QRPageComponent() {
         if (filament.length !== filamentList.length)
             return;
 
-        print();
+        setTimeout(print, 1000);
     }, [filament]);
 
     return (<>
