@@ -50,6 +50,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         });
         setStep(0);
         setError("");
+        setCopiesToAdd("0");
     }
 
     const [error, setError] = useState("");
