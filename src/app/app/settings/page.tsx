@@ -91,7 +91,7 @@ export default function SettingsPage() {
     }
 
     return (<div
-        className="bg-bg w-full md:rounded-lg md:rounded-b-none md:m-2 p-4 pt-2 mb-[75px] md:mb-0 h-full"
+        className="bg-bg w-full p-4 pt-2 mb-[75px] md:mb-0 h-full"
         style={{ marginLeft: (!width || isMobile) ? undefined : sidebarWidth }}
     >
         <Tablist tabs={["Account", "Preferences"]} activeTab="Account">

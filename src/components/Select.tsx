@@ -9,7 +9,7 @@ Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "chil
     return (
         <Dropdown>
             <DropdownTrigger asChild>
-                <button {...props} className={`px-2 py-1 pr-2 rounded-lg bg-bg-lighter border-2 outline-none
+                <button {...props} className={`px-2 py-1 pr-2 rounded-lg bg-bg-lighter border-2 outline-none drop-shadow-lg
                 flex flex-row justify-between gap-4 items-center border-transparent focus:border-primary transition-all 
                 cursor-pointer text-sm ${props.className ?? ""}`}>
                     {options[value] ?? <Subtext>{placeholder}</Subtext>}

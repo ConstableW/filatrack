@@ -11,7 +11,7 @@ export default function Input({ multiline, label, error, ...props }:
         {createElement(Component, {
             ...props,
             className: `px-2 py-1 rounded-lg ${props.className ?? ""} bg-bg-lighter border-2 border-transparent
-            text-white items-center outline-none focus:outline-none 
+            text-white items-center outline-none focus:outline-none drop-shadow-lg
             focus:border-primary disabled:text-gray-400 text-sm transition-all ${error && "!border-danger"}`,
         })}
         {(label && props.type === "checkbox") &&

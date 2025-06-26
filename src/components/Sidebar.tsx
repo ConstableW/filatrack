@@ -15,7 +15,7 @@ export default function Sidebar({ session }: { session: Session }) {
 
     return (<>
         {(!isMobile && !!width) && <div
-            className="bg-bg-light h-full flex flex-col gap-1 p-2 fixed top-0 bottom-0"
+            className="bg-bg-light h-full flex flex-col gap-1 p-2 fixed top-0 bottom-0 drop-shadow-lg"
             style={{ width: sidebarWidth }}
         >
             <div className="flex flex-row gap-1 items-center px-2 pt-2">
