@@ -77,8 +77,8 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
         if (!filament.length)
             return;
 
-        updateSearch();
         sort();
+        updateSearch();
     }, [loading]);
 
     useEffect(() => {
@@ -98,6 +98,7 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
     }, [search]);
 
     useEffect(() => {
+        console.log(filamentsToShow, filamentsToShow?.length);
         setFilteredFilament(filament.filter((f, i) => {
             if (filamentsToShow !== null && !filamentsToShow.includes(i))
                 return false;
@@ -107,7 +108,7 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
                 return false;
             return true;
         }));
-    }, [filament]);
+    }, [filament, filamentsToShow]);
 
     function deleteFilament(i: number) {
         setFilament([...filament.slice(0, i), ...filament.slice(i + 1)]);

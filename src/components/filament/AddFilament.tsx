@@ -80,7 +80,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
 
         let copiesRes: DBRes<Filament[]> | null = null;
         if (!currentFilament && parseInt(amountToCreate) > 1 && !Number.isNaN(parseInt(amountToCreate)))
-            copiesRes = await app.filament.createMultipleFilament(filamentData, parseInt(amountToCreate));
+            copiesRes = await app.filament.createMultipleFilament(filamentData, parseInt(amountToCreate) - 1);
 
         if (res.error || copiesRes?.error) {
             setError(res.error ?? copiesRes?.error!);

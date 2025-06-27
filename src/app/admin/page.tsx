@@ -10,6 +10,7 @@ import Select from "@/components/Select";
 import { app } from "../lib/db";
 import { AnalyticEntry } from "../lib/db/analytics";
 import { day } from "../lib/date";
+import { ArrowLeft } from "lucide-react";
 
 const dateFormatter = Intl.DateTimeFormat(undefined, {
     month: "2-digit",
@@ -59,6 +60,7 @@ export default function AdminPage() {
 
     return (<>
         <div className="rounded-lg bg-bg-light p-4 m-3 md:m-10 mb-2 md:mb-2">
+            <a className="style flex gap-1 items-center" href="/app"><ArrowLeft /> Back</a>
             <h1>Analytics</h1>
 
             <Select value={`${timespan}`} onChange={v => setTimespan(parseInt(v))} options={
@@ -106,7 +108,7 @@ export default function AdminPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {Object.keys(currentStats.authenticationMethods).map(method => <tr>
+                        {Object.keys(currentStats.authenticationMethods).map(method => <tr key={method}>
                             <td>{method}</td>
                             <td>{currentStats.authenticationMethods[method as keyof typeof currentStats.authenticationMethods]}</td>
                         </tr>)}
