@@ -85,7 +85,7 @@ export default function AdminPage() {
                                 .reverse(),
                         },
                     ]}
-                    yAxis={[{ label: "Sign-Ups" }]}
+                    yAxis={[{ label: "Sign-Ups", min: 0 }]}
                     xAxis={[
                         {
                             scaleType: "point",
@@ -153,6 +153,9 @@ export default function AdminPage() {
                             valueFormatter: (value: Date) => dateFormatter.format(value),
                         },
                     ]}
+                    yAxis={[{
+                        min: 0,
+                    }]}
                 />
             </div>
         </div>

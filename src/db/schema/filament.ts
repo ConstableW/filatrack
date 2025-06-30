@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { doublePrecision, integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { id, timestamps } from "./columns.helpers";
 import { usersTable } from "./user";
 
@@ -21,6 +21,10 @@ export const filamentTable = pgTable("filament", {
 
     lastUsed: timestamp().default(new Date(0))
         .notNull(),
+
+    printingTemperature: integer(),
+    diameter: doublePrecision(),
+    cost: doublePrecision(),
 
     ...timestamps,
 });

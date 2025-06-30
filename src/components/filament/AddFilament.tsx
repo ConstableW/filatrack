@@ -15,6 +15,7 @@ import FilamentColorPicker, { filamentColors } from "./ColorPicker";
 import { randomFrom } from "@/app/lib/random";
 import { DBCreateParams, DBRes } from "@/app/lib/db/types";
 import { app } from "@/app/lib/db";
+import Drawer from "../Drawer";
 
 export default function AddFilamentModal({ onAdd, currentFilament, open, onClose, userSettings }:
     ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament | Filament[]) => void, userSettings: UserSettings }) {
@@ -29,6 +30,10 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         material: userSettings.defaultMaterial,
         note: "",
 
+        printingTemperature: null,
+        diameter: null,
+        cost: null,
+
         currentMass: userSettings.defaultMass,
         startingMass: userSettings.defaultMass,
 
@@ -42,6 +47,10 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
             color: randomFrom(filamentColors),
             material: userSettings?.defaultMaterial ?? "PLA",
             note: "",
+
+            printingTemperature: null,
+            diameter: null,
+            cost: null,
 
             currentMass: userSettings?.defaultMass ?? 1000,
             startingMass: userSettings?.defaultMass ?? 1000,
@@ -154,17 +163,38 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
 
             {step === 2 && <>
                 <MassPicker values={filamentData} onChange={setFilamentData} />
+
+                <Drawer label="Optional Info">
+                    <Input
+                        label="Printing Temperature (°C)"
+                        type="number"
+                        value={filamentData.printingTemperature ?? ""}
+                        onChange={e => setFilamentData({ printingTemperature: !e.target.value ? null : parseInt(e.target.value) })}
+                    />
+                    <Input
+                        label="Diameter (mm)"
+                        type="number"
+                        value={filamentData.diameter ?? ""}
+                        onChange={e => setFilamentData({ diameter: !e.target.value ? null : parseFloat(e.target.value) })}
+                    />
+                    <Input
+                        label="Cost"
+                        type="number"
+                        value={filamentData.cost ?? ""}
+                        onChange={e => setFilamentData({ cost: !e.target.value ? null : parseFloat(e.target.value) })}
+                    />
+                </Drawer>
             </>}
 
             <ModalFooter error={error}>
-                {step >= 0 && <>
+                {step > 0 && <>
                     <Button onClick={() => setStep(Math.max(0, step - 1))} look={ButtonStyles.secondary}>
                         Previous
                     </Button>
-                    <Button onClick={() => (step === 2 ? addFilament() : setStep(step + 1))} loading={loading}>
-                        {step === 2 ? (currentFilament ? "Edit" : "Add") : "Next"}
-                    </Button>
                 </>}
+                <Button onClick={() => (step === 2 ? addFilament() : setStep(step + 1))} loading={loading}>
+                    {step === 2 ? (currentFilament ? "Edit" : "Add") : "Next"}
+                </Button>
             </ModalFooter>
         </Modal>
     </>);

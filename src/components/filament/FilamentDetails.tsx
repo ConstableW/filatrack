@@ -5,7 +5,7 @@ import Subtext from "../Subtext";
 import Divider from "../Divider";
 import FilamentHistoryList from "./FilamentHistory";
 import Button from "../Button";
-import { Text } from "lucide-react";
+import { Diameter, DollarSign, Text, Thermometer } from "lucide-react";
 
 export default function FilamentDetailsModal({ filament, openLogModal, ...props }:
     { filament: Filament, openLogModal: () => void } & ModalProps) {
@@ -23,6 +23,18 @@ export default function FilamentDetailsModal({ filament, openLogModal, ...props 
                     {!!filament.note && <div className="flex flex-row gap-1 items-center mt-1 text-sm">
                         <Text className="min-w-[24px]" />
                         {filament.note}
+                    </div>}
+                    {!!filament.printingTemperature && <div className="flex flex-row gap-1 items-center mt-1 text-sm">
+                        <Thermometer className="min-w-[24px]" />
+                        {filament.printingTemperature}°C
+                    </div>}
+                    {!!filament.diameter && <div className="flex flex-row gap-1 items-center mt-1 text-sm">
+                        <Diameter className="min-w-[24px]" />
+                        {filament.diameter}mm
+                    </div>}
+                    {!!filament.cost && <div className="flex flex-row gap-1 items-center mt-1 text-sm">
+                        <DollarSign className="min-w-[24px]" />
+                        ${filament.cost}
                     </div>}
                 </div>
                 <Divider vertical className="hidden md:block" />
