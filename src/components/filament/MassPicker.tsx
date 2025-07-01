@@ -17,7 +17,7 @@ export default function MassPicker({ values, onChange, noHelper }:
     { values: MassData, onChange: (massData: MassData) => void, noHelper?: boolean }) {
     const [infoModalOpen, setInfoModalOpen] = useState(false);
 
-    return (<>
+    return (<div className="max-w-[520px]">
         <div className="flex flex-col md:flex-row gap-2 w-full *:w-full">
             <Input
                 type="number"
@@ -52,5 +52,5 @@ export default function MassPicker({ values, onChange, noHelper }:
         </Subtext>}
 
         {!noHelper && <GetMassModal open={infoModalOpen} onClose={() => setInfoModalOpen(false)} />}
-    </>);
+    </div>);
 }

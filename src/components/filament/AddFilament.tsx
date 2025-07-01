@@ -158,7 +158,11 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
 
             {step === 1 && <>
                 <p>Material</p>
-                <MaterialPicker value={filamentData.material} onChange={m => setFilamentData({ material: m })} />
+                <MaterialPicker
+                    value={filamentData.material}
+                    onChange={m => setFilamentData({ material: m })}
+                    userSettings={userSettings}
+                />
             </>}
 
             {step === 2 && <>

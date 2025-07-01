@@ -15,6 +15,7 @@ import Subtext from "@/components/Subtext";
 import Tab from "@/components/tabs/Tab";
 import Tablist from "@/components/tabs/Tablist";
 import { UserSettings } from "@/db/types";
+import { X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -33,6 +34,7 @@ export default function SettingsPage() {
         timeFormat: "12-hour",
         dateFormat: "mm/dd/yyyy",
         defaultMaterial: "PLA",
+        materialPickerOptions: [],
         defaultMass: 1000,
         seenSearchTips: false,
         seenDialogs: [],
@@ -180,10 +182,12 @@ export default function SettingsPage() {
                     <Divider />
 
                     <b>Default Material</b>
+                    <Button onClick={() => setModal("materialpickeroptions")}>Edit Options</Button>
                     <div>
                         <MaterialPicker
                             value={userSettings.defaultMaterial}
                             onChange={v => setUserSettingsData({ defaultMaterial: v })}
+                            userSettings={userSettings}
                         />
                     </div>
 
@@ -201,6 +205,53 @@ export default function SettingsPage() {
                     <Divider />
 
                     <Button loading={saveLoading} onClick={saveSettings}>Save</Button>
+
+                    <Modal open={modal === "materialpickeroptions"} onClose={() => setModal("")} title="Edit Material Picker Options">
+                        <Subtext>Edit the default options for the material picker</Subtext>
+                        <Divider />
+
+                        <Input
+                            placeholder="Press enter to add option"
+                            onKeyDown={e => {
+                                if (e.key !== "Enter")
+                                    return;
+
+                                setUserSettingsData({
+                                    materialPickerOptions: [
+                                        ...userSettings.materialPickerOptions,
+                                        (e.target as HTMLInputElement).value,
+                                    ],
+                                });
+
+                                (e.target as HTMLInputElement).value = "";
+                            }}
+                            maxLength={7}
+                        />
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-1 mt-2">
+                            {userSettings.materialPickerOptions.map((v, i) => (
+                                <div
+                                    className={`bg-bg-lighter rounded-full px-3 py-1 
+                                        text-center flex items-center justify-between`}
+                                    key={v}
+                                >
+                                    {v}
+                                    <X
+                                        className="text-gray-500 cursor-pointer min-w-[24px] ml-1"
+                                        onClick={() => setUserSettingsData({
+                                            materialPickerOptions: [
+                                                ...userSettings.materialPickerOptions.slice(0, i),
+                                                ...userSettings.materialPickerOptions.slice(i + 1),
+                                            ],
+                                        })}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+
+                        <ModalFooter>
+                            <Button onClick={() => saveSettings().then(() => setModal(""))} loading={saveLoading}>Save</Button>
+                        </ModalFooter>
+                    </Modal>
                 </>}
             </Tab>
         </Tablist>

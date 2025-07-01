@@ -1,23 +1,16 @@
+"use client";
+
 import { useState } from "react";
 import Input from "../Input";
+import { UserSettings } from "@/db/types";
 
-export const filamentMaterials = [
-    "PLA",
-    "TPU",
-    "ABS",
-    "PETG",
-    "ASA",
-    "PC",
-    "HIPS",
-    "PVA",
-];
-
-export default function MaterialPicker({ value, onChange }: { value: string, onChange: (val: string) => void }) {
+export default function MaterialPicker({ value, onChange, userSettings }:
+    { value: string, onChange: (val: string) => void, userSettings: UserSettings }) {
     const [otherMat, setOtherMat] = useState(false);
 
-    return (<>
-        <div className="grid grid-cols-3 md:grid-cols-4 gap-1 my-2">
-            {filamentMaterials.map(f => <MaterialEntry
+    return (<div className="max-w-[400px]">
+        <div className="grid [grid-template-columns:repeat(auto-fit,minmax(min(100%,24%),1fr))] gap-1 my-2">
+            {userSettings.materialPickerOptions.map(f => <MaterialEntry
                 key={f}
                 selected={!otherMat && value === f}
                 onClick={() => {
@@ -31,21 +24,21 @@ export default function MaterialPicker({ value, onChange }: { value: string, onC
 
         <Input
             placeholder="Other..."
-            className={!otherMat && filamentMaterials.includes(value) ? "" : "!border-primary"}
-            value={!otherMat && filamentMaterials.includes(value) ? "" : value}
+            className={!otherMat && userSettings.materialPickerOptions.includes(value) ? "" : "!border-primary"}
+            value={!otherMat && userSettings.materialPickerOptions.includes(value) ? "" : value}
             onChange={e => {
                 setOtherMat(true);
                 onChange(e.target.value);
             }}
             maxLength={32}
         />
-    </>);
+    </div>);
 }
 
 export function MaterialEntry({ children, selected, onClick }:
     { selected?: boolean, onClick?: () => void } & React.PropsWithChildren) {
     return (
-        <div className={`rounded-full bg-bg-lighter px-2 py-1 text-center cursor-pointer transition-all
+        <div className={`rounded-full bg-bg-lighter px-2 py-1 text-center cursor-pointer transition-all w-full
             border-2 border-transparent hover:border-primary ${selected && "!border-primary"} select-none`}
         onClick={onClick}
         >

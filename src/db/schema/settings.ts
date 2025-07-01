@@ -1,6 +1,17 @@
 import { boolean, integer, pgTable, text } from "drizzle-orm/pg-core";
 import { usersTable } from "./user";
 
+export const defaultFilamentMaterials = [
+    "PLA",
+    "TPU",
+    "ABS",
+    "PETG",
+    "ASA",
+    "PC",
+    "HIPS",
+    "PVA",
+];
+
 export const userSettingsTable = pgTable("userSettings", {
     userId: text("userId")
         .notNull()
@@ -9,6 +20,9 @@ export const userSettingsTable = pgTable("userSettings", {
 
     additionalFilamentModifier: integer().default(0)
         .notNull(),
+    materialPickerOptions: text().array()
+        .notNull()
+        .default(defaultFilamentMaterials),
 
     timeFormat: text().default("12-hour")
         .notNull(),
