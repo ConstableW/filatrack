@@ -42,7 +42,7 @@ export default function Sidebar({ session }: { session: Session }) {
                 <SidebarItem href="https://github.com/mrdiamonddog/filatrack">
                     <FaGithub /> GitHub
                 </SidebarItem>
-                <SidebarItem href="https://discord.gg/8DKjWsGCPq">
+                <SidebarItem href="/discord">
                     <FaDiscord /> Discord
                 </SidebarItem>
             </div>
