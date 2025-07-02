@@ -20,7 +20,7 @@ export default function HomePage() {
 
     const [userSettings, setUserSettings] = useState<UserSettings>();
 
-    const [allFilament, setAllFilament] = useState<Filament[]>([]);
+    const [allFilament, setAllFilament] = useState<Filament[]>();
 
     useEffect(() => {
         app.settings.getUserSettings().then(r => {
@@ -74,7 +74,7 @@ export default function HomePage() {
                 title="Your Filament"
                 sortBy={sortBy}
                 search={search}
-                allFilament={allFilament}
+                data={allFilament?.filter(f => f.currentMass > 0) ?? null}
                 userSettings={userSettings}
             />
             <FilamentList
@@ -82,7 +82,7 @@ export default function HomePage() {
                 title="Empty Filament"
                 sortBy={sortBy}
                 search={search}
-                allFilament={allFilament}
+                data={allFilament?.filter(f => f.currentMass <= 0) ?? null}
                 userSettings={userSettings}
             />
         </div>

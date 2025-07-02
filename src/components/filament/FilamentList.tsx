@@ -10,20 +10,17 @@ import Divider from "../Divider";
 import Button from "../Button";
 import Subtext from "../Subtext";
 
-export default function FilamentList({ allFilament, userSettings, isEmpty, allowAdd, title, sortBy, search }:
-    { allFilament?: Filament[], userSettings?: UserSettings, allowAdd?: boolean,
+export default function FilamentList({ data, userSettings, allowAdd, title, sortBy, search }:
+    { data?: Filament[] | null, userSettings?: UserSettings, allowAdd?: boolean,
         isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string
 }) {
-    const [filament, setFilament] = useState<Filament[]>([]);
-    const [filteredFilament, setFilteredFilament] = useState<Filament[]>([]);
-    const [filamentsToShow, setFilamentsToShow] = useState<number[] | null>(null);
-
-    const [loading, setLoading] = useState(true);
-
     const [addFilamentOpen, setAddFilamentOpen] = useState(false);
 
+    const [filament, setFilament] = useState(data);
+    const [searchedFilament, setSearchedFilament] = useState<number[] | null>(null);
+
     function sort() {
-        if (!sortBy)
+        if (!sortBy || !filament)
             return;
 
         let newFilaments: Filament[] = [...filament];
@@ -42,13 +39,11 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
 
         if (sortBy === "lastUsed")
             newFilaments.reverse();
-
-        setFilament(newFilaments);
     }
 
     function updateSearch() {
-        if (!search) {
-            setFilamentsToShow(null);
+        if (!search || !filament) {
+            setSearchedFilament(null);
             return;
         }
 
@@ -68,55 +63,26 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
                 toShow.push(filament.indexOf(f));
         }
 
-        setFilamentsToShow(toShow);
-
         sort();
+        setSearchedFilament(toShow);
     }
 
-    useEffect(() => {
-        if (!filament.length)
-            return;
-
-        sort();
-        updateSearch();
-    }, [loading]);
-
-    useEffect(() => {
-        if (!userSettings)
-            return;
-
-        setLoading(false);
-        setFilament(allFilament ?? []);
-    }, [userSettings, allFilament]);
-
-    useEffect(() => {
-        sort();
-    }, [sortBy]);
-
-    useEffect(() => {
-        updateSearch();
-    }, [search]);
-
-    useEffect(() => {
-        console.log(filamentsToShow, filamentsToShow?.length);
-        setFilteredFilament(filament.filter((f, i) => {
-            if (filamentsToShow !== null && !filamentsToShow.includes(i))
-                return false;
-            if (f.currentMass <= 0 && !isEmpty)
-                return false;
-            if (f.currentMass > 0 && isEmpty)
-                return false;
-            return true;
-        }));
-    }, [filament, filamentsToShow]);
-
     function deleteFilament(i: number) {
+        if (!filament)
+            return;
         setFilament([...filament.slice(0, i), ...filament.slice(i + 1)]);
     }
 
     function editFilament(i: number, newData: Filament) {
+        if (!filament)
+            return;
         setFilament([...filament.slice(0, i), newData, ...filament.slice(i + 1)]);
     }
+
+    useEffect(() => {
+        setFilament(data);
+        updateSearch();
+    }, [data]);
 
     return (<>
         <div className="flex flex-row items-center justify-between mt-1">
@@ -129,16 +95,16 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
         </div>
         <Divider />
 
-        <div className={`${!loading && "grid grid-cols-2"} md:flex md:flex-row gap-2 md:flex-wrap`}>
-            {loading && <Skeleton
+        <div className={`${!filament && "grid grid-cols-2"} md:flex md:flex-row gap-2 md:flex-wrap`}>
+            {!filament && <Skeleton
                 width="100%"
                 height={269}
                 count={2}
                 className="flex flex-row gap-2 md:flex-wrap [&>br]:hidden md:w-full *:w-full md:*:!w-[175px]"
             />}
 
-            {(!!filteredFilament.length && !loading) &&
-                filteredFilament.map((f, i) => (
+            {filament?.map((f, i) => (
+                (searchedFilament === null || searchedFilament.includes(i)) &&
                     <FilamentEntry
                         key={f.id}
                         filament={f}
@@ -147,10 +113,9 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
                         onAdd={f => setFilament([...filament, f])}
                         userSettings={userSettings}
                     />
-                ))
-            }
+            ))}
 
-            {(allowAdd && !loading) &&
+            {(allowAdd && !!filament?.length) &&
             <div
                 className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center justify-center relative md:w-[175px] 
                     cursor-pointer transition-all border-2 border-transparent hover:border-primary w-full min-h-[230px] 
@@ -161,9 +126,9 @@ export default function FilamentList({ allFilament, userSettings, isEmpty, allow
             </div>
             }
 
-            {(!filteredFilament.length && !loading && !allowAdd) && <Subtext>Nothing to see here.</Subtext>}
+            {(filament && !allowAdd) && <Subtext>Nothing to see here.</Subtext>}
 
-            {userSettings && <AddFilamentModal
+            {(userSettings && filament) && <AddFilamentModal
                 open={addFilamentOpen}
                 onClose={() => setAddFilamentOpen(false)}
                 onAdd={f => setFilament([...filament, ...(Array.isArray(f) ? f : [f])])}
