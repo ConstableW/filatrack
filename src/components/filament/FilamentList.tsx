@@ -231,7 +231,7 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
             </div>
             }
 
-            {(filament && !allowAdd) && <Subtext>Nothing to see here.</Subtext>}
+            {(filament && !allowAdd && !filament.length) && <Subtext>Nothing to see here.</Subtext>}
 
             {(userSettings && filament) && <AddFilamentModal
                 open={openModal === "add"}
