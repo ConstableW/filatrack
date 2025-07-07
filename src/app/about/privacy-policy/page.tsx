@@ -3,7 +3,7 @@ export default function PrivacyPolicyPage() {
     return (<div className="w-full flex items-center justify-center">
         <div className="w-[95%] md:w-2/3 bg-bg-light rounded-lg p-5">
             <h1>Privacy Policy</h1>
-            <p>Last updated: June 21, 2025</p>
+            <p>Last updated: July 7th, 2025</p>
             <p>This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.</p>
             <p>We use Your Personal data to provide and improve the Service. By using the Service, You agree to the collection and use of information in accordance with this Privacy Policy. This Privacy Policy has been created with the help of the <a href="https://www.termsfeed.com/privacy-policy-generator/" target="_blank">Privacy Policy Generator</a>.</p>
             <h2>Interpretation and Definitions</h2>
@@ -98,12 +98,6 @@ export default function PrivacyPolicyPage() {
                     <p>Administered by: Us</p>
                     <p>Purpose: These Cookies are essential to provide You with services available through the Website and to enable You to use some of its features. They help to authenticate users and prevent fraudulent use of user accounts. Without these Cookies, the services that You have asked for cannot be provided, and We only use these Cookies to provide You with those services.</p>
                 </li>
-                <li>
-                    <p><strong>Functionality Cookies</strong></p>
-                    <p>Type: Persistent Cookies</p>
-                    <p>Administered by: Us</p>
-                    <p>Purpose: These Cookies allow us to remember choices You make when You use the Website, such as remembering your login details or language preference. The purpose of these Cookies is to provide You with a more personal experience and to avoid You having to re-enter your preferences every time You use the Website.</p>
-                </li>
             </ul>
             <p>For more information about the cookies we use and your choices regarding cookies, please visit our Cookies Policy or the Cookies section of our Privacy Policy.</p>
             <h3>Use of Your Personal Data</h3>
@@ -124,7 +118,6 @@ export default function PrivacyPolicyPage() {
             </ul>
             <p>We may share Your personal information in the following situations:</p>
             <ul>
-                <li><strong>With Service Providers:</strong> We may share Your personal information with Service Providers to monitor and analyze the use of our Service,  to contact You.</li>
                 <li><strong>With other users:</strong> when You share personal information or otherwise interact in the public areas with other users, such information may be viewed by all users and may be publicly distributed outside. If You interact with other users or register through a Third-Party Social Media Service, Your contacts on the Third-Party Social Media Service may see Your name, profile, pictures and description of Your activity. Similarly, other users will be able to view descriptions of Your activity, communicate with You and view Your profile.</li>
                 <li><strong>With Your consent</strong>: We may disclose Your personal information for any other purpose with Your consent.</li>
             </ul>
@@ -170,6 +163,7 @@ export default function PrivacyPolicyPage() {
             <p>If you have any questions about this Privacy Policy, You can contact us:</p>
             <ul>
                 <li>By visiting this page on our website: <a href="https://filatrack.vercel.app/about/contact" rel="external nofollow noopener" target="_blank" className="style">https://filatrack.vercel.app/about/contact</a></li>
+                <li>By visiting our Discord server: <a href="https://filatrack.vercel.app/discord" rel="external nofollow noopener" target="_blank" className="style">https://filatrack.vercel.app/discord</a></li>
             </ul>
         </div>
     </div>);

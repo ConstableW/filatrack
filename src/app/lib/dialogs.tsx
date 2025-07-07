@@ -8,7 +8,8 @@ import Subtext from "@/components/Subtext";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { randomFrom, randomInt } from "./random";
-import { hasUserSeenDialog, setUserSeenDialog } from "./db/settings";
+import { getUserSettings, setUserSeenDialog } from "./db/settings";
+import { lastPrivacyPolicyUpdate } from "./constants";
 
 type Dialog = {
     toast: (openModal?: () => void, closeToast?: () => void) => number | string,
@@ -116,6 +117,29 @@ export const dialogs: Record<string, Dialog> = {
     },
 };
 
+const privacyPolicyUpdateDialog: Dialog = {
+    toast: (_, closeToast) => toast.info("Privacy Policy", {
+        description: <div className="flex flex-col gap-2">
+            <p>
+                We have updated our privacy policy.
+            </p>
+            <div className="flex flex-row gap-2">
+                <Button
+                    onClick={() => {
+                        closeToast?.();
+                        window.open("https://filatrack.vercel.app/about/privacy-policy");
+                    }}
+                    className="text-xs"
+                    look={ButtonStyles.primary}
+                >
+                    Open
+                </Button>
+            </div>
+        </div>,
+        duration: 9999999,
+    }),
+};
+
 export function RandomDialogs() {
     const dialogIds = Object.keys(dialogs);
 
@@ -124,18 +148,38 @@ export function RandomDialogs() {
     const [toastId, setToastId] = useState<number | string>();
 
     useEffect(() => {
-        if (!selectedDialog)
-            return;
+        (async() => {
+            const res = await getUserSettings();
 
-        if (randomInt(0, 100) < 50)
-            return;
+            if (res.error || !res.data)
+                return;
 
-        hasUserSeenDialog(selectedDialog).then(res => {
-            if (res.error || !!res.data)
+            const userSettings = res.data!;
+
+            const lastSeenPrivacyPolicy = userSettings.seenDialogs?.find(d => d.startsWith("privacy-policy:"));
+
+            if (!lastSeenPrivacyPolicy) {
+                setToastId(privacyPolicyUpdateDialog.toast(undefined, () => toast.dismiss(toastId)));
+                setUserSeenDialog(`privacy-policy:${new Date()}`);
+                return;
+            }
+
+            const lastSeenDate = lastSeenPrivacyPolicy.split(":")[1];
+
+            if (new Date(lastSeenDate) < lastPrivacyPolicyUpdate) {
+                setToastId(privacyPolicyUpdateDialog.toast(undefined, () => toast.dismiss(toastId)));
+                setUserSeenDialog(`privacy-policy:${new Date()}`);
+                return;
+            }
+
+            if (!selectedDialog)
+                return;
+
+            if (randomInt(0, 100) < 50)
                 return;
 
             setToastId(dialogs[selectedDialog].toast(() => setModalOpen(true), () => toast.dismiss(toastId)));
-        });
+        })();
     }, [selectedDialog]);
 
     return dialogs[selectedDialog].modal?.({
