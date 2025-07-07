@@ -175,7 +175,10 @@ export function RandomDialogs() {
             if (!selectedDialog)
                 return;
 
-            if (randomInt(0, 100) < 50)
+            if (userSettings.seenDialogs?.includes(selectedDialog))
+                return;
+
+            if (randomInt(0, 100) < 60)
                 return;
 
             setToastId(dialogs[selectedDialog].toast(() => setModalOpen(true), () => toast.dismiss(toastId)));
