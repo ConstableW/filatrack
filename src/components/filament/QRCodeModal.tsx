@@ -8,9 +8,11 @@ import Input from "../Input";
 import { useObjectState } from "@/app/lib/hooks";
 
 export function generateQrUrl(filament: Filament | Filament[], options: Record<string, boolean>) {
-    const ids = Array.isArray(filament) ? filament.map(f => f.shortId).join(",") : filament.shortId;
+    const ids = Array.isArray(filament) ? filament.map(f => f.id).join(",") : filament.id;
     const optionsString = Object.keys(options).filter(o => !!options[o])
             .join(",");
+
+    console.log(ids, optionsString);
 
     return `/qr?filament=${ids}&options=${optionsString}`;
 }

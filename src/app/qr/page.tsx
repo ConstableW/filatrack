@@ -5,7 +5,7 @@ import { Box, Weight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { Suspense, useEffect, useState } from "react";
-import { getFilamentByShortId } from "../lib/db/filament";
+import { getFilament } from "../lib/db/filament";
 import { toast } from "sonner";
 import Spinner from "@/components/Spinner";
 
@@ -25,7 +25,7 @@ function QRPageComponent() {
 
         (async() => {
             for (const f of filamentList) {
-                await getFilamentByShortId(f).then(res => {
+                await getFilament(f).then(res => {
                     if (res.error)
                         toast.error(`Error retireving filament: ${res.error}`);
 
