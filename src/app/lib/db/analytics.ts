@@ -11,22 +11,12 @@ import { DBRes } from "./types";
 export type AnalyticEntry = typeof analyticsTable.$inferSelect;
 
 export async function getTotalUsers() {
-    const session = await auth();
-
-    if (!session || !session.user)
-        return { error: "Not authenticated" };
-
     return {
         data: (await db.select().from(usersTable)).length,
     };
 }
 
 export async function getTotalFilament() {
-    const session = await auth();
-
-    if (!session || !session.user)
-        return { error: "Not authenticated" };
-
     return {
         data: (await db.select().from(filamentTable)).length,
     };
