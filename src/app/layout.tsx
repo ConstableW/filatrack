@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Lexend } from "next/font/google";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
@@ -78,10 +77,18 @@ export default function RootLayout({
                 >
                     {children}
                 </SessionProvider>
-                <Analytics />
+
                 <SpeedInsights />
 
-                {/* <RandomDialogs /> */}
+                {/* <!-- Google tag (gtag.js) --> */}
+                <script async src="https://www.googletagmanager.com/gtag/js?id=G-9KPCZN25YJ"></script>
+                <script>
+                    {`window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+
+                    gtag('config', 'G-9KPCZN25YJ');`}
+                </script>
 
                 <Toaster
                     className="toaster group"
