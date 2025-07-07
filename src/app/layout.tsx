@@ -5,7 +5,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 import { CheckCircle2, CircleAlert, Info } from "lucide-react";
-import Head from "next/head";
 // import { RandomDialogs } from "./lib/dialogs";
 
 const lexend = Lexend({
@@ -70,7 +69,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <Head>
+            <head>
                 {/* <!-- Google tag (gtag.js) --> */}
                 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9KPCZN25YJ"></script>
                 <script>
@@ -80,7 +79,7 @@ export default function RootLayout({
 
                     gtag('config', 'G-9KPCZN25YJ');`}
                 </script>
-            </Head>
+            </head>
             <body
                 className={`${lexend.variable} antialiased bg-bg`}
             >
