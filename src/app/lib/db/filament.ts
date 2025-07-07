@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { DBCreateParams, DBRes } from "./types";
 import { db } from "@/db/drizzle";
 import { filamentLogTable, filamentTable } from "@/db/schema/filament";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { Filament, FilamentLog } from "@/db/types";
 import { addOrUpdateAnalyticEntry } from "./analytics";
 
@@ -147,7 +147,7 @@ export async function editFilament(filamentId: string, newData: Partial<DBCreate
     };
 }
 
-export async function deleteFilament(filamentId: string): Promise<DBRes<Filament>> {
+export async function deleteFilament(filamentId: string): Promise<DBRes<void>> {
     const session = await auth();
 
     if (!session || !session.user)
@@ -162,12 +162,48 @@ export async function deleteFilament(filamentId: string): Promise<DBRes<Filament
     if (filament.userId !== session.user.id)
         return { error: "This is not your filament." };
 
-    let error = undefined;
-
     await db.delete(filamentTable).where(eq(filamentTable.id, filamentId));
 
+    return {};
+}
+
+export async function deleteFilaments(filamentIds: string[]): Promise<DBRes<void>> {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    const filaments = await db.select().from(filamentTable)
+        .where(inArray(filamentTable.id, filamentIds));
+
+    for (const filament of filaments) {
+        if (filament.userId !== session.user.id)
+            return { error: "Not your filament" };
+    }
+
+    await db.delete(filamentTable).where(inArray(filamentTable.id, filamentIds));
+
+    return {};
+}
+
+export async function reorderFilament(newFilamentList: Filament[]): Promise<DBRes<Filament[]>> {
+    const session = await auth();
+
+    if (!session || !session.user)
+        return { error: "Not authenticated" };
+
+    for (const f of newFilamentList)
+        if (f.userId !== session.user.id)
+            return { error: "Not your filament " };
+
+    const res = await Promise.all(newFilamentList.map(async f => (await db.update(filamentTable).set({
+        index: f.index,
+    })
+        .where(eq(filamentTable.id, f.id))
+        .returning())[0]));
+
     return {
-        error,
+        data: res,
     };
 }
 

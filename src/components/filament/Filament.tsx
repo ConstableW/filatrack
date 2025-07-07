@@ -18,11 +18,33 @@ import QRCodeModal from "./QRCodeModal";
 import FilamentDetailsModal from "./FilamentDetails";
 import { useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import Input from "../Input";
 
-export default function FilamentEntry({ filament, isPreview, noLog, light, onDelete, onEdit, onAdd, userSettings }:
-    { filament: Filament, isPreview?: boolean, noLog?: boolean, light?: boolean, userSettings?: UserSettings,
-        onDelete?: () => void, onEdit?: (filament: Filament) => void, onAdd?: (newFilament: Filament) => void
-    }) {
+type Props = {
+    filament: Filament;
+
+    isPreview?: boolean;
+    noLog?: boolean;
+    light?: boolean;
+
+    userSettings?: UserSettings;
+
+    editMode?: boolean;
+    selected?: boolean;
+    onSelectedChange?: (selected: boolean) => void;
+
+    onDelete?: () => void;
+    onEdit?: (filament: Filament) => void;
+    onAdd?: (newFilament: Filament) => void;
+}
+
+export default function FilamentEntry({
+    filament,
+    isPreview, noLog, light,
+    userSettings,
+    editMode, selected, onSelectedChange,
+    onDelete, onEdit, onAdd,
+}: Props) {
     const searchParams = useSearchParams();
 
     const [openModal, setOpenModal] = useState(filament.shortId !== null &&
@@ -74,9 +96,23 @@ export default function FilamentEntry({ filament, isPreview, noLog, light, onDel
         <div
             className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center drop-shadow-lg
             justify-between relative border-2 border-transparent transition-all md:max-w-[175px] md:min-w-[175px]
-            ${(isPreview || light) ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "}`}
-            onClick={(!isPreview && (() => setOpenModal("details"))) || undefined}
+            ${(light) ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "} ${editMode && "relative"}`}
+            onClick={() => {
+                if (!isPreview)
+                    setOpenModal("details");
+            }}
+            onMouseDown={() => {
+                if (editMode)
+                    onSelectedChange?.(!selected);
+            }}
         >
+            {editMode && <Input
+                type="checkbox"
+                className="absolute top-1 left-1 w-4 h-4"
+                checked={selected}
+                disabled
+            />}
+
             <div className="flex flex-col justify-center items-center w-full">
                 <FilamentIcon
                     size={75}

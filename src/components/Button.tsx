@@ -3,7 +3,7 @@ import Spinner from "./Spinner";
 
 export enum ButtonStyles {
     primary = "bg-primary hover:bg-secondary disabled:bg-primary-disabled text-white",
-    secondary = "bg-bg-lighter hover:bg-bg-lightest disabled:bg-bg text-white",
+    secondary = "bg-bg-lighter hover:bg-bg-lightest disabled:bg-bg-light text-white",
     danger = "bg-danger hover:bg-danger disabled:bg-danger-secondary text-white",
 }
 

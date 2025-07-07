@@ -14,7 +14,7 @@ import SearchTipsModal from "@/components/filament/SearchTips";
 export default function HomePage() {
     const [isMobile, width] = useDevice();
 
-    const [sortBy, setSortBy] = useState<keyof Filament>("name");
+    const [sortBy, setSortBy] = useState<keyof Filament>("index");
     const [search, setSearch] = useState("");
     const [searchTipsOpen, setSearchTipsOpen] = useState(false);
 
@@ -51,6 +51,7 @@ export default function HomePage() {
                         onChange={v => setSortBy(v as keyof Filament)}
                         className="h-full w-full"
                         options={{
+                            index: "Custom",
                             name: "Name",
                             brand: "Brand",
                             material: "Material",

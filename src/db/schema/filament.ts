@@ -10,6 +10,9 @@ export const filamentTable = pgTable("filament", {
     userId: text().notNull()
         .references(() => usersTable.id, { onDelete: "cascade" }),
 
+    index: integer().notNull()
+        .default(-1),
+
     name: text().notNull(),
     brand: text().notNull(),
     color: text().notNull(),

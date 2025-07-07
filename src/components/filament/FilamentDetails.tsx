@@ -19,6 +19,7 @@ export default function FilamentDetailsModal({ filament, openLogModal, ...props 
                     <FilamentEntry
                         isPreview
                         filament={filament}
+                        light
                     />
                     {!!filament.note && <div className="flex flex-row gap-1 items-center mt-1 text-sm">
                         <Text className="min-w-[24px]" />

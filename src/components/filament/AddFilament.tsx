@@ -29,6 +29,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         color: randomFrom(filamentColors),
         material: userSettings.defaultMaterial,
         note: "",
+        index: 0,
 
         printingTemperature: null,
         diameter: null,

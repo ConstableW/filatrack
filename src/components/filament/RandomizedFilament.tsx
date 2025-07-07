@@ -69,6 +69,7 @@ export function randomFilament(): Filament {
         note: "",
         currentMass: randomInt(1, maxMass),
         startingMass: maxMass,
+        index: 0,
 
         printingTemperature: null,
         diameter: null,
