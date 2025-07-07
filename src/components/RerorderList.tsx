@@ -98,7 +98,7 @@ export function ReorderableList({
                 items={items}
                 strategy={rectSortingStrategy}
             >
-                <div className="flex flex-row flex-wrap gap-2">
+                <div className="grid grid-cols-2 md:flex md:flex-row md:flex-wrap gap-2">
                     {items.map(id => (
                         <SortableItem key={id} id={id} child={childMap[id]} />
                     ))}

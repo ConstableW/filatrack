@@ -205,7 +205,8 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
         </div>
         <Divider />
 
-        <div className={`${!filament && "grid grid-cols-2"} md:flex md:flex-row gap-2 md:flex-wrap`}>
+        <div className={`${!filament && "grid grid-cols-2"} ${!editMode && "grid grid-cols-2"} 
+            md:flex md:flex-row gap-2 md:flex-wrap`}>
             {!filament && <Skeleton
                 width="100%"
                 height={269}
