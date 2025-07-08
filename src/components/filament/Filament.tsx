@@ -108,9 +108,9 @@ export default function FilamentEntry({
         >
             {editMode && <Input
                 type="checkbox"
-                className="absolute top-1 left-1 w-4 h-4"
+                className="absolute top-1 left-1 w-4 h-4 pointer-events-none"
                 checked={selected}
-                disabled
+                readOnly
             />}
 
             <div className="flex flex-col justify-center items-center w-full">
