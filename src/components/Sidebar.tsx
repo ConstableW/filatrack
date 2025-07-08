@@ -36,7 +36,7 @@ export default function Sidebar({ session }: { session: Session }) {
                         <Lock /> Admin
                     </SidebarItem>
                 }
-                <SidebarItem href="https://github.com/sponsors/mrdiamonddog/">
+                <SidebarItem href="https://mrdiamond.is-a.dev/support">
                     <Heart /> Support
                 </SidebarItem>
                 <SidebarItem href="https://github.com/mrdiamonddog/filatrack">

@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { randomFrom, randomInt } from "./random";
 import { getUserSettings, setUserSeenDialog } from "./db/settings";
-import { lastPrivacyPolicyUpdate } from "./constants";
+import { endpoints, lastPrivacyPolicyUpdate } from "./constants";
 
 type Dialog = {
     toast: (openModal?: () => void, closeToast?: () => void) => number | string,
@@ -127,7 +127,7 @@ const privacyPolicyUpdateDialog: Dialog = {
                 <Button
                     onClick={() => {
                         closeToast?.();
-                        window.open("https://filatrack.vercel.app/about/privacy-policy");
+                        window.open(endpoints.privacyPolicy);
                     }}
                     className="text-xs"
                     look={ButtonStyles.primary}

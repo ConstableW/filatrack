@@ -8,7 +8,12 @@ import { eq } from "drizzle-orm";
 import { usersTable } from "@/db/schema/user";
 import { UserSettings } from "@/db/types";
 
-export async function setUsername(username: string): Promise<DBRes<undefined>> {
+/**
+ * Sets the user's username.
+ * @param username The new username.
+ * @returns Nothing if successful.
+ */
+export async function setUsername(username: string): Promise<DBRes<void>> {
     const session = await auth();
 
     if (!session || !session.user)
@@ -23,6 +28,10 @@ export async function setUsername(username: string): Promise<DBRes<undefined>> {
     return {};
 }
 
+/**
+ * Creates userSettings for a user.
+ * @returns The new userSettings.
+ */
 export async function createUserSettings(): Promise<DBRes<UserSettings>> {
     const session = await auth();
 
@@ -37,6 +46,10 @@ export async function createUserSettings(): Promise<DBRes<UserSettings>> {
     };
 }
 
+/**
+ * Gets the user's userSettings.
+ * @returns The user's userSettings.
+ */
 export async function getUserSettings(): Promise<DBRes<UserSettings>> {
     const session = await auth();
 
@@ -54,6 +67,11 @@ export async function getUserSettings(): Promise<DBRes<UserSettings>> {
     };
 }
 
+/**
+ * Updates a user's userSettings.
+ * @param newSettings The modified settings data. If a key isn't specified, it won't be modified.
+ * @returns The modified settings data.
+ */
 export async function updateUserSettings(newSettings: Partial<UserSettings>): Promise<DBRes<UserSettings>> {
     const session = await auth();
 
@@ -78,6 +96,10 @@ export async function updateUserSettings(newSettings: Partial<UserSettings>): Pr
     };
 }
 
+/**
+ * Deletes a user and all of it's data from Filatrack.
+ * @returns Nothing if successful.
+ */
 export async function deleteUser(): Promise<DBRes<void>> {
     const session = await auth();
 
@@ -89,22 +111,11 @@ export async function deleteUser(): Promise<DBRes<void>> {
     return { };
 }
 
-export async function hasUserSeenDialog(id: string): Promise<DBRes<boolean>> {
-    const session = await auth();
-
-    if (!session || !session.user)
-        return { error: "Not authenticated" };
-
-    const userSettings = await getUserSettings();
-
-    if (userSettings.error)
-        return { error: userSettings.error };
-
-    return {
-        data: (userSettings.data!.seenDialogs ?? []).includes(id),
-    };
-}
-
+/**
+ * Quick method to set if a user has seen a dialog.
+ * @param id The ID of the dialog.
+ * @returns Nothing if successful.
+ */
 export async function setUserSeenDialog(id: string): Promise<DBRes<void>> {
     const session = await auth();
 

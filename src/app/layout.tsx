@@ -5,6 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 import { CheckCircle2, CircleAlert, Info } from "lucide-react";
+import { prodUrl } from "./lib/constants";
 // import { RandomDialogs } from "./lib/dialogs";
 
 const lexend = Lexend({
@@ -14,7 +15,7 @@ const lexend = Lexend({
 
 export const metadata: Metadata = {
     title: "Filatrack - Simple Filament Tracking",
-    description: "Super-simple tracking of all your 3d printing filaments",
+    description: "Super-simple tracking of all your 3d printing filaments!",
     icons: [
         {
             url: "/favicon-96x96.png",
@@ -42,15 +43,15 @@ export const metadata: Metadata = {
         startupImage: "/filament.png",
     },
     manifest: "/site.webmanifest",
-    keywords: ["filament", "3d printing", "tracker", "spool", "pla"],
+    keywords: ["filament", "3d printing", "tracker", "spool", "pla", "filament tracking", "track filament"],
     openGraph: {
         title: "Filatrack",
         description: "A super-simple way to keep inventory of your filament rolls.",
-        url: "https://filatrack.vercel.app/",
+        url: prodUrl,
         siteName: "Filatrack",
         images: [
             {
-                url: "https://filatrack.vercel.app/apple-touch-icon.png",
+                url: `${prodUrl}apple-touch-icon.png`,
             },
         ],
     },
@@ -58,7 +59,7 @@ export const metadata: Metadata = {
         card: "summary",
         site: "@drew_rat",
         creator: "@drew_rat",
-        images: "https://filatrack.vercel.app/apple-touch-icon.png",
+        images: `${prodUrl}/apple-touch-icon.png`,
     },
 };
 
@@ -108,6 +109,7 @@ export default function RootLayout({
                     }}
                 />
 
+                {/* For modals */}
                 <div id="portal-root" />
             </body>
         </html>

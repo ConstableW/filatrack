@@ -6,7 +6,7 @@ A super-duper simple way to track your 3d printing filament!
 
 Made with Next.JS, Auth.JS, Drizzle ORM, and Supabase!
 
-Join the [Discord server](https://discord.gg/8DKjWsGCPq) for more info and feature requests!
+Join the [Discord server](https://filatrack.vercel.app/discord) for more info and feature requests!
 
 ## Bugs
 

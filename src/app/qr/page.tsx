@@ -8,6 +8,7 @@ import { Suspense, useEffect, useState } from "react";
 import { getFilament } from "../lib/db/filament";
 import { toast } from "sonner";
 import Spinner from "@/components/Spinner";
+import { endpoints } from "../lib/constants";
 
 function QRPageComponent() {
     const searchParams = useSearchParams();
@@ -51,7 +52,7 @@ function QRPageComponent() {
             key={f.shortId}
         >
             <QRCodeSVG
-                value={`https://filatrack.vercel.app/app?f=${f.shortId}`}
+                value={`${endpoints.app}?f=${f.shortId}`}
                 imageSettings={{
                     src: "/filament-black.png",
                     width: 35,

@@ -8,6 +8,10 @@ import { eq, inArray } from "drizzle-orm";
 import { Filament, FilamentLog } from "@/db/types";
 import { addOrUpdateAnalyticEntry } from "./analytics";
 
+/**
+ * Gets all of the filament a user has created.
+ * @returns The list of filament
+ */
 export async function getAllFilaments(): Promise<DBRes<Filament[]>> {
     const session = await auth();
 
@@ -20,6 +24,11 @@ export async function getAllFilaments(): Promise<DBRes<Filament[]>> {
     };
 }
 
+/**
+ * Gets the specific filament a user owns.
+ * @param id Filament ID
+ * @returns The filament with given ID or null if not found
+ */
 export async function getFilament(id: string): Promise<DBRes<Filament | null>> {
     const session = await auth();
 
@@ -39,6 +48,11 @@ export async function getFilament(id: string): Promise<DBRes<Filament | null>> {
     };
 }
 
+/**
+ * Gets a filament by its shortId
+ * @param shortId The shortId of the filament
+ * @returns The filament or null if not found
+ */
 export async function getFilamentByShortId(shortId: string): Promise<DBRes<Filament | null>> {
     const session = await auth();
 
@@ -56,6 +70,11 @@ export async function getFilamentByShortId(shortId: string): Promise<DBRes<Filam
     };
 }
 
+/**
+ * Creates a filament with the specified parameters.
+ * @param filament The data for the filament, not including auto-generated values such as IDs.
+ * @returns The new filament.
+ */
 export async function createFilament(filament: DBCreateParams<Omit<Filament, "shortId">>): Promise<DBRes<Filament>> {
     const session = await auth();
 
@@ -88,6 +107,12 @@ export async function createFilament(filament: DBCreateParams<Omit<Filament, "sh
     };
 }
 
+/**
+ * Create multiple of the same filament at once
+ * @param filament The data for the filament, not including auto-generated values such as IDs.
+ * @param amount The amount of this filament to create.
+ * @returns The new filament rolls.
+ */
 export async function createMultipleFilament(filament: DBCreateParams<Omit<Filament, "shortId">>, amount: number)
 : Promise<DBRes<Filament[]>> {
     const session = await auth();
@@ -103,6 +128,9 @@ export async function createMultipleFilament(filament: DBCreateParams<Omit<Filam
 
     if (amount > 50)
         return { error: "You can only make up to 100 copies" };
+
+    if (amount <= 0)
+        return { error: "You can't make 0 filament. " };
 
     addOrUpdateAnalyticEntry(new Date(), {
         filamentCreated: amount,
@@ -123,6 +151,12 @@ export async function createMultipleFilament(filament: DBCreateParams<Omit<Filam
     };
 }
 
+/**
+ * Edits an existing filament.
+ * @param filamentId The ID of the filament to edit.
+ * @param newData The edited data. If a field is not specified in this data, it will not be modified.
+ * @returns The modified filament.
+ */
 export async function editFilament(filamentId: string, newData: Partial<DBCreateParams<Filament>>): Promise<DBRes<Filament>> {
     const session = await auth();
 
@@ -147,6 +181,11 @@ export async function editFilament(filamentId: string, newData: Partial<DBCreate
     };
 }
 
+/**
+ * Deletes a filament.
+ * @param filamentId The filament to delete
+ * @returns Nothing if successful
+ */
 export async function deleteFilament(filamentId: string): Promise<DBRes<void>> {
     const session = await auth();
 
@@ -167,6 +206,11 @@ export async function deleteFilament(filamentId: string): Promise<DBRes<void>> {
     return {};
 }
 
+/**
+ * Delete multiple filament at once.
+ * @param filamentIds The IDs of the filament to delete.
+ * @returns Nothing if successful.
+ */
 export async function deleteFilaments(filamentIds: string[]): Promise<DBRes<void>> {
     const session = await auth();
 
@@ -186,6 +230,11 @@ export async function deleteFilaments(filamentIds: string[]): Promise<DBRes<void
     return {};
 }
 
+/**
+ * Changes the `index` key of a list of filament to match the order of the array.
+ * @param newFilamentList The new list of filament in the new order.
+ * @returns The new filament list with `index` updated.
+ */
 export async function reorderFilament(newFilamentList: Filament[]): Promise<DBRes<Filament[]>> {
     const session = await auth();
 
@@ -207,6 +256,11 @@ export async function reorderFilament(newFilamentList: Filament[]): Promise<DBRe
     };
 }
 
+/**
+ * Gets all logs for specified filament
+ * @param filamentId The filament to get logs for
+ * @returns The logs
+ */
 export async function getFilamentLogs(filamentId: string): Promise<DBRes<FilamentLog[]>> {
     const session = await auth();
 
@@ -228,6 +282,11 @@ export async function getFilamentLogs(filamentId: string): Promise<DBRes<Filamen
     };
 }
 
+/**
+ * Creates a log for a filament.
+ * @param log The data to create the log with. Must include filamentId.
+ * @returns The new log.
+ */
 export async function createFilamentLog(log: DBCreateParams<FilamentLog>): Promise<DBRes<FilamentLog>> {
     const session = await auth();
 
@@ -255,7 +314,12 @@ export async function createFilamentLog(log: DBCreateParams<FilamentLog>): Promi
     };
 }
 
-export async function deleteFilamentLog(log: DBCreateParams<FilamentLog>): Promise<DBRes<undefined>> {
+/**
+ * Deletes a filament log.
+ * @param log The log to delete.
+ * @returns Nothing if successful.
+ */
+export async function deleteFilamentLog(log: DBCreateParams<FilamentLog>): Promise<DBRes<void>> {
     const session = await auth();
 
     if (!session || !session.user)
@@ -275,6 +339,11 @@ export async function deleteFilamentLog(log: DBCreateParams<FilamentLog>): Promi
     return { };
 }
 
+/**
+ * Edits an existing filament log.
+ * @param newLog The modified log data. If a key isn't specified, it will not be modified.
+ * @returns The modified log.
+ */
 export async function editFilamentLog(newLog: Partial<DBCreateParams<FilamentLog>>): Promise<DBRes<FilamentLog>> {
     const session = await auth();
 

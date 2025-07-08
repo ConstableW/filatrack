@@ -10,18 +10,30 @@ import { DBRes } from "./types";
 
 export type AnalyticEntry = typeof analyticsTable.$inferSelect;
 
+/**
+ * Gets the total number of users listed in the database.
+ * @returns Number of users in database
+ */
 export async function getTotalUsers() {
     return {
         data: (await db.select().from(usersTable)).length,
     };
 }
 
+/**
+ * Gets the total number of filament rolls listed in the database.
+ * @returns Number of filament rolls in database
+ */
 export async function getTotalFilament() {
     return {
         data: (await db.select().from(filamentTable)).length,
     };
 }
 
+/**
+ * Gets the total number of filament logs listed in the database.
+ * @returns Number of logs in database
+ */
 export async function getTotalLogs() {
     const session = await auth();
 
@@ -33,6 +45,11 @@ export async function getTotalLogs() {
     };
 }
 
+/**
+ * Converts a standard date into a properly formatted SQL UTC date.
+ * @param date The date in any timezone
+ * @returns A UTC date properly formatted in SQL
+ */
 function toDbDate(date: Date) {
     const month = date.getUTCMonth() + 1;
     const day = date.getUTCDate();
@@ -43,6 +60,11 @@ function toDbDate(date: Date) {
     return `${date.getUTCFullYear()}-${monthStr}-${dayStr}`;
 }
 
+/**
+ * Gets a single analytics entry by date
+ * @param date The date to get the entry for
+ * @returns The analytic entry
+ */
 export async function getAnalyticEntry(date: Date): Promise<DBRes<AnalyticEntry | undefined>> {
     const session = await auth();
 
@@ -60,6 +82,12 @@ export async function getAnalyticEntry(date: Date): Promise<DBRes<AnalyticEntry 
     };
 }
 
+/**
+ * Gets many analytic entries at once in specified range (inclusive).
+ * @param startDate The start date of range
+ * @param endDate The end date of range
+ * @returns All of the analytic entries in the range.
+ */
 export async function getBatchAnalyticEntries(startDate: Date, endDate: Date): Promise<DBRes<AnalyticEntry[] | undefined>> {
     const session = await auth();
 
@@ -82,6 +110,12 @@ export async function getBatchAnalyticEntries(startDate: Date, endDate: Date): P
     };
 }
 
+/**
+ * Adds or updates the analytic entry on a specific date.
+ * @param date The date to add/update.
+ * @param data What to increment any keys in the analytic entry by.
+ * @returns The new/modified analytic entry
+ */
 export async function addOrUpdateAnalyticEntry(date: Date, data: Partial<Omit<AnalyticEntry, "date">>) {
     let entry = (await db.select().from(analyticsTable)
         .where(eq(analyticsTable.date, toDbDate(date))))[0];
@@ -107,6 +141,10 @@ export async function addOrUpdateAnalyticEntry(date: Date, data: Partial<Omit<An
     };
 }
 
+/**
+ * Gets statistics for what authentication methods are used.
+ * @returns Record of authentication type : number of users who used it
+ */
 export async function getAuthenticationMethodStats(): Promise<DBRes<Record<string, number>>> {
     const session = await auth();
 
