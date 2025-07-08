@@ -3,11 +3,11 @@ import Divider from "@/components/Divider";
 import RandomizedFilament from "@/components/filament/RandomizedFilament";
 import Subtext from "@/components/Subtext";
 import { ChevronDown, CircleDollarSign, Code, Dot, GlobeLock, QrCode, ScrollText, Smartphone } from "lucide-react";
-import { getTotalFilament, getTotalUsers } from "./lib/db/analytics";
+import { getTotalFilament, getTotalLogs, getTotalUsers } from "./lib/db/analytics";
 
 function LandingCard({ children }: React.PropsWithChildren) {
     return (
-        <div className="bg-bg-light p-3 rounded-lg border-2 border-transparent hover:border-primary transition-all">
+        <div className="bg-bg-light p-3 rounded-lg border-2 border-transparent hover:border-primary transition-all drop-shadow-lg">
             {children}
         </div>
     );
@@ -24,7 +24,7 @@ function LandingCardHeader({ children }: React.PropsWithChildren) {
 export default async function Home() {
     return (<>
         <main className="absolute-center">
-            <div className="flex flex-col md:flex-row gap-2">
+            <div className="flex flex-col md:flex-row gap-2 items-center">
                 <RandomizedFilament />
                 <div>
                     <h1>Filatrack</h1>
@@ -33,23 +33,32 @@ export default async function Home() {
                     Free, forever. No ads. All open-source.
                     </Subtext>
                     <a href="/login">
-                        <Button>Get Started</Button>
+                        <Button className="w-full">Get Started</Button>
                     </a>
                 </div>
             </div>
         </main>
 
         <div className="mt-[100vh] md:mt-[75vh] w-full flex justify-center">
-            <div className="bg-bg-light rounded-lg p-4">
+            <div className="bg-bg-light rounded-lg p-4 drop-shadow-lg">
                 <div className="flex flex-row gap-2">
                     <div>
                         <Subtext className="text-xl">Users</Subtext>
                         <h2>{(await getTotalUsers()).data!}</h2>
                     </div>
+
                     <Divider vertical />
+
                     <div>
                         <Subtext className="text-xl">Filament</Subtext>
                         <h2>{(await getTotalFilament()).data!}</h2>
+                    </div>
+
+                    <Divider vertical />
+
+                    <div>
+                        <Subtext className="text-xl">Logs</Subtext>
+                        <h2>{(await getTotalLogs()).data!}</h2>
                     </div>
                 </div>
             </div>

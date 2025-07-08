@@ -9,6 +9,7 @@ import { Session } from "next-auth";
 import { sidebarWidth } from "@/app/lib/random";
 import { useDevice } from "@/app/lib/hooks";
 import Divider from "./Divider";
+import { baseUrl } from "@/app/lib/constants";
 
 export default function Sidebar({ session }: { session: Session }) {
     const [isMobile, width] = useDevice();
@@ -18,30 +19,38 @@ export default function Sidebar({ session }: { session: Session }) {
             className="bg-bg-light h-full flex flex-col gap-1 p-2 fixed top-0 bottom-0 drop-shadow-lg"
             style={{ width: sidebarWidth }}
         >
-            <div className="flex flex-row gap-1 items-center px-2 pt-2">
+            <a className="flex flex-row gap-1 items-center px-2 pt-2" href={baseUrl}>
                 <img src="/filament.svg" width="32" height="32" />
                 <p className="text-lg">Filatrack</p>
-            </div>
+            </a>
+
             <Divider className="!my-1" />
+
             <AccountCard session={session} />
+
             <SidebarItem href="/app">
                 <GiFilmSpool size={24} /> Filament
             </SidebarItem>
+
             <SidebarItem href="/app/settings">
                 <Cog /> Settings
             </SidebarItem>
+
             <div className="mt-auto">
                 {session.user?.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID &&
                     <SidebarItem href="/admin">
                         <Lock /> Admin
                     </SidebarItem>
                 }
+
                 <SidebarItem href="https://mrdiamond.is-a.dev/support">
                     <Heart /> Support
                 </SidebarItem>
+
                 <SidebarItem href="https://github.com/mrdiamonddog/filatrack">
                     <FaGithub /> GitHub
                 </SidebarItem>
+
                 <SidebarItem href="/discord">
                     <FaDiscord /> Discord
                 </SidebarItem>
@@ -56,14 +65,17 @@ export default function Sidebar({ session }: { session: Session }) {
             <SidebarItem href="/app">
                 <GiFilmSpool size={48} />
             </SidebarItem>
+
             <SidebarItem href="/app/settings">
                 <Cog size={48} />
             </SidebarItem>
+
             {session.user?.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID &&
                 <SidebarItem href="/admin">
                     <Lock size={48} />
                 </SidebarItem>
             }
+
             <AccountCard session={session} />
         </div>
         }

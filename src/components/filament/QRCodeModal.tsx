@@ -12,8 +12,6 @@ export function generateQrUrl(filament: Filament | Filament[], options: Record<s
     const optionsString = Object.keys(options).filter(o => !!options[o])
             .join(",");
 
-    console.log(ids, optionsString);
-
     return `/qr?filament=${ids}&options=${optionsString}`;
 }
 

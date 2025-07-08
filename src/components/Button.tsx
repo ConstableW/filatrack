@@ -14,7 +14,7 @@ export default function Button({ look, loading, ...props }:
             {...props}
             className={`px-2 py-1 rounded-lg ${props.className ?? ""} ${look ?? ButtonStyles.primary} 
             transition-all flex justify-center items-center text-sm enabled:cursor-pointer disabled:cursor-not-allowed
-            hover:enabled:scale-105 active:enabled:scale-95 `}
+            hover:enabled:scale-105 active:enabled:scale-95 drop-shadow-lg`}
             disabled={loading || props.disabled}
         >
             {loading && <Spinner />} {props.children}
