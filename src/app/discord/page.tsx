@@ -1,5 +1,3 @@
-import { redirect } from "next/navigation";
+import { defineRedirectPage } from "../lib/pages";
 
-export default function DiscordPage() {
-    return redirect("https://discord.gg/8DKjWsGCPq");
-}
+export default defineRedirectPage("https://discord.gg/8DKjWsGCPq");

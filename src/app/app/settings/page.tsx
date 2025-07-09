@@ -8,6 +8,7 @@ import Divider from "@/components/Divider";
 import MassPicker from "@/components/filament/MassPicker";
 import MaterialPicker from "@/components/filament/MaterialPicker";
 import SearchTipsModal from "@/components/filament/SearchTips";
+import Footer from "@/components/Footer";
 import Input from "@/components/Input";
 import Modal, { ModalFooter } from "@/components/Modal";
 import Spinner from "@/components/Spinner";
@@ -255,6 +256,7 @@ export default function SettingsPage() {
                 </>}
             </Tab>
         </Tablist>
-        <a href="/about/privacy-policy" className="style">Privacy Policy</a>
+
+        <Footer />
     </div>);
 }

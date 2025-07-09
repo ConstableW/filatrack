@@ -11,6 +11,7 @@ import { app } from "../lib/db";
 import { AnalyticEntry } from "../lib/db/analytics";
 import { day } from "../lib/date";
 import { ArrowLeft } from "lucide-react";
+import { endpoints } from "../lib/constants";
 
 const dateFormatter = Intl.DateTimeFormat(undefined, {
     month: "2-digit",
@@ -60,7 +61,7 @@ export default function AdminPage() {
 
     return (<>
         <div className="rounded-lg bg-bg-light p-4 m-3 md:m-10 mb-2 md:mb-2">
-            <a className="style flex gap-1 items-center" href="/app"><ArrowLeft /> Back</a>
+            <a className="style flex gap-1 items-center" href={endpoints.app}><ArrowLeft /> Back</a>
             <h1>Analytics</h1>
 
             <Select value={`${timespan}`} onChange={v => setTimespan(parseInt(v))} options={

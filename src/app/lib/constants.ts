@@ -27,6 +27,7 @@ export const baseUrl = isProd ? prodUrl : devUrl;
  */
 export const endpoints = {
     discord: `${baseUrl}discord`,
+    github: `${baseUrl}github`,
     app: `${baseUrl}app`,
     settings: `${baseUrl}app/settings`,
     privacyPolicy: `${baseUrl}about/privacy-policy`,

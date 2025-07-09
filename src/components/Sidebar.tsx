@@ -9,7 +9,7 @@ import { Session } from "next-auth";
 import { sidebarWidth } from "@/app/lib/random";
 import { useDevice } from "@/app/lib/hooks";
 import Divider from "./Divider";
-import { baseUrl } from "@/app/lib/constants";
+import { baseUrl, endpoints } from "@/app/lib/constants";
 
 export default function Sidebar({ session }: { session: Session }) {
     const [isMobile, width] = useDevice();
@@ -28,11 +28,11 @@ export default function Sidebar({ session }: { session: Session }) {
 
             <AccountCard session={session} />
 
-            <SidebarItem href="/app">
+            <SidebarItem href={endpoints.app}>
                 <GiFilmSpool size={24} /> Filament
             </SidebarItem>
 
-            <SidebarItem href="/app/settings">
+            <SidebarItem href={endpoints.settings}>
                 <Cog /> Settings
             </SidebarItem>
 
@@ -47,11 +47,11 @@ export default function Sidebar({ session }: { session: Session }) {
                     <Heart /> Support
                 </SidebarItem>
 
-                <SidebarItem href="https://github.com/mrdiamonddog/filatrack">
+                <SidebarItem href={endpoints.github}>
                     <FaGithub /> GitHub
                 </SidebarItem>
 
-                <SidebarItem href="/discord">
+                <SidebarItem href={endpoints.discord}>
                     <FaDiscord /> Discord
                 </SidebarItem>
             </div>
@@ -62,11 +62,11 @@ export default function Sidebar({ session }: { session: Session }) {
             className={`bg-bg-light w-[95%] flex flex-row items-center justify-between 
                 gap-1 p-2 fixed left-1/2 -translate-x-1/2 bottom-4 h-[75px] z-[1] rounded-full shadow-xl`}
         >
-            <SidebarItem href="/app">
+            <SidebarItem href={endpoints.app}>
                 <GiFilmSpool size={48} />
             </SidebarItem>
 
-            <SidebarItem href="/app/settings">
+            <SidebarItem href={endpoints.settings}>
                 <Cog size={48} />
             </SidebarItem>
 

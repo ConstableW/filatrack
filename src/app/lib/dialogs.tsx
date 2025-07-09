@@ -99,7 +99,7 @@ export const dialogs: Record<string, Dialog> = {
                     We have a Discord! Feel free to come chat or suggest stuff!
                 </p>
                 <div className="flex flex-row gap-2">
-                    <a href="/discord" target="_blank"><Button className="text-xs">Join</Button></a>
+                    <a href={endpoints.discord} target="_blank"><Button className="text-xs">Join</Button></a>
                     <Button
                         onClick={() => {
                             setUserSeenDialog("discord");

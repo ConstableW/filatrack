@@ -10,6 +10,7 @@ import Input from "@/components/Input";
 import { app } from "../lib/db";
 import { useDevice } from "../lib/hooks";
 import SearchTipsModal from "@/components/filament/SearchTips";
+import Footer from "@/components/Footer";
 
 export default function HomePage() {
     const [isMobile, width] = useDevice();
@@ -40,7 +41,7 @@ export default function HomePage() {
 
     return <>
         <div
-            className="bg-bg w-full p-4 pt-2 mb-[75px] md:mb-0 h-full"
+            className="bg-bg w-full p-4 pt-2 mb-[75px] md:mb-0 h-full pb-20"
             style={{ marginLeft: (!width || isMobile) ? undefined : sidebarWidth }}
         >
             <div className="w-full bg-bg-light rounded-lg p-2 flex flex-col md:flex-row md:items-center gap-1 drop-shadow-lg">
@@ -86,6 +87,8 @@ export default function HomePage() {
                 data={allFilament?.filter(f => f.currentMass <= 0) ?? null}
                 userSettings={userSettings}
             />
+
+            <Footer />
         </div>
 
         <SearchTipsModal open={searchTipsOpen} onClose={() => {
