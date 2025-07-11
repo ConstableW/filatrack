@@ -3,13 +3,12 @@
 import { GiFilmSpool } from "react-icons/gi";
 import AccountCard from "./Account";
 import SidebarItem from "./SidebarItem";
-import { Cog, Heart, Lock } from "lucide-react";
+import { Cog, Heart, Lock, ScrollText } from "lucide-react";
 import { FaDiscord, FaGithub } from "react-icons/fa6";
 import { Session } from "next-auth";
-import { sidebarWidth } from "@/app/lib/random";
 import { useDevice } from "@/app/lib/hooks";
 import Divider from "./Divider";
-import { baseUrl, endpoints } from "@/app/lib/constants";
+import { baseUrl, endpoints, sidebarWidth } from "@/app/lib/constants";
 
 export default function Sidebar({ session }: { session: Session }) {
     const [isMobile, width] = useDevice();
@@ -30,6 +29,10 @@ export default function Sidebar({ session }: { session: Session }) {
 
             <SidebarItem href={endpoints.app}>
                 <GiFilmSpool size={24} /> Filament
+            </SidebarItem>
+
+            <SidebarItem href={endpoints.prints}>
+                <ScrollText /> Prints
             </SidebarItem>
 
             <SidebarItem href={endpoints.settings}>
@@ -64,6 +67,10 @@ export default function Sidebar({ session }: { session: Session }) {
         >
             <SidebarItem href={endpoints.app}>
                 <GiFilmSpool size={48} />
+            </SidebarItem>
+
+            <SidebarItem href={endpoints.prints}>
+                <ScrollText size={48} />
             </SidebarItem>
 
             <SidebarItem href={endpoints.settings}>

@@ -1,8 +1,8 @@
 "use client";
 
+import { sidebarWidth } from "@/app/lib/constants";
 import { app } from "@/app/lib/db";
 import { useDevice, useObjectState } from "@/app/lib/hooks";
-import { sidebarWidth } from "@/app/lib/random";
 import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
 import MassPicker from "@/components/filament/MassPicker";
