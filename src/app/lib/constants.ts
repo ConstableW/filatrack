@@ -15,7 +15,7 @@ export const devUrl = "http://localhost:3000/";
 /**
  * The production URL for Filatrack. (with trailing slash)
  */
-export const prodUrl = "https://filatrack.vercel.app/";
+export const prodUrl = "https://filatrack.app/";
 
 /**
  * True if the current enviornment is production.

@@ -4,7 +4,7 @@ Thank you for your interest in contributing!
 
 PLEASE check the Discord to see if someone is already working on what you want to add! Odds are, someone might be.
 
-[Discord server](https://filatrack.vercel.app/discord)
+[Discord server](https://filatrack.app/discord)
 
 ## Installation (also for self-hosting)
 
