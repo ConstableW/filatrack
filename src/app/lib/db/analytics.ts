@@ -7,6 +7,7 @@ import { analyticsTable } from "@/db/schema/analytics";
 import { filamentLogTable, filamentTable } from "@/db/schema/filament";
 import { accountsTable, usersTable } from "@/db/schema/user";
 import { DBRes } from "./types";
+import { apiAuth } from "./helpers";
 
 export type AnalyticEntry = typeof analyticsTable.$inferSelect;
 
@@ -66,9 +67,9 @@ function toDbDate(date: Date) {
  * @returns The analytic entry
  */
 export async function getAnalyticEntry(date: Date): Promise<DBRes<AnalyticEntry | undefined>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     if (session.user.id! !== process.env.ADMIN_USER_ID)
@@ -89,9 +90,9 @@ export async function getAnalyticEntry(date: Date): Promise<DBRes<AnalyticEntry 
  * @returns All of the analytic entries in the range.
  */
 export async function getBatchAnalyticEntries(startDate: Date, endDate: Date): Promise<DBRes<AnalyticEntry[] | undefined>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     if (session.user.id! !== process.env.ADMIN_USER_ID)
@@ -146,9 +147,9 @@ export async function addOrUpdateAnalyticEntry(date: Date, data: Partial<Omit<An
  * @returns Record of authentication type : number of users who used it
  */
 export async function getAuthenticationMethodStats(): Promise<DBRes<Record<string, number>>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     if (session.user.id! !== process.env.ADMIN_USER_ID)

@@ -1,4 +1,4 @@
-import { doublePrecision, integer, pgTable, text } from "drizzle-orm/pg-core";
+import { doublePrecision, integer, json, pgTable, text } from "drizzle-orm/pg-core";
 import { id, timestamps } from "./columns.helpers";
 import { usersTable } from "./user";
 
@@ -14,9 +14,10 @@ export const printsTable = pgTable("prints", {
 
     totalFilamentUsed: integer().notNull(),
 
-    filamentUsed: text().array()
+    filamentUsed: json()
         .notNull()
-        .default([]),
+        .default({})
+        .$type<Record<string, number>>(),
 
     ...timestamps,
 });

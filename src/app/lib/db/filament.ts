@@ -1,21 +1,21 @@
 "use server";
 
-import { auth } from "@/auth";
 import { DBCreateParams, DBRes } from "./types";
 import { db } from "@/db/drizzle";
 import { filamentLogTable, filamentTable } from "@/db/schema/filament";
 import { eq, inArray } from "drizzle-orm";
 import { Filament, FilamentLog } from "@/db/types";
 import { addOrUpdateAnalyticEntry } from "./analytics";
+import { apiAuth } from "./helpers";
 
 /**
  * Gets all of the filament a user has created.
  * @returns The list of filament
  */
 export async function getAllFilaments(): Promise<DBRes<Filament[]>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     return {
@@ -30,9 +30,9 @@ export async function getAllFilaments(): Promise<DBRes<Filament[]>> {
  * @returns The filament with given ID or null if not found
  */
 export async function getFilament(id: string): Promise<DBRes<Filament | null>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     let filament = (await db.select().from(filamentTable)
@@ -54,9 +54,9 @@ export async function getFilament(id: string): Promise<DBRes<Filament | null>> {
  * @returns The filament or null if not found
  */
 export async function getFilamentByShortId(shortId: string): Promise<DBRes<Filament | null>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     const filament = (await db.select().from(filamentTable)
@@ -76,9 +76,9 @@ export async function getFilamentByShortId(shortId: string): Promise<DBRes<Filam
  * @returns The new filament.
  */
 export async function createFilament(filament: DBCreateParams<Omit<Filament, "shortId">>): Promise<DBRes<Filament>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     if (filament.name.length > 32)
@@ -115,9 +115,9 @@ export async function createFilament(filament: DBCreateParams<Omit<Filament, "sh
  */
 export async function createMultipleFilament(filament: DBCreateParams<Omit<Filament, "shortId">>, amount: number)
 : Promise<DBRes<Filament[]>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     if (filament.name.length > 32)
@@ -158,9 +158,9 @@ export async function createMultipleFilament(filament: DBCreateParams<Omit<Filam
  * @returns The modified filament.
  */
 export async function editFilament(filamentId: string, newData: Partial<DBCreateParams<Filament>>): Promise<DBRes<Filament>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     const oldFilament = (await db.select().from(filamentTable)
@@ -187,9 +187,9 @@ export async function editFilament(filamentId: string, newData: Partial<DBCreate
  * @returns Nothing if successful
  */
 export async function deleteFilament(filamentId: string): Promise<DBRes<void>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     const filament = (await db.select().from(filamentTable)
@@ -212,9 +212,9 @@ export async function deleteFilament(filamentId: string): Promise<DBRes<void>> {
  * @returns Nothing if successful.
  */
 export async function deleteFilaments(filamentIds: string[]): Promise<DBRes<void>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     const filaments = await db.select().from(filamentTable)
@@ -236,9 +236,9 @@ export async function deleteFilaments(filamentIds: string[]): Promise<DBRes<void
  * @returns The new filament list with `index` updated.
  */
 export async function reorderFilament(newFilamentList: Filament[]): Promise<DBRes<Filament[]>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     for (const f of newFilamentList)
@@ -262,9 +262,9 @@ export async function reorderFilament(newFilamentList: Filament[]): Promise<DBRe
  * @returns The logs
  */
 export async function getFilamentLogs(filamentId: string): Promise<DBRes<FilamentLog[]>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     const filament = (await db.select().from(filamentTable)
@@ -288,9 +288,9 @@ export async function getFilamentLogs(filamentId: string): Promise<DBRes<Filamen
  * @returns The new log.
  */
 export async function createFilamentLog(log: DBCreateParams<FilamentLog>): Promise<DBRes<FilamentLog>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     const filament = (await db.select().from(filamentTable)
@@ -320,9 +320,9 @@ export async function createFilamentLog(log: DBCreateParams<FilamentLog>): Promi
  * @returns Nothing if successful.
  */
 export async function deleteFilamentLog(log: DBCreateParams<FilamentLog>): Promise<DBRes<void>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     const filament = (await db.select().from(filamentTable)
@@ -345,9 +345,9 @@ export async function deleteFilamentLog(log: DBCreateParams<FilamentLog>): Promi
  * @returns The modified log.
  */
 export async function editFilamentLog(newLog: Partial<DBCreateParams<FilamentLog>>): Promise<DBRes<FilamentLog>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     const filament = (await db.select().from(filamentTable)

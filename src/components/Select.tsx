@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "./Dropdown";
 import { Check, ChevronDown } from "lucide-react";
 import Subtext from "./Subtext";
+import Input from "./Input";
 
 export function Select({ options, value, onChange, placeholder, ...props }:
     { options: Record<string, React.ReactNode>, value: string, onChange: (val: string) => void, placeholder?: string } &
@@ -31,9 +32,12 @@ Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "chil
     );
 }
 
-export function SelectMultiple({ options, values, onChange, placeholder, ...props }:
-    { options: Record<string, React.ReactNode>, values: string[], onChange: (newVals: string[]) => void, placeholder?: string } &
+export function SelectMultiple({ options, values, onChange, placeholder, searchable, ...props }:
+    { options: Record<string, React.ReactNode>, values: string[], onChange: (newVals: string[]) => void, placeholder?: string,
+        searchable?: boolean } &
 Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "children">) {
+    const [search, setSearch] = useState("");
+
     return (
         <Dropdown>
             <DropdownTrigger asChild>
@@ -41,11 +45,23 @@ Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "chil
                 flex flex-row justify-between gap-4 items-center border-transparent focus:border-primary transition-all 
                 cursor-pointer text-sm ${props.className ?? ""}`}>
                     {!values.length && <Subtext>{placeholder}</Subtext>}
+                    {values.length === 1 && options[values[0]]}
+                    {values.length >= 2 && `${values.length} selected`}
                     <ChevronDown />
                 </button>
             </DropdownTrigger>
             <DropdownContent>
+                {searchable &&
+                    <Input
+                        placeholder="Search..."
+                        className="mb-1 border-2 !border-bg-lightest"
+                        autoFocus
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                    />
+                }
                 {Object.keys(options)
+                    .filter(o => !search || o.toLowerCase().includes(search.toLowerCase()))
                     .map(k => <DropdownItem
                         onClick={() => {
                             if (values.includes(k))
@@ -53,10 +69,11 @@ Omit<React.SelectHTMLAttributes<HTMLButtonElement>, "value" | "onChange" | "chil
                             else
                                 onChange([...values, k]);
                         }}
-                        className={`${values.includes(k) && "!border-primary"} border-2 border-transparent`}
+                        className={`${values.includes(k) && "!border-primary"} border-2 
+                        border-transparent flex flex-row gap-1 items-center not-last:mb-1`}
                         key={k}
                     >
-                        {values.includes(k) && <Check className="text-gray-500" />}
+                        {values.includes(k) && <Check />}
                         {options[k]}
                     </DropdownItem>)
                 }

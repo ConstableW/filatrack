@@ -7,14 +7,20 @@ import { grams } from "@/app/lib/units";
 import FilamentDetailsModal from "./FilamentDetails";
 import { useState } from "react";
 
-export default function SmallFilamentPreview({ filament, noInteraction }: { filament: Filament, noInteraction?: boolean }) {
+export default function SmallFilamentPreview({ filament, noInteraction, className }:
+    { filament: Filament, noInteraction?: boolean, className?: string }) {
     const [openModal, setOpenModal] = useState("");
 
     return (<>
         <div
-            className={`bg-bg-lighter p-2 py-1 rounded-lg w-full flex justify-between items-center flex-wrap gap-2
+            className={`p-2 py-1 rounded-lg w-full flex justify-between items-center flex-wrap gap-2 ${className} 
                 ${!noInteraction && "border-2 border-transparent transition-all hover:border-primary cursor-pointer"}`}
-            onClick={() => setOpenModal("details")}
+            onClick={e => {
+                if (noInteraction)
+                    return;
+                e.stopPropagation();
+                setOpenModal("details");
+            }}
         >
             <div className="flex gap-1 items-center">
                 <FilamentIcon size={32} filament={filament} />

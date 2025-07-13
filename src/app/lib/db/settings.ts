@@ -1,12 +1,12 @@
 "use server";
 
-import { auth } from "@/auth";
 import { DBRes } from "./types";
 import { userSettingsTable } from "@/db/schema/settings";
 import { db } from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { usersTable } from "@/db/schema/user";
 import { UserSettings } from "@/db/types";
+import { apiAuth } from "./helpers";
 
 /**
  * Sets the user's username.
@@ -14,9 +14,9 @@ import { UserSettings } from "@/db/types";
  * @returns Nothing if successful.
  */
 export async function setUsername(username: string): Promise<DBRes<void>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     if (username.length > 12)
@@ -33,9 +33,9 @@ export async function setUsername(username: string): Promise<DBRes<void>> {
  * @returns The new userSettings.
  */
 export async function createUserSettings(): Promise<DBRes<UserSettings>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     return {
@@ -51,9 +51,9 @@ export async function createUserSettings(): Promise<DBRes<UserSettings>> {
  * @returns The user's userSettings.
  */
 export async function getUserSettings(): Promise<DBRes<UserSettings>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     let settings = (await db.select().from(userSettingsTable)
@@ -73,9 +73,9 @@ export async function getUserSettings(): Promise<DBRes<UserSettings>> {
  * @returns The modified settings data.
  */
 export async function updateUserSettings(newSettings: Partial<UserSettings>): Promise<DBRes<UserSettings>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     const userSettings = (await db.select().from(userSettingsTable)
@@ -101,9 +101,9 @@ export async function updateUserSettings(newSettings: Partial<UserSettings>): Pr
  * @returns Nothing if successful.
  */
 export async function deleteUser(): Promise<DBRes<void>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     await db.delete(usersTable).where(eq(usersTable.id, session.user.id!));
@@ -117,9 +117,9 @@ export async function deleteUser(): Promise<DBRes<void>> {
  * @returns Nothing if successful.
  */
 export async function setUserSeenDialog(id: string): Promise<DBRes<void>> {
-    const session = await auth();
+    const session = await apiAuth();
 
-    if (!session || !session.user)
+    if (!session)
         return { error: "Not authenticated" };
 
     const userSettings = await getUserSettings();

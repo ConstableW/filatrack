@@ -2,7 +2,6 @@
 
 import FilamentList from "@/components/filament/FilamentList";
 import { useEffect, useState } from "react";
-import Select from "@/components/Select";
 import { Filament, UserSettings } from "@/db/types";
 import { ListFilter } from "lucide-react";
 import Input from "@/components/Input";
@@ -11,6 +10,7 @@ import { useDevice } from "../lib/hooks";
 import SearchTipsModal from "@/components/filament/SearchTips";
 import Footer from "@/components/Footer";
 import { sidebarWidth } from "../lib/constants";
+import { Select } from "@/components/Select";
 
 export default function HomePage() {
     const [isMobile, width] = useDevice();
