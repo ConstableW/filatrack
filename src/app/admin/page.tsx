@@ -6,12 +6,12 @@
 import Divider from "@/components/Divider";
 import { LineChart } from "@mui/x-charts";
 import { useEffect, useState } from "react";
-import Select from "@/components/Select";
 import { app } from "../lib/db";
 import { AnalyticEntry } from "../lib/db/analytics";
 import { day } from "../lib/date";
 import { ArrowLeft } from "lucide-react";
 import { endpoints } from "../lib/constants";
+import { Select } from "@/components/Select";
 
 const dateFormatter = Intl.DateTimeFormat(undefined, {
     month: "2-digit",

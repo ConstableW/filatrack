@@ -1,12 +1,11 @@
 "use client";
 
 import { day } from "@/app/lib/date";
-import { useObjectState } from "@/app/lib/hooks";
 import { randomFrom, randomInt } from "@/app/lib/random";
 import { Filament } from "@/db/types";
-import { useEffect } from "react";
-import FilamentEntry from "./Filament";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import FilamentEntry from "./Filament";
 
 const filamentNames = {
     Red: "#FF0000",
@@ -81,7 +80,7 @@ export function randomFilament(): Filament {
 }
 
 function RandomizedFilament() {
-    const [filament, setFilament] = useObjectState(randomFilament());
+    const [filament, setFilament] = useState(randomFilament());
 
     useEffect(() => {
         const interval = setInterval(() => setFilament(randomFilament()), 1000);

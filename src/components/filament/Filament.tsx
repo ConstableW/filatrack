@@ -116,8 +116,7 @@ export default function FilamentEntry({
             <div className="flex flex-col justify-center items-center w-full">
                 <FilamentIcon
                     size={75}
-                    color={filament.color}
-                    stage={filament.currentMass <= 0 ? 5 : Math.max(1, Math.ceil(filament.currentMass / filament.startingMass * 5))}
+                    filament={filament}
                 />
 
                 <p className="text-lg text-center truncate max-w-[100%]">{filament.name}</p>

@@ -8,7 +8,7 @@ import Button from "../Button";
 import { Diameter, DollarSign, Text, Thermometer } from "lucide-react";
 
 export default function FilamentDetailsModal({ filament, openLogModal, ...props }:
-    { filament: Filament, openLogModal: () => void } & ModalProps) {
+    { filament: Filament, openLogModal?: () => void } & ModalProps) {
     return (
         <Modal {...props} title="Filament Details">
             <Subtext>View extra details and usage of this filament.</Subtext>
@@ -45,9 +45,11 @@ export default function FilamentDetailsModal({ filament, openLogModal, ...props 
                 </div>
             </div>
 
-            <Divider />
+            {!!openLogModal && <>
+                <Divider />
 
-            <Button className="w-full" onClick={openLogModal}>Log</Button>
+                <Button className="w-full" onClick={openLogModal}>Log</Button>
+            </>}
         </Modal>
     );
 }

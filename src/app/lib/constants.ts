@@ -1,4 +1,9 @@
 /**
+ * The width of the sidebar (on PC)
+ */
+export const sidebarWidth = "180px";
+
+/**
  * The last time the privacy policy was updated. This is manually updated when it is modified.
  */
 export const lastPrivacyPolicyUpdate = new Date("7/7/25 00:00:00 GMT-0000");
@@ -29,6 +34,7 @@ export const endpoints = {
     discord: `${baseUrl}discord`,
     github: `${baseUrl}github`,
     app: `${baseUrl}app`,
+    prints: `${baseUrl}app/prints`,
     settings: `${baseUrl}app/settings`,
     privacyPolicy: `${baseUrl}about/privacy-policy`,
     contact: `${baseUrl}about/contact`,

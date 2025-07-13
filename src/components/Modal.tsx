@@ -23,7 +23,10 @@ export default function Modal({ children, title, open, onClose, level, danger }:
             className={`${open ? "fade-in-75" : "fade-out-75"} opacity-75 fixed inset-0 bg-black
             ${!level ? "" : "rounded-lg"}`}
             style={{ zIndex: (level ?? 0) + 1 }}
-            onClick={onClose}
+            onClick={e => {
+                e.stopPropagation();
+                onClose();
+            }}
         />}
 
         {visible && <div
