@@ -6,8 +6,9 @@ import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
 import FilamentEntry from "./Filament";
 import { Filament, FilamentLog, UserSettings } from "@/db/types";
-import { DBRes } from "@/app/lib/db/types";
+import { ApiRes } from "@/app/lib/db/types";
 import { app } from "@/app/lib/db";
+import { handleApiError } from "@/app/lib/errors";
 
 export default function LogFilamentModal({ open, onClose, filament, onFinish, currentLog, userSettings }:
     { filament: Filament, onFinish: (newFilament: Filament, newLog: FilamentLog) => void, userSettings?: UserSettings,
@@ -32,7 +33,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
         setLoading(true);
         setError("");
 
-        let res: DBRes<FilamentLog> | null = null;
+        let res: ApiRes<FilamentLog> | null = null;
         if (currentLog) {
             res = await app.filament.editFilamentLog({
                 filamentUsed,
@@ -52,7 +53,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
         }
 
         if (res.error) {
-            setError(res.error);
+            setError(handleApiError(res.error));
             setLoading(false);
             return;
         }
@@ -63,7 +64,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
         });
 
         if (editRes.error) {
-            setError(editRes.error);
+            setError(handleApiError(editRes.error));
             setLoading(false);
             return;
         }

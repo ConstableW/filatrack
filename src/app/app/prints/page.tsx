@@ -2,6 +2,7 @@
 
 import { sidebarWidth } from "@/app/lib/constants";
 import { app } from "@/app/lib/db";
+import { handleApiError } from "@/app/lib/errors";
 import { useDevice } from "@/app/lib/hooks";
 import Button from "@/components/Button";
 import Divider from "@/components/Divider";
@@ -12,7 +13,6 @@ import Skeleton from "@/components/Skeleton";
 import { Filament, Print } from "@/db/types";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 export default function PrintsPage() {
     const [isMobile, width] = useDevice();
@@ -26,14 +26,14 @@ export default function PrintsPage() {
     useEffect(() => {
         app.filament.getAllFilaments().then(res => {
             if (res.error)
-                return void toast.error(`Failed to fetch filament: ${res.error}`);
+                return void handleApiError(res.error, "toast");
 
             setAllFilament(res.data!);
         });
 
         app.prints.getAllPrints().then(res => {
             if (res.error)
-                return void toast.error(`Failed to fetch prints: ${res.error}`);
+                return void handleApiError(res.error, "toast");
 
             setPrints(res.data!);
         });

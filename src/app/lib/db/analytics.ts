@@ -1,13 +1,13 @@
 "use server";
 
-import { auth } from "@/auth";
 import { db } from "@/db/drizzle";
 import { between, eq } from "drizzle-orm";
 import { analyticsTable } from "@/db/schema/analytics";
 import { filamentLogTable, filamentTable } from "@/db/schema/filament";
 import { accountsTable, usersTable } from "@/db/schema/user";
-import { DBRes } from "./types";
+import { ApiRes } from "./types";
 import { apiAuth } from "./helpers";
+import { ApiError } from "../errors";
 
 export type AnalyticEntry = typeof analyticsTable.$inferSelect;
 
@@ -36,11 +36,6 @@ export async function getTotalFilament() {
  * @returns Number of logs in database
  */
 export async function getTotalLogs() {
-    const session = await auth();
-
-    if (!session || !session.user)
-        return { error: "Not authenticated" };
-
     return {
         data: (await db.select().from(filamentLogTable)).length,
     };
@@ -66,14 +61,14 @@ function toDbDate(date: Date) {
  * @param date The date to get the entry for
  * @returns The analytic entry
  */
-export async function getAnalyticEntry(date: Date): Promise<DBRes<AnalyticEntry | undefined>> {
+export async function getAnalyticEntry(date: Date): Promise<ApiRes<AnalyticEntry | undefined>> {
     const session = await apiAuth();
 
-    if (!session)
-        return { error: "Not authenticated" };
+    if (!session || !session.user)
+        return ApiError("NotAuthenticated");
 
     if (session.user.id! !== process.env.ADMIN_USER_ID)
-        return { error: "Unauthorized" };
+        return ApiError("NotAuthorized");
 
     let entry = (await db.select().from(analyticsTable)
         .where(eq(analyticsTable.date, toDbDate(date))))[0];
@@ -89,14 +84,14 @@ export async function getAnalyticEntry(date: Date): Promise<DBRes<AnalyticEntry 
  * @param endDate The end date of range
  * @returns All of the analytic entries in the range.
  */
-export async function getBatchAnalyticEntries(startDate: Date, endDate: Date): Promise<DBRes<AnalyticEntry[] | undefined>> {
+export async function getBatchAnalyticEntries(startDate: Date, endDate: Date): Promise<ApiRes<AnalyticEntry[] | undefined>> {
     const session = await apiAuth();
 
-    if (!session)
-        return { error: "Not authenticated" };
+    if (!session || !session.user)
+        return ApiError("NotAuthenticated");
 
     if (session.user.id! !== process.env.ADMIN_USER_ID)
-        return { error: "Unauthorized" };
+        return ApiError("NotAuthorized");
 
     const start = toDbDate(startDate);
     const end = toDbDate(endDate);
@@ -146,14 +141,14 @@ export async function addOrUpdateAnalyticEntry(date: Date, data: Partial<Omit<An
  * Gets statistics for what authentication methods are used.
  * @returns Record of authentication type : number of users who used it
  */
-export async function getAuthenticationMethodStats(): Promise<DBRes<Record<string, number>>> {
+export async function getAuthenticationMethodStats(): Promise<ApiRes<Record<string, number>>> {
     const session = await apiAuth();
 
-    if (!session)
-        return { error: "Not authenticated" };
+    if (!session || !session.user)
+        return ApiError("NotAuthenticated");
 
     if (session.user.id! !== process.env.ADMIN_USER_ID)
-        return { error: "Unauthorized" };
+        return ApiError("NotAuthorized");
 
     const allAccounts = await db.select().from(accountsTable);
 

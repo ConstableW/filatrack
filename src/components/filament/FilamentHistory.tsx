@@ -10,6 +10,7 @@ import { ArrowRight, Clock, Pencil, Trash2 } from "lucide-react";
 import { grams } from "@/app/lib/units";
 import LogFilamentModal from "./LogFilament";
 import { app } from "@/app/lib/db";
+import { handleApiError } from "@/app/lib/errors";
 
 function FilamentHistoryEntry({ log, i, onDelete, onEdit, preview, filament }:
     {
@@ -85,15 +86,15 @@ export default function FilamentHistoryList({ filament }: { filament: Filament }
         setLoading(true);
 
         setLogs([]);
-        app.filament.getFilamentLogs(filament.id).then(r => {
+        app.filament.getFilamentLogs(filament.id).then(res => {
             setLoading(false);
 
-            if (r.error) {
-                setError(r.error);
+            if (res.error) {
+                setError(handleApiError(res.error));
                 return;
             }
 
-            setLogs(r.data!);
+            setLogs(res.data!);
         });
     }, [open]);
 
