@@ -3,7 +3,7 @@ import React from "react";
 
 export default function FilamentIcon({ size, filament }: { size: number, filament?: Filament }) {
     const stage = filament ?
-        filament.currentMass <= 0 ? 5 : Math.max(1, Math.ceil(filament.currentMass / filament.startingMass * 5)) :
+        filament.currentMass <= 0 ? 5 : Math.min(5, Math.max(1, Math.ceil(filament.currentMass / filament.startingMass * 5))) :
         5;
 
     return (<div className="relative" style={{ width: size, height: size }}>

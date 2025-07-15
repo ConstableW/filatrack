@@ -4,11 +4,12 @@ import Divider from "../Divider";
 import Input from "../Input";
 import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
-import FilamentEntry from "./Filament";
 import { Filament, FilamentLog, UserSettings } from "@/db/types";
 import { ApiRes } from "@/app/lib/db/types";
 import { app } from "@/app/lib/db";
 import { handleApiError } from "@/app/lib/errors";
+import SmallFilamentPreview from "./SmallFilamentPreview";
+import { grams } from "@/app/lib/units";
 
 export default function LogFilamentModal({ open, onClose, filament, onFinish, currentLog, userSettings }:
     { filament: Filament, onFinish: (newFilament: Filament, newLog: FilamentLog) => void, userSettings?: UserSettings,
@@ -17,16 +18,20 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
     const [loading, setLoading] = useState(false);
 
     const [filamentUsed, setFilamentUsed] = useState(currentLog?.filamentUsed ?? 0);
+    const [note, setNote] = useState(currentLog?.note ?? "");
 
-    function calculateActualFilamentUsed(input: number) {
-        return (currentLog ? currentLog.previousMass : filament.currentMass) -
-        input -
-        ((currentLog ? 0 : userSettings?.additionalFilamentModifier) ?? 0);
+    function calculateNewFilamentMass(input: number) {
+        // If current log exists, undo the filament used by that and subtract by the new value
+        if (currentLog)
+            return filament.currentMass + currentLog.filamentUsed - input;
+
+        // Otherwise, just currentMass - new value
+        return filament.currentMass - input;
     }
 
     async function logFilament() {
-        if (filamentUsed === 0 || Number.isNaN(filamentUsed)) {
-            setError("Last time I checked, you can't 3d print anything with 0 grams of filament.");
+        if (Number.isNaN(filamentUsed)) {
+            setError("Last time I checked, you can't 3d print anything with undefined filament.");
             return;
         }
 
@@ -36,7 +41,12 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
         let res: ApiRes<FilamentLog> | null = null;
         if (currentLog) {
             res = await app.filament.editFilamentLog({
+                id: currentLog.id,
+
                 filamentUsed,
+
+                note,
+
                 filamentId: currentLog.filamentId,
                 time: currentLog.time,
             });
@@ -45,7 +55,9 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
                 filamentUsed,
 
                 previousMass: filament.currentMass,
-                newMass: calculateActualFilamentUsed(filamentUsed),
+                newMass: calculateNewFilamentMass(filamentUsed),
+
+                note,
 
                 filamentId: filament.id,
                 time: new Date(),
@@ -59,7 +71,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
         }
 
         const editRes = await app.filament.editFilament(filament.id, {
-            currentMass: calculateActualFilamentUsed(filamentUsed),
+            currentMass: calculateNewFilamentMass(filamentUsed),
             lastUsed: new Date(Math.max((currentLog ? currentLog.time : new Date()).getTime(), filament.lastUsed.getTime())),
         });
 
@@ -83,13 +95,20 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
             </Subtext>
             <Divider />
             <div className="flex flex-col items-center gap-2">
-                <FilamentEntry filament={filament} isPreview />
+                <SmallFilamentPreview filament={filament} noInteraction className="bg-bg-lighter" />
                 <Input
                     label="Filament Used (g)"
                     type="number"
                     value={filamentUsed}
                     onChange={e => setFilamentUsed(parseInt(e.target.value))}
                     autoFocus={true}
+                />
+                <Input
+                    label="Note"
+                    placeholder="What did you print?"
+                    maxLength={45}
+                    value={note}
+                    onChange={e => setNote(e.target.value)}
                 />
             </div>
 
@@ -100,16 +119,12 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
             </Subtext>}
             <p className="w-full text-center text-sm">
                 This will leave{" "}
-                {Math.max(
+                {grams(Math.max(
                     0,
-                    calculateActualFilamentUsed(filamentUsed)
-                )}
-                    g / {filament.startingMass / 1000}kg remaining.
+                    calculateNewFilamentMass(filamentUsed)
+                ))} / {grams(filament.startingMass)} remaining.
             </p>
 
-            {(filament.currentMass - (Number.isNaN(filamentUsed) ? 0 : filamentUsed)) <= 0 &&
-                <span className="text-danger">This action will put your filament into your Empty Filament.</span>
-            }
             <ModalFooter
                 error={error}>
                 <Button loading={loading} onClick={logFilament}>Confirm</Button>

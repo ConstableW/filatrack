@@ -37,9 +37,14 @@ export const filamentLogTable = pgTable("filamentLog", {
 
     filamentId: text().notNull()
         .references(() => filamentTable.id, { onDelete: "cascade" }),
+
     filamentUsed: integer().notNull(),
-    previousMass: integer().notNull(),
-    newMass: integer().notNull(),
+
+    note: text(),
+
+    previousMass: integer(),
+    newMass: integer(),
+
     time: timestamp().defaultNow()
         .notNull(),
 });

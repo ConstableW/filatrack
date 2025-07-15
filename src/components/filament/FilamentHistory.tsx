@@ -6,16 +6,14 @@ import { useEffect, useState } from "react";
 import Spinner from "../Spinner";
 import { toDateString, toTimeString } from "@/app/lib/date";
 import { Filament, FilamentLog } from "@/db/types";
-import { ArrowRight, Clock, Pencil, Trash2 } from "lucide-react";
-import { grams } from "@/app/lib/units";
+import { Clock, Pencil, Trash2 } from "lucide-react";
 import LogFilamentModal from "./LogFilament";
 import { app } from "@/app/lib/db";
 import { handleApiError } from "@/app/lib/errors";
 
-function FilamentHistoryEntry({ log, i, onDelete, onEdit, preview, filament }:
+function FilamentHistoryEntry({ log, onDelete, onEdit, preview, filament }:
     {
         log: FilamentLog,
-        i: number,
         onDelete?: () => void,
         onEdit?: (l: FilamentLog) => void,
         preview?: boolean,
@@ -26,15 +24,9 @@ function FilamentHistoryEntry({ log, i, onDelete, onEdit, preview, filament }:
     return (<>
         <div className="bg-bg-lighter rounded-lg w-full p-2 flex flex-row justify-between items-center">
             <div className="flex flex-row items-center gap-2">
-                <div className="pr-2 border-r-2 border-bg-lightest h-full">
-                    <p className="text-gray-500 text-2xl">{i}</p>
-                </div>
                 <div className="w-full">
                     <div className="flex flex-row items-center gap-1">
-                        {log.filamentUsed}g
-                        <Subtext className="flex flex-row items-center gap-1">
-                            ({grams(log.previousMass)} <ArrowRight size={16} /> {grams(log.newMass)})
-                        </Subtext>
+                        {log.filamentUsed}g {!!log.note && `- ${log.note}`}
                     </div>
                     <Subtext className="flex flex-row items-center gap-1 text-xs">
                         <Clock size={16} /> {toDateString(log.time)}, {toTimeString(log.time, false)}
@@ -52,7 +44,8 @@ function FilamentHistoryEntry({ log, i, onDelete, onEdit, preview, filament }:
             <Divider />
 
             <p>Are you sure you want to delete this log?</p>
-            <FilamentHistoryEntry log={log} i={i} preview />
+            <p>This will undo the filament used by this log.</p>
+            <FilamentHistoryEntry log={log} preview />
 
             <ModalFooter>
                 <Button onClick={() => setOpenModal("")} look={ButtonStyles.secondary}>Cancel</Button>
@@ -94,7 +87,7 @@ export default function FilamentHistoryList({ filament }: { filament: Filament }
                 return;
             }
 
-            setLogs(res.data!);
+            setLogs(res.data!.sort((a, b) => Number(a.time) - Number(b.time)));
         });
     }, [open]);
 
@@ -112,7 +105,6 @@ export default function FilamentHistoryList({ filament }: { filament: Filament }
         <div className="flex flex-col gap-2">
             {logs.map((l, i) => <FilamentHistoryEntry
                 log={l}
-                i={i + 1}
                 key={l.id}
                 onEdit={l => onEditLog(l, i)}
                 onDelete={() => onDeleteLog(i)}

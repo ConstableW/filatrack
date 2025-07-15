@@ -309,6 +309,12 @@ export async function createFilamentLog(log: DBObjectParams<FilamentLog>): Promi
     if (filament.userId !== session.user.id)
         return ApiError("NotAuthorized");
 
+    if (log.note && log.note.length > 45)
+        return ApiError("InvalidField", "Note too long");
+
+    if (Number.isNaN(log.filamentUsed))
+        return ApiError("InvalidField", "Invalid filament used");
+
     addOrUpdateAnalyticEntry(new Date(), {
         logsCreated: 1,
     });
@@ -326,7 +332,7 @@ export async function createFilamentLog(log: DBObjectParams<FilamentLog>): Promi
  * @param log The log to delete.
  * @returns Nothing if successful.
  */
-export async function deleteFilamentLog(log: DBObjectParams<FilamentLog>): Promise<ApiRes<void>> {
+export async function deleteFilamentLog(log: FilamentLog): Promise<ApiRes<void>> {
     const session = await apiAuth();
 
     if (!session)
@@ -341,7 +347,9 @@ export async function deleteFilamentLog(log: DBObjectParams<FilamentLog>): Promi
     if (filament.userId !== session.user.id)
         return ApiError("NotAuthorized");
 
-    await db.delete(filamentLogTable).where(eq(filamentLogTable.time, log.time));
+    await db.delete(filamentLogTable).where(eq(filamentLogTable.id, log.id));
+    await db.update(filamentTable).set({ currentMass: filament.currentMass + log.filamentUsed })
+        .where(eq(filamentTable.id, filament.id));
 
     return { };
 }
@@ -351,7 +359,7 @@ export async function deleteFilamentLog(log: DBObjectParams<FilamentLog>): Promi
  * @param newLog The modified log data. If a key isn't specified, it will not be modified.
  * @returns The modified log.
  */
-export async function editFilamentLog(newLog: Partial<DBObjectParams<FilamentLog>>): Promise<ApiRes<FilamentLog>> {
+export async function editFilamentLog(newLog: Partial<FilamentLog>): Promise<ApiRes<FilamentLog>> {
     const session = await apiAuth();
 
     if (!session)
@@ -366,9 +374,15 @@ export async function editFilamentLog(newLog: Partial<DBObjectParams<FilamentLog
     if (filament.userId !== session.user.id)
         return ApiError("NotAuthorized");
 
+    if (newLog.note && newLog.note.length > 45)
+        return ApiError("InvalidField", "Note too long");
+
+    if (newLog.filamentUsed && Number.isNaN(newLog.filamentUsed))
+        return ApiError("InvalidField", "Invalid filament used");
+
     return {
-        data: (await db.update(filamentLogTable).set(newLog)
-            .where(eq(filamentLogTable.time, newLog.time!))
+        data: (await db.update(filamentLogTable).set({ ...newLog })
+            .where(eq(filamentLogTable.id, newLog.id!))
             .returning())[0],
     };
 }
