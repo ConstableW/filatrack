@@ -7,16 +7,17 @@ import Input from "../Input";
 import { Filament, Print } from "@/db/types";
 import Button, { ButtonStyles } from "../Button";
 import { useObjectState } from "@/app/lib/hooks";
-import { DBCreateParams } from "@/app/lib/db/types";
+import { DBObjectParams } from "@/app/lib/db/types";
 import { SelectMultiple } from "../Select";
 import React, { useState } from "react";
 import SmallFilamentPreview from "../filament/SmallFilamentPreview";
 import { CornerDownRight } from "lucide-react";
 import { app } from "@/app/lib/db";
+import { handleApiError } from "@/app/lib/errors";
 
 export default function AddPrintModal({ onAdd, open, onClose, filament }:
     { onAdd?: (print: Print) => void, filament: Filament[] } & ModalProps) {
-    const [printData, setPrintData] = useObjectState<DBCreateParams<Print>>({
+    const [printData, setPrintData] = useObjectState<DBObjectParams<Print>>({
         name: "",
         timeHours: 0,
         totalFilamentUsed: 0,
@@ -52,7 +53,7 @@ export default function AddPrintModal({ onAdd, open, onClose, filament }:
         const res = await app.prints.addPrint(printData);
 
         if (res.error) {
-            setError(res.error);
+            setError(handleApiError(res.error));
             setLoading(false);
             return;
         }

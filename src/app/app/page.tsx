@@ -11,6 +11,7 @@ import SearchTipsModal from "@/components/filament/SearchTips";
 import Footer from "@/components/Footer";
 import { sidebarWidth } from "../lib/constants";
 import { Select } from "@/components/Select";
+import { handleApiError } from "../lib/errors";
 
 export default function HomePage() {
     const [isMobile, width] = useDevice();
@@ -24,18 +25,18 @@ export default function HomePage() {
     const [allFilament, setAllFilament] = useState<Filament[]>();
 
     useEffect(() => {
-        app.settings.getUserSettings().then(r => {
-            if (r.error)
-                return;
+        app.settings.getUserSettings().then(res => {
+            if (res.error)
+                return void handleApiError(res.error, "toast");
 
-            setUserSettings(r.data!);
+            setUserSettings(res.data!);
         });
 
-        app.filament.getAllFilaments().then(r => {
-            if (r.error)
-                return;
+        app.filament.getAllFilaments().then(res => {
+            if (res.error)
+                return void handleApiError(res.error, "toast");
 
-            setAllFilament(r.data!);
+            setAllFilament(res.data!);
         });
     }, []);
 

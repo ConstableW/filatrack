@@ -17,8 +17,8 @@ import { app } from "@/app/lib/db";
 import QRCodeModal from "./QRCodeModal";
 import FilamentDetailsModal from "./FilamentDetails";
 import { useSearchParams } from "next/navigation";
-import { toast } from "sonner";
 import Input from "../Input";
+import { handleApiError } from "@/app/lib/errors";
 
 type Props = {
     filament: Filament;
@@ -65,7 +65,7 @@ export default function FilamentEntry({
 
         const res = await app.filament.deleteFilament(filament.id);
         if (res.error) {
-            setError(res.error);
+            setError(handleApiError(res.error));
             setLoading(false);
             return;
         }
@@ -82,7 +82,7 @@ export default function FilamentEntry({
             currentMass: 0,
         });
         if (res.error) {
-            setError(res.error);
+            setError(handleApiError(res.error));
             setLoading(false);
             return;
         }
@@ -154,7 +154,7 @@ export default function FilamentEntry({
                         <DropdownItem onClick={() => {
                             app.filament.createFilament({ ...filament })
                                 .then(res => (
-                                    res.error ? toast.error(`Error duplicating filament: ${res.error}`) :
+                                    res.error ? handleApiError(res.error, "toast") :
                                         onAdd?.(res.data!)
                                 ));
                         }}>

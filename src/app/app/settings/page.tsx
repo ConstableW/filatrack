@@ -2,6 +2,7 @@
 
 import { sidebarWidth } from "@/app/lib/constants";
 import { app } from "@/app/lib/db";
+import { handleApiError } from "@/app/lib/errors";
 import { useDevice, useObjectState } from "@/app/lib/hooks";
 import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
@@ -64,7 +65,7 @@ export default function SettingsPage() {
         const res = await app.settings.setUsername(username);
 
         if (res.error)
-            console.error(res.error);
+            handleApiError(res.error, "toast");
 
         setSaveLoading(false);
     }
@@ -75,9 +76,9 @@ export default function SettingsPage() {
         const res = await app.settings.updateUserSettings(userSettings);
 
         if (res.error)
-            console.error(res.error);
-
-        setUserSettingsData(res.data!);
+            handleApiError(res.error, "toast");
+        else
+            setUserSettingsData(res.data!);
 
         setSaveLoading(false);
     }

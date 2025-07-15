@@ -13,9 +13,10 @@ import { Filament, UserSettings } from "@/db/types";
 import Spinner from "../Spinner";
 import FilamentColorPicker, { filamentColors } from "./ColorPicker";
 import { randomFrom } from "@/app/lib/random";
-import { DBCreateParams, DBRes } from "@/app/lib/db/types";
+import { DBObjectParams, ApiRes } from "@/app/lib/db/types";
 import { app } from "@/app/lib/db";
 import Drawer from "../Drawer";
+import { handleApiError } from "@/app/lib/errors";
 
 export default function AddFilamentModal({ onAdd, currentFilament, open, onClose, userSettings }:
     ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament | Filament[]) => void, userSettings: UserSettings }) {
@@ -23,7 +24,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
 
     const [amountToCreate, setAmountToCreate] = useState("1");
 
-    const [filamentData, setFilamentData] = useObjectState<DBCreateParams<Omit<Filament, "shortId">>>(currentFilament ?? {
+    const [filamentData, setFilamentData] = useObjectState<DBObjectParams<Omit<Filament, "shortId">>>(currentFilament ?? {
         name: "",
         brand: "",
         color: randomFrom(filamentColors),
@@ -88,12 +89,12 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
             await app.filament.editFilament(currentFilament.id, filamentData) :
             await app.filament.createFilament(filamentData);
 
-        let copiesRes: DBRes<Filament[]> | null = null;
+        let copiesRes: ApiRes<Filament[]> | null = null;
         if (!currentFilament && parseInt(amountToCreate) > 1 && !Number.isNaN(parseInt(amountToCreate)))
             copiesRes = await app.filament.createMultipleFilament(filamentData, parseInt(amountToCreate) - 1);
 
         if (res.error || copiesRes?.error) {
-            setError(res.error ?? copiesRes?.error!);
+            setError(handleApiError(res.error ?? copiesRes?.error!));
             setLoading(false);
             return;
         }
