@@ -5,11 +5,11 @@ import Input from "../Input";
 import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
 import { Filament, FilamentLog, UserSettings } from "@/db/types";
-import { ApiRes } from "@/app/lib/db/types";
-import { app } from "@/app/lib/db";
-import { handleApiError } from "@/app/lib/errors";
+import { ApiRes } from "@/lib/db/types";
+import { app } from "@/lib/db";
+import { handleApiError } from "@/lib/errors";
 import SmallFilamentPreview from "./SmallFilamentPreview";
-import { grams } from "@/app/lib/units";
+import { grams } from "@/lib/units";
 
 export default function LogFilamentModal({ open, onClose, filament, onFinish, currentLog, userSettings }:
     { filament: Filament, onFinish: (newFilament: Filament, newLog: FilamentLog) => void, userSettings?: UserSettings,

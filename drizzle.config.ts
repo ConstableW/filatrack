@@ -1,4 +1,4 @@
-import { isProd } from "@/app/lib/constants";
+import { isProd } from "@/lib/constants";
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({

@@ -5,11 +5,11 @@ import { Box, Weight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { Suspense, useEffect, useState } from "react";
-import { getFilament } from "../lib/db/filament";
+import { getFilament } from "../../lib/db/filament";
 import { toast } from "sonner";
 import Spinner from "@/components/Spinner";
-import { endpoints } from "../lib/constants";
-import { grams } from "../lib/units";
+import { endpoints } from "../../lib/constants";
+import { grams } from "../../lib/units";
 
 function QRPageComponent() {
     const searchParams = useSearchParams();

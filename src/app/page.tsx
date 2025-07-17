@@ -2,9 +2,9 @@ import Button from "@/components/Button";
 import Divider from "@/components/Divider";
 import Subtext from "@/components/Subtext";
 import { ChevronDown, CircleDollarSign, Code, GlobeLock, QrCode, ScrollText, Smartphone } from "lucide-react";
-import { getTotalFilament, getTotalLogs, getTotalUsers } from "./lib/db/analytics";
+import { getTotalFilament, getTotalLogs, getTotalUsers } from "../lib/db/analytics";
 import Footer from "@/components/Footer";
-import { endpoints } from "./lib/constants";
+import { endpoints } from "../lib/constants";
 import RandomizedFilament from "@/components/filament/RandomizedFilament";
 
 function LandingCard({ children }: React.PropsWithChildren) {

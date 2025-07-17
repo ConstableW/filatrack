@@ -1,4 +1,4 @@
-import { isProd } from "@/app/lib/constants";
+import { isProd } from "@/lib/constants";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 

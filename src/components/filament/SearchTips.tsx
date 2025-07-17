@@ -1,4 +1,4 @@
-import { app } from "@/app/lib/db";
+import { app } from "@/lib/db";
 import Button from "../Button";
 import Divider from "../Divider";
 import Modal, { ModalFooter, ModalProps } from "../Modal";

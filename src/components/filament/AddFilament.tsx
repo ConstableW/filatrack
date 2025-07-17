@@ -6,17 +6,17 @@ import Subtext from "../Subtext";
 import Divider from "../Divider";
 import Input from "../Input";
 import Button, { ButtonStyles } from "../Button";
-import { useObjectState } from "@/app/lib/hooks";
+import { useObjectState } from "@/lib/hooks";
 import MaterialPicker from "./MaterialPicker";
 import MassPicker from "./MassPicker";
 import { Filament, UserSettings } from "@/db/types";
 import Spinner from "../Spinner";
 import FilamentColorPicker, { filamentColors } from "./ColorPicker";
-import { randomFrom } from "@/app/lib/random";
-import { DBObjectParams, ApiRes } from "@/app/lib/db/types";
-import { app } from "@/app/lib/db";
+import { randomFrom } from "@/lib/random";
+import { DBObjectParams, ApiRes } from "@/lib/db/types";
+import { app } from "@/lib/db";
 import Drawer from "../Drawer";
-import { handleApiError } from "@/app/lib/errors";
+import { handleApiError } from "@/lib/errors";
 
 export default function AddFilamentModal({ onAdd, currentFilament, open, onClose, userSettings }:
     ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament | Filament[]) => void, userSettings: UserSettings }) {

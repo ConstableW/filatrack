@@ -4,12 +4,12 @@ import Modal, { ModalFooter } from "../Modal";
 import Subtext from "../Subtext";
 import { useEffect, useState } from "react";
 import Spinner from "../Spinner";
-import { toDateString, toTimeString } from "@/app/lib/date";
+import { toDateString, toTimeString } from "@/lib/date";
 import { Filament, FilamentLog } from "@/db/types";
 import { Clock, Pencil, Trash2 } from "lucide-react";
 import LogFilamentModal from "./LogFilament";
-import { app } from "@/app/lib/db";
-import { handleApiError } from "@/app/lib/errors";
+import { app } from "@/lib/db";
+import { handleApiError } from "@/lib/errors";
 
 function FilamentHistoryEntry({ log, onDelete, onEdit, preview, filament }:
     {

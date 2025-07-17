@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import Sidebar from "@/components/Sidebar";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { RandomDialogs } from "../lib/dialogs";
+import { RandomDialogs } from "../../lib/dialogs";
 
 export const metadata: Metadata = {
     title: "Filatrack App",

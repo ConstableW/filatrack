@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 import { FaGithub } from "react-icons/fa";
-import { getAuthErrorMessage } from "../lib/errors";
+import { getAuthErrorMessage } from "../../lib/errors";
 import { FaGoogle } from "react-icons/fa6";
 
 function LogInButton({ provider, children }: { provider: string } & React.PropsWithChildren) {

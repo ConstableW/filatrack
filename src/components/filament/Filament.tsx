@@ -9,16 +9,16 @@ import Modal, { ModalFooter } from "../Modal";
 import Divider from "../Divider";
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../Dropdown";
 import LogFilamentModal from "./LogFilament";
-import { toDateString } from "@/app/lib/date";
+import { toDateString } from "@/lib/date";
 import { Filament, UserSettings } from "@/db/types";
-import { grams } from "@/app/lib/units";
+import { grams } from "@/lib/units";
 import AddFilamentModal from "./AddFilament";
-import { app } from "@/app/lib/db";
+import { app } from "@/lib/db";
 import QRCodeModal from "./QRCodeModal";
 import FilamentDetailsModal from "./FilamentDetails";
 import { useSearchParams } from "next/navigation";
 import Input from "../Input";
-import { handleApiError } from "@/app/lib/errors";
+import { handleApiError } from "@/lib/errors";
 
 type Props = {
     filament: Filament;

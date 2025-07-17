@@ -1,7 +1,7 @@
 "use client";
 
-import { day } from "@/app/lib/date";
-import { randomFrom, randomInt } from "@/app/lib/random";
+import { day } from "@/lib/date";
+import { randomFrom, randomInt } from "@/lib/random";
 import { Filament } from "@/db/types";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";

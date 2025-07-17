@@ -1,12 +1,12 @@
 "use client";
 
-import { endpoints } from "@/app/lib/constants";
+import { endpoints } from "@/lib/constants";
 import { Dot } from "lucide-react";
 import Modal, { ModalFooter } from "./Modal";
 import { useState } from "react";
 import Subtext from "./Subtext";
 import Divider from "./Divider";
-import { changelog, version } from "@/app/lib/changelog";
+import { changelog, version } from "@/lib/changelog";
 import Button, { ButtonStyles } from "./Button";
 
 export default function Footer() {

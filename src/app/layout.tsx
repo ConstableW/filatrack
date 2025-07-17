@@ -5,7 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 import { CheckCircle2, CircleAlert, Info } from "lucide-react";
-import { prodUrl } from "./lib/constants";
+import { prodUrl } from "../lib/constants";
 // import { RandomDialogs } from "./lib/dialogs";
 
 const lexend = Lexend({

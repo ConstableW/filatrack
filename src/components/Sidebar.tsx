@@ -6,9 +6,9 @@ import SidebarItem from "./SidebarItem";
 import { Cog, Heart, Lock } from "lucide-react";
 import { FaDiscord, FaGithub } from "react-icons/fa6";
 import { Session } from "next-auth";
-import { useDevice } from "@/app/lib/hooks";
+import { useDevice } from "@/lib/hooks";
 import Divider from "./Divider";
-import { baseUrl, endpoints, sidebarWidth } from "@/app/lib/constants";
+import { baseUrl, endpoints, sidebarWidth } from "@/lib/constants";
 
 export default function Sidebar({ session }: { session: Session }) {
     const [isMobile, width] = useDevice();

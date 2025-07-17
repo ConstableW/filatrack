@@ -2,8 +2,8 @@ import { Filament } from "@/db/types";
 import FilamentIcon from "../icons/Filament";
 import Subtext from "../Subtext";
 import { Box, Clock, Weight } from "lucide-react";
-import { toDateString } from "@/app/lib/date";
-import { grams } from "@/app/lib/units";
+import { toDateString } from "@/lib/date";
+import { grams } from "@/lib/units";
 import FilamentDetailsModal from "./FilamentDetails";
 import { useState } from "react";
 

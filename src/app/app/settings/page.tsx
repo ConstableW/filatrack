@@ -1,9 +1,9 @@
 "use client";
 
-import { sidebarWidth } from "@/app/lib/constants";
-import { app } from "@/app/lib/db";
-import { handleApiError } from "@/app/lib/errors";
-import { useDevice, useObjectState } from "@/app/lib/hooks";
+import { sidebarWidth } from "@/lib/constants";
+import { app } from "@/lib/db";
+import { handleApiError } from "@/lib/errors";
+import { useDevice, useObjectState } from "@/lib/hooks";
 import Button, { ButtonStyles } from "@/components/Button";
 import Divider from "@/components/Divider";
 import MassPicker from "@/components/filament/MassPicker";

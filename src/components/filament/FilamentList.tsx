@@ -10,7 +10,7 @@ import Divider from "../Divider";
 import Button, { ButtonStyles } from "../Button";
 import Subtext from "../Subtext";
 import { ReorderableList } from "../RerorderList";
-import { deleteFilaments, reorderFilament } from "@/app/lib/db/filament";
+import { deleteFilaments, reorderFilament } from "@/lib/db/filament";
 import QRCodeModal from "./QRCodeModal";
 import Modal, { ModalFooter } from "../Modal";
 

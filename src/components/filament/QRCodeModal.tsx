@@ -5,7 +5,7 @@ import Modal, { ModalFooter, ModalProps } from "../Modal";
 import Subtext from "../Subtext";
 import Button from "../Button";
 import Input from "../Input";
-import { useObjectState } from "@/app/lib/hooks";
+import { useObjectState } from "@/lib/hooks";
 
 export function generateQrUrl(filament: Filament | Filament[], options: Record<string, boolean>) {
     const ids = Array.isArray(filament) ? filament.map(f => f.id).join(",") : filament.id;

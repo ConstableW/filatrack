@@ -1,4 +1,4 @@
-import { endpoints, prodUrl } from "@/app/lib/constants";
+import { endpoints, prodUrl } from "@/lib/constants";
 
 /* eslint-disable max-len */
 export default function PrivacyPolicyPage() {
