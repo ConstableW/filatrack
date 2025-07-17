@@ -15,3 +15,13 @@ There definitely are bugs. Please report bugs in the issues on this repo instead
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Star History
+
+<a href="https://www.star-history.com/#mrdiamonddog/filatrack&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=mrdiamonddog/filatrack&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=mrdiamonddog/filatrack&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=mrdiamonddog/filatrack&type=Date" />
+ </picture>
+</a>
