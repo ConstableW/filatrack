@@ -1,9 +1,9 @@
 "use client";
 
-import { endpoints, version } from "@/app/lib/constants";
+import { endpoints } from "@/app/lib/constants";
 import { Dot } from "lucide-react";
 import Modal, { ModalFooter } from "./Modal";
-import { useState } from "react";
+import { useState, version } from "react";
 import Subtext from "./Subtext";
 import Divider from "./Divider";
 import { changelog } from "@/app/lib/changelog";

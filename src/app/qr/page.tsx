@@ -9,6 +9,7 @@ import { getFilament } from "../lib/db/filament";
 import { toast } from "sonner";
 import Spinner from "@/components/Spinner";
 import { endpoints } from "../lib/constants";
+import { grams } from "../lib/units";
 
 function QRPageComponent() {
     const searchParams = useSearchParams();
@@ -66,11 +67,11 @@ function QRPageComponent() {
             {options.includes("brand") && <p className="text-wrap text-center leading-5 my-1">{f.brand}</p>}
             {options.includes("mass") && <div className="flex flex-row w-full justify-center items-center gap-1 text-sm">
                 <Weight size={20} />
-                1kg
+                {grams(f.startingMass)}
             </div>}
             {options.includes("mat") && <div className="flex flex-row w-full justify-center items-center gap-1 text-sm">
                 <Box size={20} />
-                PLA
+                {f.material}
             </div>}
         </div>)}
     </>);
