@@ -6,6 +6,7 @@ import { getTotalFilament, getTotalLogs, getTotalUsers } from "../lib/db/analyti
 import Footer from "@/components/Footer";
 import { endpoints } from "../lib/constants";
 import RandomizedFilament from "@/components/filament/RandomizedFilament";
+import LandingBackground from "@/components/LandingBackground";
 
 function LandingCard({ children }: React.PropsWithChildren) {
     return (
@@ -25,12 +26,14 @@ function LandingCardHeader({ children }: React.PropsWithChildren) {
 
 export default async function Home() {
     return (<>
+        <LandingBackground />
+
         <main className="absolute-center">
             <div className="flex flex-col md:flex-row gap-2 items-center">
                 <RandomizedFilament />
                 <div>
-                    <h1>Filatrack</h1>
-                    <Subtext className="whitespace-pre-wrap mb-2">
+                    <h1 className="text-shadow-lg text-shadow-gray-500/50">Filatrack</h1>
+                    <Subtext className="whitespace-pre-wrap mb-2 text-shadow-lg text-shadow-bg/50">
                         Keep track of all your filament rolls in the simplest way possible.{"\n"}
                         Free, forever. No ads. All open-source.
                     </Subtext>

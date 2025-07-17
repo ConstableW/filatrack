@@ -223,6 +223,11 @@ select, option {
       height: 0;
     }
   }
+
+  .bottom-fade {
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    overflow-y: scroll;
+  }
 }
 
 @keyframes underline-expand {
