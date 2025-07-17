@@ -3,7 +3,7 @@
 import { GiFilmSpool } from "react-icons/gi";
 import AccountCard from "./Account";
 import SidebarItem from "./SidebarItem";
-import { Cog, Heart, Lock, ScrollText } from "lucide-react";
+import { Cog, Heart, Lock } from "lucide-react";
 import { FaDiscord, FaGithub } from "react-icons/fa6";
 import { Session } from "next-auth";
 import { useDevice } from "@/app/lib/hooks";
@@ -31,9 +31,9 @@ export default function Sidebar({ session }: { session: Session }) {
                 <GiFilmSpool size={24} /> Filament
             </SidebarItem>
 
-            <SidebarItem href={endpoints.prints}>
+            {/* <SidebarItem href={endpoints.prints}>
                 <ScrollText /> Prints
-            </SidebarItem>
+            </SidebarItem> */}
 
             <SidebarItem href={endpoints.settings}>
                 <Cog /> Settings
@@ -69,9 +69,9 @@ export default function Sidebar({ session }: { session: Session }) {
                 <GiFilmSpool size={48} />
             </SidebarItem>
 
-            <SidebarItem href={endpoints.prints}>
+            {/* <SidebarItem href={endpoints.prints}>
                 <ScrollText size={48} />
-            </SidebarItem>
+            </SidebarItem> */}
 
             <SidebarItem href={endpoints.settings}>
                 <Cog size={48} />
