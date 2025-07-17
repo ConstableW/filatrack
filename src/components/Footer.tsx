@@ -7,7 +7,7 @@ import { useState } from "react";
 import Subtext from "./Subtext";
 import Divider from "./Divider";
 import { changelog, version } from "@/app/lib/changelog";
-import Button from "./Button";
+import Button, { ButtonStyles } from "./Button";
 
 export default function Footer() {
     const [openModal, setOpenModal] = useState("");
@@ -33,11 +33,16 @@ export default function Footer() {
             <Divider />
             <b>{changelog[currentChangelog].version}</b>
             <Subtext>{changelog[currentChangelog].date}</Subtext>
-            <p className="whitespace-pre-wrap">{changelog[currentChangelog].content}</p>
+
+            {changelog[currentChangelog].content}
 
             <ModalFooter>
-                {currentChangelog !== 0 && <Button>Next</Button>}
-                {currentChangelog !== changelog.length - 1 && <Button>Previous</Button>}
+                {currentChangelog !== 0 &&
+                    <Button onClick={() => setCurrentChangelog(c => c - 1)}>Next</Button>
+                }
+                {currentChangelog !== changelog.length - 1 &&
+                    <Button onClick={() => setCurrentChangelog(c => c + 1)} look={ButtonStyles.secondary}>Previous</Button>
+                }
             </ModalFooter>
         </Modal>
     </>);
