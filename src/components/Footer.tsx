@@ -3,10 +3,10 @@
 import { endpoints } from "@/app/lib/constants";
 import { Dot } from "lucide-react";
 import Modal, { ModalFooter } from "./Modal";
-import { useState, version } from "react";
+import { useState } from "react";
 import Subtext from "./Subtext";
 import Divider from "./Divider";
-import { changelog } from "@/app/lib/changelog";
+import { changelog, version } from "@/app/lib/changelog";
 import Button from "./Button";
 
 export default function Footer() {
