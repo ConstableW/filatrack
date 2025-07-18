@@ -37,11 +37,11 @@ export default function Footer() {
             {changelog[currentChangelog].content}
 
             <ModalFooter>
-                {currentChangelog !== 0 &&
-                    <Button onClick={() => setCurrentChangelog(c => c - 1)}>Next</Button>
-                }
                 {currentChangelog !== changelog.length - 1 &&
                     <Button onClick={() => setCurrentChangelog(c => c + 1)} look={ButtonStyles.secondary}>Previous</Button>
+                }
+                {currentChangelog !== 0 &&
+                    <Button onClick={() => setCurrentChangelog(c => c - 1)}>Next</Button>
                 }
             </ModalFooter>
         </Modal>

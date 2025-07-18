@@ -33,7 +33,9 @@ export const baseUrl = isProd ? prodUrl : devUrl;
 export const endpoints = {
     discord: `${baseUrl}discord`,
     github: `${baseUrl}github`,
-    app: `${baseUrl}app`,
+    app: `${baseUrl}app/dashboard`,
+    dashboard: `${baseUrl}app/dashboard`,
+    filament: `${baseUrl}app/filament`,
     prints: `${baseUrl}app/prints`,
     settings: `${baseUrl}app/settings`,
     privacyPolicy: `${baseUrl}about/privacy-policy`,

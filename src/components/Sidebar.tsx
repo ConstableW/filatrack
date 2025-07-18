@@ -3,7 +3,7 @@
 import { GiFilmSpool } from "react-icons/gi";
 import AccountCard from "./Account";
 import SidebarItem from "./SidebarItem";
-import { Cog, Heart, Lock } from "lucide-react";
+import { Cog, Heart, Home, Lock } from "lucide-react";
 import { FaDiscord, FaGithub } from "react-icons/fa6";
 import { Session } from "next-auth";
 import { useDevice } from "@/lib/hooks";
@@ -27,7 +27,11 @@ export default function Sidebar({ session }: { session: Session }) {
 
             <AccountCard session={session} />
 
-            <SidebarItem href={endpoints.app}>
+            <SidebarItem href={endpoints.dashboard}>
+                <Home size={24} /> Dashboard
+            </SidebarItem>
+
+            <SidebarItem href={endpoints.filament}>
                 <GiFilmSpool size={24} /> Filament
             </SidebarItem>
 
@@ -65,7 +69,11 @@ export default function Sidebar({ session }: { session: Session }) {
             className={`bg-bg-light w-[95%] flex flex-row items-center justify-between 
                 gap-1 p-2 fixed left-1/2 -translate-x-1/2 bottom-4 h-[75px] z-[1] rounded-full shadow-xl`}
         >
-            <SidebarItem href={endpoints.app}>
+            <SidebarItem href={endpoints.dashboard}>
+                <Home size={48} />
+            </SidebarItem>
+
+            <SidebarItem href={endpoints.filament}>
                 <GiFilmSpool size={48} />
             </SidebarItem>
 

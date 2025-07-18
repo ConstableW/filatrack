@@ -103,6 +103,7 @@ export async function createFilament(filament: DBObjectParams<Omit<Filament, "sh
         data: (await db.insert(filamentTable).values({
             ...filament,
             userId: session.user.id!,
+            updatedAt: new Date(),
         })
             .returning())[0],
     };
@@ -143,6 +144,7 @@ export async function createMultipleFilament(filament: DBObjectParams<Omit<Filam
         newFilament.push((await db.insert(filamentTable).values({
             ...filament,
             userId: session.user.id!,
+            updatedAt: new Date(),
         })
             .returning())[0]);
     }
@@ -182,6 +184,7 @@ export async function editFilament(filamentId: string, newData: Partial<DBObject
     return {
         data: (await db.update(filamentTable).set({
             ...newData,
+            updatedAt: new Date(),
         })
             .where(eq(filamentTable.id, filamentId))
             .returning())[0],
@@ -294,7 +297,7 @@ export async function getFilamentLogs(filamentId: string): Promise<ApiRes<Filame
  * @param log The data to create the log with. Must include filamentId.
  * @returns The new log.
  */
-export async function createFilamentLog(log: DBObjectParams<FilamentLog>): Promise<ApiRes<FilamentLog>> {
+export async function createFilamentLog(log: DBObjectParams<FilamentLog>): Promise<ApiRes<{ log: FilamentLog, filament: Filament }>> {
     const session = await apiAuth();
 
     if (!session)
@@ -315,15 +318,26 @@ export async function createFilamentLog(log: DBObjectParams<FilamentLog>): Promi
     if (Number.isNaN(log.filamentUsed))
         return ApiError("InvalidField", "Invalid filament used");
 
+    const editRes = await editFilament(filament.id, {
+        currentMass: filament.currentMass - log.filamentUsed,
+        lastUsed: new Date(),
+    });
+
+    if (editRes.error)
+        return ApiError("ServerError", `Could not edit specified filament: ${editRes.error.code}, ${editRes.error.info}`);
+
     addOrUpdateAnalyticEntry(new Date(), {
         logsCreated: 1,
     });
 
     return {
-        data: (await db.insert(filamentLogTable).values({
-            ...log,
-        })
-            .returning())[0],
+        data: {
+            log: (await db.insert(filamentLogTable).values({
+                ...log,
+            })
+                .returning())[0],
+            filament: editRes.data!,
+        },
     };
 }
 
@@ -357,9 +371,11 @@ export async function deleteFilamentLog(log: FilamentLog): Promise<ApiRes<void>>
 /**
  * Edits an existing filament log.
  * @param newLog The modified log data. If a key isn't specified, it will not be modified.
+ * @param prevLog The previous log data. filamentUsed must be specified.
  * @returns The modified log.
  */
-export async function editFilamentLog(newLog: Partial<FilamentLog>): Promise<ApiRes<FilamentLog>> {
+export async function editFilamentLog(newLog: Partial<FilamentLog>, prevLog: Partial<FilamentLog>)
+    : Promise<ApiRes<{ log: FilamentLog, filament?: Filament }>> {
     const session = await apiAuth();
 
     if (!session)
@@ -380,9 +396,25 @@ export async function editFilamentLog(newLog: Partial<FilamentLog>): Promise<Api
     if (newLog.filamentUsed && Number.isNaN(newLog.filamentUsed))
         return ApiError("InvalidField", "Invalid filament used");
 
+    let editRes: ApiRes<Filament> | null = null;
+    if (newLog.filamentUsed) {
+        if (!prevLog.filamentUsed)
+            return ApiError("InvalidField", "Previous log must contain filamentUsed.");
+
+        editRes = await editFilament(filament.id, {
+            currentMass: filament.currentMass + prevLog.filamentUsed - newLog.filamentUsed,
+        });
+
+        if (editRes.error)
+            return ApiError("ServerError", `Could not edit specified filament: ${editRes.error.code}, ${editRes.error.info}`);
+    }
+
     return {
-        data: (await db.update(filamentLogTable).set({ ...newLog })
-            .where(eq(filamentLogTable.id, newLog.id!))
-            .returning())[0],
+        data: {
+            log: (await db.update(filamentLogTable).set({ ...newLog })
+                .where(eq(filamentLogTable.id, newLog.id!))
+                .returning())[0],
+            filament: editRes?.data ?? undefined,
+        },
     };
 }

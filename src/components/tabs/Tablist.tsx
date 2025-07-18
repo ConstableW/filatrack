@@ -8,7 +8,8 @@ import TabButton from "./TabButton";
 interface Props {
     tabs: string[];
     activeTab?: string;
-    children: React.ReactNode;
+    onTabChange?: (v: string) => void;
+    children?: React.ReactNode;
     className?: string;
 }
 
@@ -35,7 +36,10 @@ export default function Tablist(props: Props) {
                 <TabButton
                     key={tab}
                     active={activeTab === tab}
-                    onClick={() => setActiveTab(tab)}
+                    onClick={() => {
+                        setActiveTab(tab);
+                        props.onTabChange?.(tab);
+                    }}
                 >{tab}</TabButton>
             ))}
         </div>

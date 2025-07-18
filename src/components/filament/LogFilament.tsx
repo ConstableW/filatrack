@@ -38,7 +38,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
         setLoading(true);
         setError("");
 
-        let res: ApiRes<FilamentLog> | null = null;
+        let res: ApiRes<{ log: FilamentLog, filament?: Filament }> | null = null;
         if (currentLog) {
             res = await app.filament.editFilamentLog({
                 id: currentLog.id,
@@ -49,7 +49,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
 
                 filamentId: currentLog.filamentId,
                 time: currentLog.time,
-            });
+            }, currentLog);
         } else {
             res = await app.filament.createFilamentLog({
                 filamentUsed,
@@ -70,22 +70,11 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
             return;
         }
 
-        const editRes = await app.filament.editFilament(filament.id, {
-            currentMass: calculateNewFilamentMass(filamentUsed),
-            lastUsed: new Date(Math.max((currentLog ? currentLog.time : new Date()).getTime(), filament.lastUsed.getTime())),
-        });
-
-        if (editRes.error) {
-            setError(handleApiError(editRes.error));
-            setLoading(false);
-            return;
-        }
-
         setLoading(false);
         setError("");
         setFilamentUsed(0);
         onClose();
-        onFinish(editRes.data!, res.data!);
+        onFinish(res.data!.filament ?? filament, res.data!.log);
     }
 
     return (

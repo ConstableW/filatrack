@@ -9,10 +9,10 @@ import AddFilamentModal from "./AddFilament";
 import Divider from "../Divider";
 import Button, { ButtonStyles } from "../Button";
 import Subtext from "../Subtext";
-import { ReorderableList } from "../RerorderList";
 import { deleteFilaments, reorderFilament } from "@/lib/db/filament";
 import QRCodeModal from "./QRCodeModal";
 import Modal, { ModalFooter } from "../Modal";
+import { ReorderableList } from "../RerorderList";
 
 export default function FilamentList({ data, userSettings, allowAdd, title, sortBy, search }:
     { data?: Filament[] | null, userSettings?: UserSettings, allowAdd?: boolean,
@@ -168,7 +168,7 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
             />
     ));
 
-    return (<>
+    return (<div>
         <div className="flex flex-row items-center justify-between mt-1">
             <h2>{title}</h2>
             {allowAdd && <div className="flex flex-row gap-2">
@@ -205,13 +205,13 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
         </div>
         <Divider />
 
-        <div className={`${!filament && "grid grid-cols-2"} ${!editMode && "grid grid-cols-2"} 
+        <div className={`${(!editMode && filament) && "grid grid-cols-2"} ${!filament && "md:grid md:grid-cols-2"}
             md:flex md:flex-row gap-2 md:flex-wrap`}>
             {!filament && <Skeleton
                 width="100%"
-                height={269}
+                height={270}
                 count={2}
-                className="flex flex-row gap-2 md:flex-wrap [&>br]:hidden md:w-full *:w-full md:*:!w-[175px]"
+                className="flex flex-row gap-2 md:flex-wrap [&>br]:hidden w-full *:w-full md:*:!w-[175px]"
             />}
 
             {editMode ?
@@ -223,8 +223,8 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
 
             {(allowAdd && !!filament && !editMode) &&
             <div
-                className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center justify-center relative md:w-[175px] 
-                    cursor-pointer transition-all border-2 border-transparent hover:border-primary w-full min-h-[230px] 
+                className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center justify-center relative md:w-[175px]
+                    cursor-pointer transition-all border-2 border-transparent hover:border-primary w-full min-h-[270px]
                     drop-shadow-lg`}
                 onClick={() => setOpenModal("add")}
             >
@@ -265,5 +265,5 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
                 }} loading={deleteLoading}>Confirm</Button>
             </ModalFooter>
         </Modal>
-    </>);
+    </div>);
 }
