@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import FilamentEntry from "./Filament";
-import { Filament, UserSettings } from "@/db/types";
+import { Box, Filament, UserSettings } from "@/db/types";
 import Skeleton from "../Skeleton";
-import { Pencil, Plus, QrCode, Trash2, X } from "lucide-react";
+import { ArchiveRestore, Pencil, Plus, QrCode, Trash2, X } from "lucide-react";
 import AddFilamentModal from "./AddFilament";
 import Divider from "../Divider";
 import Button, { ButtonStyles } from "../Button";
@@ -13,9 +13,10 @@ import { deleteFilaments, reorderFilament } from "@/lib/db/filament";
 import QRCodeModal from "./QRCodeModal";
 import Modal, { ModalFooter } from "../Modal";
 import { ReorderableList } from "../RerorderList";
+import MoveFilamentModal from "./MoveFilament";
 
-export default function FilamentList({ data, userSettings, allowAdd, title, sortBy, search }:
-    { data?: Filament[] | null, userSettings?: UserSettings, allowAdd?: boolean,
+export default function FilamentList({ data, userSettings, allowAdd, title, sortBy, search, boxId, allBoxes }:
+    { data?: Filament[] | null, userSettings?: UserSettings, allowAdd?: boolean, boxId?: string, allBoxes?: Box[],
         isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string
 }) {
     const [editMode, setEditMode] = useState(false);
@@ -105,7 +106,18 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
     function editFilament(i: number, newData: Filament) {
         if (!filament)
             return;
-        setFilament([...filament.slice(0, i), newData, ...filament.slice(i + 1)]);
+
+        if (newData.box !== filament[i].box)
+            setFilament([...filament.slice(0, i), ...filament.slice(i + 1)]);
+        else
+            setFilament([...filament.slice(0, i), newData, ...filament.slice(i + 1)]);
+    }
+
+    function moveFilament(newFilament: Filament[]) {
+        if (!filament)
+            return;
+
+        setFilament(filament.filter(f => !newFilament.map(f => f.id).includes(f.id)));
     }
 
     function onReorderFilament(newElements: React.ReactElement[]) {
@@ -146,6 +158,13 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
     }, [sortBy]);
 
     useEffect(() => {
+        if (!filament)
+            return;
+
+        updateSearch(filament);
+    }, [search]);
+
+    useEffect(() => {
         setSelectedFilament([]);
     }, [editMode]);
 
@@ -162,6 +181,8 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
 
                 userSettings={userSettings}
 
+                allBoxes={allBoxes}
+
                 editMode={editMode}
                 selected={selectedFilament.includes(f)}
                 onSelectedChange={v => selectChangeFilament(f, v)}
@@ -173,6 +194,13 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
             <h2>{title}</h2>
             {allowAdd && <div className="flex flex-row gap-2">
                 {editMode && <>
+                    <Button
+                        look={ButtonStyles.secondary}
+                        disabled={!selectedFilament.length}
+                        onClick={() => setOpenModal("move")}
+                    >
+                        <ArchiveRestore size={32} />
+                    </Button>
                     <Button
                         look={ButtonStyles.secondary}
                         disabled={!selectedFilament.length}
@@ -239,10 +267,19 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
                 onClose={() => setOpenModal("")}
                 onAdd={f => setFilament([...filament, ...(Array.isArray(f) ? f : [f])])}
                 userSettings={userSettings}
+                boxId={boxId}
             />}
         </div>
 
         <QRCodeModal open={openModal === "qrcode"} onClose={() => setOpenModal("")} filament={selectedFilament} />
+
+        {allBoxes && <MoveFilamentModal
+            open={openModal === "move"}
+            onClose={() => setOpenModal("")}
+            filament={selectedFilament}
+            allBoxes={allBoxes}
+            onMove={moveFilament}
+        />}
 
         <Modal open={openModal === "delete"} onClose={() => setOpenModal("")} title="Delete Filament">
             <Subtext className="mb-2">Removes this filament from your library.</Subtext>

@@ -3,7 +3,7 @@
 import { GiFilmSpool } from "react-icons/gi";
 import AccountCard from "./Account";
 import SidebarItem from "./SidebarItem";
-import { Cog, Heart, Home, Lock } from "lucide-react";
+import { Bolt, Heart, Home, Lock } from "lucide-react";
 import { FaDiscord, FaGithub } from "react-icons/fa6";
 import { Session } from "next-auth";
 import { useDevice } from "@/lib/hooks";
@@ -40,7 +40,7 @@ export default function Sidebar({ session }: { session: Session }) {
             </SidebarItem> */}
 
             <SidebarItem href={endpoints.settings}>
-                <Cog /> Settings
+                <Bolt /> Settings
             </SidebarItem>
 
             <div className="mt-auto">
@@ -82,7 +82,7 @@ export default function Sidebar({ session }: { session: Session }) {
             </SidebarItem> */}
 
             <SidebarItem href={endpoints.settings}>
-                <Cog size={48} />
+                <Bolt size={48} />
             </SidebarItem>
 
             {session.user?.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID &&

@@ -3,21 +3,28 @@
 import { DBObjectParams, ApiRes } from "./types";
 import { db } from "@/db/drizzle";
 import { filamentLogTable, filamentTable } from "@/db/schema/filament";
-import { eq, inArray } from "drizzle-orm";
+import { eq, inArray, and } from "drizzle-orm";
 import { Filament, FilamentLog } from "@/db/types";
 import { addOrUpdateAnalyticEntry } from "./analytics";
 import { apiAuth } from "./helpers";
 import { ApiError } from "../errors";
+import { app } from ".";
 
 /**
  * Gets all of the filament a user has created.
  * @returns The list of filament
  */
-export async function getAllFilaments(): Promise<ApiRes<Filament[]>> {
+export async function getAllFilaments(boxId?: string): Promise<ApiRes<Filament[]>> {
     const session = await apiAuth();
 
     if (!session)
         return ApiError("NotAuthenticated");
+
+    if (boxId)
+        return {
+            data: await db.select().from(filamentTable)
+                .where(and(eq(filamentTable.userId, session.user.id!), eq(filamentTable.box, boxId))),
+        };
 
     return {
         data: await db.select().from(filamentTable)
@@ -38,6 +45,12 @@ export async function getFilament(id: string): Promise<ApiRes<Filament | null>> 
 
     let filament = (await db.select().from(filamentTable)
         .where(eq(filamentTable.id, id)))[0];
+
+    if (!filament)
+        return ApiError("NotFound");
+
+    if (filament.userId !== session.user.id)
+        return ApiError("NotAuthorized");
 
     if (!filament.shortId)
         filament = (await db.update(filamentTable).set({ shortId: crypto.randomUUID().slice(0, 8) })
@@ -99,13 +112,18 @@ export async function createFilament(filament: DBObjectParams<Omit<Filament, "sh
     if ((filament as Filament).shortId)
         delete (filament as Partial<Filament>).shortId;
 
+    const newFilament = (await db.insert(filamentTable).values({
+        ...filament,
+        userId: session.user.id!,
+        updatedAt: new Date(),
+    })
+        .returning())[0];
+
+    if (filament.box)
+        await app.boxes.addFilament(filament.box, newFilament.id);
+
     return {
-        data: (await db.insert(filamentTable).values({
-            ...filament,
-            userId: session.user.id!,
-            updatedAt: new Date(),
-        })
-            .returning())[0],
+        data: newFilament,
     };
 }
 

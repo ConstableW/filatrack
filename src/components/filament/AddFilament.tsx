@@ -18,8 +18,13 @@ import { app } from "@/lib/db";
 import Drawer from "../Drawer";
 import { handleApiError } from "@/lib/errors";
 
-export default function AddFilamentModal({ onAdd, currentFilament, open, onClose, userSettings }:
-    ModalProps & { currentFilament?: Filament, onAdd?: (filament: Filament | Filament[]) => void, userSettings: UserSettings }) {
+export default function AddFilamentModal({ onAdd, currentFilament, open, onClose, userSettings, boxId }:
+    ModalProps & {
+        currentFilament?: Filament,
+        onAdd?: (filament: Filament | Filament[]) => void,
+        userSettings: UserSettings,
+        boxId?: string,
+     }) {
     const [step, setStep] = useState(-1);
 
     const [amountToCreate, setAmountToCreate] = useState("1");
@@ -35,6 +40,8 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         printingTemperature: null,
         diameter: null,
         cost: null,
+
+        box: boxId ?? null,
 
         currentMass: userSettings.defaultMass,
         startingMass: userSettings.defaultMass,
@@ -53,6 +60,8 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
             printingTemperature: null,
             diameter: null,
             cost: null,
+
+            box: boxId ?? null,
 
             currentMass: userSettings?.defaultMass ?? 1000,
             startingMass: userSettings?.defaultMass ?? 1000,

@@ -14,4 +14,7 @@ export const analyticsTable = pgTable("analytics", {
 
     logsCreated: integer().default(0)
         .notNull(),
+
+    boxesCreated: integer().default(0)
+        .notNull(),
 });

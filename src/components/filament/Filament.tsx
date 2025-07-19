@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Clock, EllipsisVertical, Weight } from "lucide-react";
+import { Box as BoxIcon, Clock, EllipsisVertical, Weight } from "lucide-react";
 import FilamentIcon from "../icons/Filament";
 import Subtext from "../Subtext";
 import Button, { ButtonStyles } from "../Button";
@@ -10,7 +10,7 @@ import Divider from "../Divider";
 import { Dropdown, DropdownContent, DropdownItem, DropdownTrigger } from "../Dropdown";
 import LogFilamentModal from "./LogFilament";
 import { toDateString } from "@/lib/date";
-import { Filament, UserSettings } from "@/db/types";
+import { Box, Filament, UserSettings } from "@/db/types";
 import { grams } from "@/lib/units";
 import AddFilamentModal from "./AddFilament";
 import { app } from "@/lib/db";
@@ -19,6 +19,7 @@ import FilamentDetailsModal from "./FilamentDetails";
 import { useSearchParams } from "next/navigation";
 import Input from "../Input";
 import { handleApiError } from "@/lib/errors";
+import MoveFilamentModal from "./MoveFilament";
 
 type Props = {
     filament: Filament;
@@ -28,6 +29,8 @@ type Props = {
     light?: boolean;
 
     userSettings?: UserSettings;
+
+    allBoxes?: Box[];
 
     editMode?: boolean;
     selected?: boolean;
@@ -42,6 +45,7 @@ export default function FilamentEntry({
     filament,
     isPreview, noLog, light,
     userSettings,
+    allBoxes,
     editMode, selected, onSelectedChange,
     onDelete, onEdit, onAdd,
 }: Props) {
@@ -75,28 +79,11 @@ export default function FilamentEntry({
         onDelete?.();
     }
 
-    async function onMoveConfirm() {
-        setLoading(true);
-
-        const res = await app.filament.editFilament(filament.id, {
-            currentMass: 0,
-        });
-        if (res.error) {
-            setError(handleApiError(res.error));
-            setLoading(false);
-            return;
-        }
-
-        setLoading(false);
-        setOpenModal("");
-        onEdit?.(res.data!);
-    }
-
     return (<>
         <div
             className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center drop-shadow-lg
-            justify-between relative border-2 border-transparent transition-all md:max-w-[175px] md:min-w-[175px]
-            ${(light) ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "} ${editMode && "relative"}`}
+            relative border-2 border-transparent transition-all md:max-w-[175px] md:min-w-[175px]
+            ${(light) ? "bg-bg-lighter" : "hover:border-primary cursor-pointer "}`}
             onClick={() => {
                 if (!isPreview)
                     setOpenModal("details");
@@ -128,18 +115,24 @@ export default function FilamentEntry({
                     <Weight size={16} /> {grams(filament.currentMass)} / {grams(filament.startingMass)}
                 </Subtext>
                 <Subtext className="text-xs flex flex-row gap-1 items-center">
-                    <Box size={16} /> {filament.material}
+                    <BoxIcon size={16} /> {filament.material}
                 </Subtext>
                 <Subtext className="text-xs flex flex-row gap-1 items-center">
                     <Clock size={16} />
                     {filament.lastUsed.getTime() === 0 ? "Never" : toDateString(filament.lastUsed)}
                 </Subtext>
             </div>
-            {(!isPreview && filament.currentMass > 0) && <div className="flex flex-row gap-1 w-full">
-                {!noLog && <Button className="w-full mt-1" onClick={e => {
-                    e.stopPropagation();
-                    setOpenModal("log");
-                }}>Log</Button>}
+            {(!isPreview) && <div className="flex flex-row gap-1 w-full mt-auto">
+                {!noLog && <Button
+                    className="w-full mt-1"
+                    onClick={e => {
+                        e.stopPropagation();
+                        setOpenModal("log");
+                    }}
+                    disabled={filament.currentMass <= 0}
+                >
+                    Log
+                </Button>}
             </div>}
 
             {!isPreview && <button
@@ -151,6 +144,7 @@ export default function FilamentEntry({
                     </DropdownTrigger>
                     <DropdownContent>
                         <DropdownItem onClick={() => setOpenModal("edit")}>Edit</DropdownItem>
+                        {allBoxes && <DropdownItem onClick={() => setOpenModal("move")}>Move</DropdownItem>}
                         <DropdownItem onClick={() => {
                             app.filament.createFilament({ ...filament })
                                 .then(res => (
@@ -161,8 +155,6 @@ export default function FilamentEntry({
                             Duplicate
                         </DropdownItem>
                         <DropdownItem onClick={() => setOpenModal("qrcode")}>QR Code</DropdownItem>
-                        {filament.currentMass > 0 &&
-                        <DropdownItem onClick={() => setOpenModal("move")}>Move to Empty</DropdownItem>}
                         <DropdownItem onClick={() => setOpenModal("delete")} danger>Delete</DropdownItem>
                     </DropdownContent>
                 </Dropdown>
@@ -199,32 +191,27 @@ export default function FilamentEntry({
                 filament={filament}
             />
 
-            <Modal open={openModal === "move"} onClose={() => setOpenModal("")} title="Move Filament">
-                <Subtext className="mb-2">Change which folder your filament is in.</Subtext>
-                <Divider />
-                <p className="w-full text-center">Are you sure you want to move this filament?</p>
-                <div className="w-full flex justify-center items-center">
-                    <FilamentEntry isPreview filament={filament} />
-                </div>
-                <p className="w-full text-center">This will set it's current mass to 0g.</p>
-                <ModalFooter
-                    tip={"If you no longer have this filament or you want it removed from your library, delete it instead."}
-                    error={error}
-                >
-                    <Button look={ButtonStyles.secondary} onClick={() => setOpenModal("")}>Cancel</Button>
-                    <Button onClick={onMoveConfirm} loading={loading}>Confirm</Button>
-                </ModalFooter>
-            </Modal>
+            {allBoxes && <MoveFilamentModal
+                open={openModal === "move"}
+                onClose={() => setOpenModal("")}
+                filament={[filament]}
+                allBoxes={allBoxes}
+                onMove={() => onDelete?.()}
+            />}
 
             <Modal open={openModal === "delete"} onClose={() => setOpenModal("")} title="Delete Filament">
-                <Subtext className="mb-2">Removes this filament from your library.</Subtext>
+                <Subtext>Removes this filament from your library.</Subtext>
                 <Divider />
+
                 <p className="w-full text-center">Are you sure you want to delete this filament?</p>
+
                 <div className="w-full flex justify-center items-center">
                     <FilamentEntry isPreview filament={filament} />
                 </div>
+
                 <p className="w-full text-center">This will also delete all of the logs made with this filament.</p>
                 <p className="w-full text-center">Any QR codes you've made with this filament will also stop working.</p>
+
                 <ModalFooter
                     tip={`Don't delete the filament if you just used it all up. 
                         Instead, press the 'Move to Empty' button in the filament's menu.`}

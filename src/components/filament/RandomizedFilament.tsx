@@ -70,6 +70,8 @@ export function randomFilament(): Filament {
         startingMass: maxMass,
         index: 0,
 
+        box: null,
+
         printingTemperature: null,
         diameter: null,
         cost: null,

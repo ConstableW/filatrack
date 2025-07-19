@@ -8,7 +8,7 @@ export default function FilamentIcon({ size, filament }: { size: number, filamen
 
     return (<div className="relative" style={{ width: size, height: size }}>
         <img src="/filament.svg" width={size} height={size}  className="absolute" />
-        <div
+        {filament && <div
             className="mask-contain"
             style={{
                 width: size,
@@ -16,7 +16,7 @@ export default function FilamentIcon({ size, filament }: { size: number, filamen
                 backgroundColor: filament?.color ?? "#000",
                 maskImage: `url(/filament-color-mask-${stage ?? 5}.svg)`,
             }}
-        />
+        />}
     </div>
     );
 }

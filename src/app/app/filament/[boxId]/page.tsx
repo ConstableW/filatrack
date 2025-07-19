@@ -2,25 +2,21 @@
 
 import { useEffect, useState } from "react";
 import { Box, Filament, UserSettings } from "@/db/types";
-import { ListFilter, Plus } from "lucide-react";
+import { ArrowLeft, ListFilter } from "lucide-react";
 import Input from "@/components/Input";
-import { app } from "../../../lib/db";
-import { useDevice } from "../../../lib/hooks";
 import SearchTipsModal from "@/components/filament/SearchTips";
 import Footer from "@/components/Footer";
-import { sidebarWidth } from "../../../lib/constants";
 import { Select } from "@/components/Select";
-import { handleApiError } from "../../../lib/errors";
-import Divider from "@/components/Divider";
 import FilamentList from "@/components/filament/FilamentList";
-import Button from "@/components/Button";
-import CreateBoxModal from "@/components/boxes/CreateBox";
-import Subtext from "@/components/Subtext";
-import BoxEntry from "@/components/boxes/Box";
-import Spinner from "@/components/Spinner";
+import { endpoints, sidebarWidth } from "@/lib/constants";
+import { handleApiError } from "@/lib/errors";
+import { useDevice } from "@/lib/hooks";
+import { app } from "@/lib/db";
 
-export default function FilamentPage() {
+export default function BoxPage({ params }: { params: Promise<{ boxId: string }> }) {
     const [isMobile, width] = useDevice();
+
+    const [box, setBox] = useState<Box>();
 
     const [sortBy, setSortBy] = useState<keyof Filament>("index");
     const [search, setSearch] = useState("");
@@ -32,15 +28,6 @@ export default function FilamentPage() {
     const [allFilament, setAllFilament] = useState<Filament[]>();
     const [allBoxes, setAllBoxes] = useState<Box[]>();
 
-    function fetchFilament() {
-        app.filament.getAllFilaments().then(res => {
-            if (res.error)
-                return void handleApiError(res.error, "toast");
-
-            setAllFilament(res.data!);
-        });
-    }
-
     useEffect(() => {
         app.settings.getUserSettings().then(res => {
             if (res.error)
@@ -49,13 +36,27 @@ export default function FilamentPage() {
             setUserSettings(res.data!);
         });
 
-        fetchFilament();
-
         app.boxes.getAllBoxes().then(res => {
             if (res.error)
                 return void handleApiError(res.error, "toast");
 
             setAllBoxes(res.data!);
+        });
+
+        params.then(p => {
+            app.boxes.getBox(p.boxId).then(res => {
+                if (res.error)
+                    return void handleApiError(res.error, "toast");
+
+                setBox(res.data!);
+            });;
+
+            app.filament.getAllFilaments(p.boxId).then(res => {
+                if (res.error)
+                    return void handleApiError(res.error, "toast");
+
+                setAllFilament(res.data!);
+            });
         });
     }, []);
 
@@ -91,36 +92,20 @@ export default function FilamentPage() {
                 />
             </div>
 
-            <div className="flex justify-between items-center mt-2">
-                <h2>Filament Boxes</h2>
-                <Button onClick={() => setOpenModal("createbox")}><Plus size={32} /></Button>
-            </div>
+            <a href={endpoints.filament} className="style flex items-center gap-1 mt-2">
+                <ArrowLeft /> Back
+            </a>
 
-            <Divider />
-
-            <div className="flex gap-2">
-                {!allBoxes && <Spinner />}
-                {(allBoxes && !allBoxes?.length) && <Subtext>Nothing to see here.</Subtext>}
-                {(allBoxes && allFilament) && allBoxes.map((box, i) => <BoxEntry
-                    box={box}
-                    allFilament={allFilament}
-                    key={box.id}
-                    onEdit={newBox => setAllBoxes([...allBoxes.slice(0, i), newBox, ...allBoxes.slice(i + 1)])}
-                    onDelete={() => {
-                        setAllBoxes(allBoxes.filter(b => b.id !== box.id));
-                        fetchFilament();
-                    }}
-                />)}
-            </div>
-
-            <FilamentList
-                data={search ? allFilament : allFilament?.filter(f => !f.box)}
-                title="Your Filament"
+            {box && <FilamentList
+                data={allFilament}
+                title={box.name}
                 allowAdd
                 sortBy={sortBy}
                 search={search}
+                userSettings={userSettings}
+                boxId={box.id}
                 allBoxes={allBoxes}
-            />
+            />}
 
             <Footer />
         </div>
@@ -132,11 +117,5 @@ export default function FilamentPage() {
                 setOpenModal("");
             }}
         />
-
-        {allBoxes && <CreateBoxModal
-            open={openModal === "createbox"}
-            onClose={() => setOpenModal("")}
-            onAdd={box => setAllBoxes([...allBoxes, box])}
-        />}
     </>;
 }
