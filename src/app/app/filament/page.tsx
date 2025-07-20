@@ -120,6 +120,8 @@ export default function FilamentPage() {
                 sortBy={sortBy}
                 search={search}
                 allBoxes={allBoxes}
+                userSettings={userSettings}
+                onModify={fetchFilament}
             />
 
             <Footer />

@@ -6,6 +6,7 @@ export const changelog = [
         version: "v1.2.1",
         content: <ul>
             <li>Fix reversed recent filament list on dashboard</li>
+            <li>Fixed a visual bug on the filament page</li>
         </ul>,
     },
     {

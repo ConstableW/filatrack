@@ -15,9 +15,9 @@ import Modal, { ModalFooter } from "../Modal";
 import { ReorderableList } from "../RerorderList";
 import MoveFilamentModal from "./MoveFilament";
 
-export default function FilamentList({ data, userSettings, allowAdd, title, sortBy, search, boxId, allBoxes }:
+export default function FilamentList({ data, userSettings, allowAdd, title, sortBy, search, boxId, allBoxes, onModify }:
     { data?: Filament[] | null, userSettings?: UserSettings, allowAdd?: boolean, boxId?: string, allBoxes?: Box[],
-        isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string
+        isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string, onModify?: () => void,
 }) {
     const [editMode, setEditMode] = useState(false);
     const [openModal, setOpenModal] = useState("");
@@ -94,6 +94,7 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
         if (!filament)
             return;
         setFilament([...filament.slice(0, i), ...filament.slice(i + 1)]);
+        onModify?.();
     }
 
     function deleteSelectedFilament() {
@@ -101,6 +102,7 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
             return;
         setFilament(filament?.filter(f => !selectedFilament.includes(f)) ?? []);
         setSelectedFilament([]);
+        onModify?.();
     }
 
     function editFilament(i: number, newData: Filament) {
@@ -111,6 +113,7 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
             setFilament([...filament.slice(0, i), ...filament.slice(i + 1)]);
         else
             setFilament([...filament.slice(0, i), newData, ...filament.slice(i + 1)]);
+        onModify?.();
     }
 
     function moveFilament(newFilament: Filament[]) {
@@ -118,6 +121,7 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
             return;
 
         setFilament(filament.filter(f => !newFilament.map(f => f.id).includes(f.id)));
+        onModify?.();
     }
 
     function onReorderFilament(newElements: React.ReactElement[]) {
