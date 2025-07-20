@@ -60,7 +60,7 @@ export default function BoxList({ allBoxes, allFilament, onReorder, onDelete, on
 
         <Divider />
 
-        <div className="flex gap-2">
+        <div className="flex flex-col md:flex-row gap-2 flex-wrap">
             {!allBoxes && <Spinner />}
             {allBoxes && !allBoxes.length && <Subtext>Nothing to see here.</Subtext>}
             {(allBoxes && allFilament) && editMode ?
@@ -74,7 +74,7 @@ export default function BoxList({ allBoxes, allFilament, onReorder, onDelete, on
         {editMode && <Subtext>Click & drag boxes to reorder</Subtext>}
 
         {allBoxes && <CreateBoxModal
-            open={openModal === "createbox"}
+            open={openModal === "add"}
             onClose={() => setOpenModal("")}
             onAdd={onAdd}
         />}
