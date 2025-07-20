@@ -259,3 +259,29 @@ export async function deleteBox(boxId: string): Promise<ApiRes<void>> {
 
     return {};
 }
+
+/**
+ * Changes the `index` key of a list of boxes to match the order of the array.
+ * @param newBoxList The new list of boxes in the new order.
+ * @returns The new box list with `index` updated.
+ */
+export async function reorderBoxes(newBoxList: Box[]): Promise<ApiRes<Box[]>> {
+    const session = await apiAuth();
+
+    if (!session)
+        return ApiError("NotAuthenticated");
+
+    for (const b of newBoxList)
+        if (b.userId !== session.user.id)
+            return ApiError("NotAuthorized");
+
+    const res = await Promise.all(newBoxList.map(async f => (await db.update(boxesTable).set({
+        index: f.index,
+    })
+        .where(eq(boxesTable.id, f.id))
+        .returning())[0]));
+
+    return {
+        data: res,
+    };
+}

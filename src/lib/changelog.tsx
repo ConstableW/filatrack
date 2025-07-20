@@ -5,6 +5,7 @@ export const changelog = [
         date: "7/21/2025",
         version: "v1.2.1",
         content: <ul>
+            <li>You can now reorder boxes</li>
             <li>Fix reversed recent filament list on dashboard</li>
             <li>Fixed a visual bug on the filament page</li>
         </ul>,

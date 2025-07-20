@@ -275,6 +275,8 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
             />}
         </div>
 
+        {editMode && <Subtext>Click & drag filament to reorder</Subtext>}
+
         <QRCodeModal open={openModal === "qrcode"} onClose={() => setOpenModal("")} filament={selectedFilament} />
 
         {allBoxes && <MoveFilamentModal

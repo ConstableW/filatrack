@@ -24,6 +24,7 @@ export default function CreateBoxModal({ onAdd, currentBox, ...props }: { onAdd:
         if (!currentBox)
             res = await app.boxes.createBox({
                 name,
+                index: 999,
                 filamentIds: [],
             });
         else
@@ -40,6 +41,7 @@ export default function CreateBoxModal({ onAdd, currentBox, ...props }: { onAdd:
         onAdd(res.data!);
         props.onClose();
         setLoading(false);
+        setName("");
     }
 
     return (<Modal {...props} title="Create Box">

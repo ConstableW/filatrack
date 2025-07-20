@@ -12,8 +12,8 @@ import Modal, { ModalFooter } from "../Modal";
 import { app } from "@/lib/db";
 import { handleApiError } from "@/lib/errors";
 
-export default function BoxEntry({ box, allFilament, onEdit, onDelete }:
-    { box: Box, allFilament: Filament[], onEdit: (box: Box) => void, onDelete: () => void }) {
+export default function BoxEntry({ box, allFilament, onEdit, onDelete, editMode }:
+    { box: Box, allFilament: Filament[], onEdit: (box: Box) => void, onDelete: () => void, editMode?: boolean }) {
     const [openModal, setOpenModal] = useState("");
 
     const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export default function BoxEntry({ box, allFilament, onEdit, onDelete }:
         <a
             className={`bg-bg-light p-2 rounded-lg flex flex-col gap-1 cursor-pointer
                     transition-all border-2 border-transparent hover:border-primary`}
-            href={`${endpoints.filament}/${box.id}`}
+            href={!editMode && `${endpoints.filament}/${box.id}` || undefined}
         >
             <div className="flex items-center justify-between">
                 <div className="flex gap-1 items-center">
@@ -49,7 +49,7 @@ export default function BoxEntry({ box, allFilament, onEdit, onDelete }:
                     <p>{box.name}</p>
                 </div>
 
-                <button
+                {!editMode && <button
                     className="ml-2 p-1 rounded-full cursor-pointer transition-all bg-bg-light hover:bg-bg-lighter"
                 >
                     <Dropdown>
@@ -62,7 +62,7 @@ export default function BoxEntry({ box, allFilament, onEdit, onDelete }:
                             <DropdownItem onClick={() => setOpenModal("delete")} danger>Delete</DropdownItem>
                         </DropdownContent>
                     </Dropdown>
-                </button>
+                </button>}
             </div>
             <Subtext className="flex gap-1 items-center">
                 <Shapes />
