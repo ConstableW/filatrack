@@ -142,7 +142,7 @@ export default function DashboardPage() {
                 <FilamentList
                     data={allFilament
                         .filter(f => (f.lastUsed ? f.lastUsed.getTime() > (Date.now() - 7 * day) : false))
-                        .sort((a, b) => a.lastUsed.getTime() - b.lastUsed.getTime())
+                        .sort((a, b) => b.lastUsed.getTime() - a.lastUsed.getTime())
                     }
                     title="Recently Used Filament"
                     userSettings={userSettings}

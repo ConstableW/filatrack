@@ -1,6 +1,13 @@
-export const version = "v1.2.0";
+export const version = "v1.2.1";
 
 export const changelog = [
+    {
+        date: "7/21/2025",
+        version: "v1.2.1",
+        content: <ul>
+            <li>Fix reversed recent filament list on dashboard</li>
+        </ul>,
+    },
     {
         date: "7/19/2025",
         version: "v1.2.0",
