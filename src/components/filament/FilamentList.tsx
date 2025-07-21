@@ -121,6 +121,7 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
             return;
 
         setFilament(filament.filter(f => !newFilament.map(f => f.id).includes(f.id)));
+        setSelectedFilament([]);
         onModify?.();
     }
 

@@ -76,6 +76,16 @@ export default function BoxEntry({ box, allFilament, onEdit, onDelete, editMode 
                     0)
                 }
             </Subtext>
+
+            <div className="flex gap-1 flex-wrap">
+                {box.filamentIds.map(id => allFilament.find(f => f.id === id)).filter(Boolean)
+                    .sort((a, b) => a!.index - b!.index)
+                    .map(f => <div
+                        key={f!.id}
+                        className="w-[24px] h-[24px] rounded-sm drop-shadow-lg"
+                        style={{ backgroundColor: f!.color }}
+                    />)}
+            </div>
         </a>
 
         <CreateBoxModal

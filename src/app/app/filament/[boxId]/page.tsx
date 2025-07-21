@@ -51,7 +51,7 @@ export default function BoxPage({ params }: { params: Promise<{ boxId: string }>
                 setBox(res.data!);
             });;
 
-            app.filament.getAllFilaments(p.boxId).then(res => {
+            app.filament.getAllFilaments().then(res => {
                 if (res.error)
                     return void handleApiError(res.error, "toast");
 

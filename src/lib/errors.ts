@@ -39,7 +39,7 @@ export const ApiErrorMessages = {
  * Creates an error object for an API response.
  * @param k The error to use
  * @param info Additional information to go with the error.
- * @returns \{ error: { code, info } }
+ * @returns `{ error: { code, info } }`
  */
 export function ApiError(k: keyof typeof ApiErrorMessages, info?: string): ApiRes<any> {
     return {

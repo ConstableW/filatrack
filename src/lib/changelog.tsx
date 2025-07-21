@@ -6,6 +6,7 @@ export const changelog = [
         version: "v1.2.2",
         content: <ul>
             <li>Fix box sorting</li>
+            <li>Fix weird bug with moving filament into boxes</li>
         </ul>,
     },
     {
