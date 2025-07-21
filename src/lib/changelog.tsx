@@ -1,8 +1,15 @@
-export const version = "v1.2.1";
+export const version = "v1.2.2";
 
 export const changelog = [
     {
-        date: "7/21/2025",
+        date: "7/22/2025",
+        version: "v1.2.2",
+        content: <ul>
+            <li>Fix box sorting</li>
+        </ul>,
+    },
+    {
+        date: "7/20/2025",
         version: "v1.2.1",
         content: <ul>
             <li>You can now reorder boxes</li>

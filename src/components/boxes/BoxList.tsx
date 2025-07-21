@@ -28,7 +28,7 @@ export default function BoxList({ allBoxes, allFilament, onReorder, onDelete, on
         onReorder(newBoxes);
     }
 
-    const boxElements = allBoxes?.map((box, i) => allFilament &&
+    const boxElements = allBoxes?.sort((a, b) => a.index - b.index).map((box, i) => allFilament &&
     <BoxEntry
         box={box}
         allFilament={allFilament}
