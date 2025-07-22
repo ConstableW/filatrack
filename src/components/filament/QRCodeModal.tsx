@@ -6,6 +6,7 @@ import Subtext from "../Subtext";
 import Button from "../Button";
 import Input from "../Input";
 import { useObjectState } from "@/lib/hooks";
+import { FilamentQREntry } from "@/app/qr/page";
 
 export function generateQrUrl(filament: Filament | Filament[], options: Record<string, boolean>) {
     const ids = Array.isArray(filament) ? filament.map(f => f.id).join(",") : filament.id;
@@ -22,11 +23,19 @@ export default function QRCodeModal({ filament, ...props }: { filament: Filament
         brand: true,
         mass: true,
         mat: true,
+        swatch: true,
     });
 
     return (
         <Modal {...props} title="QR Code">
             <Subtext>Print this QR code to quickly open your filament to view, edit, or log it!</Subtext>
+            <Divider />
+
+            <FilamentQREntry
+                options={Object.keys(options).filter(k => options[k])}
+                filament={Array.isArray(filament) ? filament[0] : filament}
+            />
+
             <Divider />
 
             <Input
@@ -58,6 +67,12 @@ export default function QRCodeModal({ filament, ...props }: { filament: Filament
                 type="checkbox"
                 checked={options.mat}
                 onChange={e => setOptions({ mat: e.target.checked })}
+            />
+            <Input
+                label="Show Color Swatch"
+                type="checkbox"
+                checked={options.swatch}
+                onChange={e => setOptions({ swatch: e.target.checked })}
             />
 
             <ModalFooter tip="Print and attach this to your filament for super-quick access with your phone!">

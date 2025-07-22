@@ -5,11 +5,48 @@ import { Box, Weight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { Suspense, useEffect, useState } from "react";
-import { getFilament } from "../../lib/db/filament";
-import { toast } from "sonner";
+import { getAllFilaments } from "../../lib/db/filament";
 import Spinner from "@/components/Spinner";
-import { endpoints } from "../../lib/constants";
 import { grams } from "../../lib/units";
+import { endpoints } from "@/lib/constants";
+
+export function FilamentQREntry({ options, filament }: { options: string[], filament: Filament }) {
+    return (<div
+        className={`${options.includes("border") && "border-2 border-black"}
+            p-3 bg-white text-black mr-1 flex gap-4 w-[350px] relative`}
+        key={filament.shortId}
+    >
+        <QRCodeSVG
+            value={`${endpoints.app}?f=${filament.shortId}`}
+            imageSettings={{
+                src: "/filament-black.png",
+                width: 35,
+                height: 35,
+                excavate: true,
+            }}
+            level="M"
+            className="h-full"
+        />
+
+        <div className="flex flex-col pr-2 justify-center max-w-[150px]">
+            {options.includes("name") && <p className="text-xl font-bold leading-5 mb-1">{filament.name}</p>}
+            {options.includes("brand") && <p>{filament.brand}</p>}
+            {options.includes("mass") && <div className="flex flex-row items-center gap-1 text-sm">
+                <Weight size={20} />
+                {grams(filament.startingMass)}
+            </div>}
+            {options.includes("mat") && <div className="flex flex-row items-center gap-1 text-sm">
+                <Box size={20} />
+                {filament.material}
+            </div>}
+        </div>
+
+        {options.includes("swatch") && <div
+            className="absolute bottom-3 right-3 w-8 h-8 border-2 rounded-sm"
+            style={{ backgroundColor: filament.color }}
+        />}
+    </div>);
+}
 
 function QRPageComponent() {
     const searchParams = useSearchParams();
@@ -23,19 +60,12 @@ function QRPageComponent() {
     const options = searchParams.get("options")!.split(",");
 
     useEffect(() => {
-        const filamentData: Filament[] = [];
+        getAllFilaments().then(res => {
+            if (res.error)
+                return;
 
-        (async() => {
-            for (const f of filamentList) {
-                await getFilament(f).then(res => {
-                    if (res.error)
-                        toast.error(`Error retireving filament: ${res.error}`);
-
-                    filamentData.push(res.data!);
-                });
-            }
-            setFilament(filamentData);
-        })();
+            setFilament(res.data.filter(f => filamentList.includes(f.id)));
+        });
     }, []);
 
     useEffect(() => {
@@ -45,36 +75,12 @@ function QRPageComponent() {
         setTimeout(print, 1000);
     }, [filament]);
 
-    return (<>
-        {!filament.length && <Spinner />}
-        {filament.map(f => <div
-            className={`${options.includes("border") && "border-2 border-black"}
-            rounded-lg p-3 bg-white inline-block text-black mr-1`}
-            key={f.shortId}
-        >
-            <QRCodeSVG
-                value={`${endpoints.app}?f=${f.shortId}`}
-                imageSettings={{
-                    src: "/filament-black.png",
-                    width: 35,
-                    height: 35,
-                    excavate: true,
-                }}
-                width="100%"
-                level="M"
-            />
-            {options.includes("name") && <h3 className="text-wrap text-center leading-5 my-1">{f.name}</h3>}
-            {options.includes("brand") && <p className="text-wrap text-center leading-5 my-1">{f.brand}</p>}
-            {options.includes("mass") && <div className="flex flex-row w-full justify-center items-center gap-1 text-sm">
-                <Weight size={20} />
-                {grams(f.startingMass)}
-            </div>}
-            {options.includes("mat") && <div className="flex flex-row w-full justify-center items-center gap-1 text-sm">
-                <Box size={20} />
-                {f.material}
-            </div>}
-        </div>)}
-    </>);
+    return (
+        <div className="flex gap-1 flex-wrap nobg">
+            {!filament.length && <Spinner />}
+            {filament.map(f => <FilamentQREntry options={options} filament={f} key={f.id} />)}
+        </div>
+    );
 }
 
 export default function QRPage() {

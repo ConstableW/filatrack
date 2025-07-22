@@ -5,6 +5,14 @@ export const changelog = [
         date: "7/22/2025",
         version: "v1.2.3",
         content: <ul>
+            <li>
+                QR code rework!
+                <ul>
+                    <li>Now look better and are easier to cut out</li>
+                    <li>Color swatch option</li>
+                    <li>Faster loading on QR page</li>
+                </ul>
+            </li>
             <li>Some backend reworking</li>
             <li>Update landing page background a little</li>
         </ul>,

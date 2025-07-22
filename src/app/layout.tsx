@@ -82,7 +82,7 @@ export default function RootLayout({
                 </script>
             </head>
             <body
-                className={`${lexend.variable} antialiased bg-bg`}
+                className={`${lexend.variable} antialiased has-[.nobg]:bg-white bg-bg`}
             >
                 <SessionProvider
                     refetchOnWindowFocus={false}
