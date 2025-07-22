@@ -42,14 +42,14 @@ export default function DashboardPage() {
             if (res.error)
                 return void handleApiError(res.error, "toast");
 
-            setAllFilament(res.data!);
+            setAllFilament(res.data);
         });
 
         app.settings.getUserSettings().then(res => {
             if (res.error)
                 return void handleApiError(res.error, "toast");
 
-            setUserSettings(res.data!);
+            setUserSettings(res.data);
         });
     }, []);
 

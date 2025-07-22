@@ -30,14 +30,14 @@ export async function getAllFilaments(boxId?: string): Promise<ApiRes<Filament[]
         data: await db.select().from(filamentTable)
             .where(eq(filamentTable.userId, session.user.id!)),
     };
-}
+};
 
 /**
  * Gets the specific filament a user owns.
  * @param id Filament ID
- * @returns The filament with given ID or null if not found
+ * @returns The filament with given ID
  */
-export async function getFilament(id: string): Promise<ApiRes<Filament | null>> {
+export async function getFilament(id: string): Promise<ApiRes<Filament>> {
     const session = await apiAuth();
 
     if (!session)
@@ -214,7 +214,7 @@ export async function editFilament(filamentId: string, newData: Partial<DBObject
  * @param filamentId The filament to delete
  * @returns Nothing if successful
  */
-export async function deleteFilament(filamentId: string): Promise<ApiRes<void>> {
+export async function deleteFilament(filamentId: string): Promise<ApiRes<null>> {
     const session = await apiAuth();
 
     if (!session)
@@ -231,7 +231,7 @@ export async function deleteFilament(filamentId: string): Promise<ApiRes<void>> 
 
     await db.delete(filamentTable).where(eq(filamentTable.id, filamentId));
 
-    return {};
+    return { data: null };
 }
 
 /**
@@ -239,7 +239,7 @@ export async function deleteFilament(filamentId: string): Promise<ApiRes<void>> 
  * @param filamentIds The IDs of the filament to delete.
  * @returns Nothing if successful.
  */
-export async function deleteFilaments(filamentIds: string[]): Promise<ApiRes<void>> {
+export async function deleteFilaments(filamentIds: string[]): Promise<ApiRes<null>> {
     const session = await apiAuth();
 
     if (!session)
@@ -255,7 +255,7 @@ export async function deleteFilaments(filamentIds: string[]): Promise<ApiRes<voi
 
     await db.delete(filamentTable).where(inArray(filamentTable.id, filamentIds));
 
-    return {};
+    return { data: null };
 }
 
 /**
@@ -354,7 +354,7 @@ export async function createFilamentLog(log: DBObjectParams<FilamentLog>): Promi
                 ...log,
             })
                 .returning())[0],
-            filament: editRes.data!,
+            filament: editRes.data,
         },
     };
 }
@@ -364,7 +364,7 @@ export async function createFilamentLog(log: DBObjectParams<FilamentLog>): Promi
  * @param log The log to delete.
  * @returns Nothing if successful.
  */
-export async function deleteFilamentLog(log: FilamentLog): Promise<ApiRes<void>> {
+export async function deleteFilamentLog(log: FilamentLog): Promise<ApiRes<null>> {
     const session = await apiAuth();
 
     if (!session)
@@ -383,7 +383,7 @@ export async function deleteFilamentLog(log: FilamentLog): Promise<ApiRes<void>>
     await db.update(filamentTable).set({ currentMass: filament.currentMass + log.filamentUsed })
         .where(eq(filamentTable.id, filament.id));
 
-    return { };
+    return { data: null };
 }
 
 /**

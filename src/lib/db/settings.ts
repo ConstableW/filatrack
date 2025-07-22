@@ -14,7 +14,7 @@ import { ApiError } from "../errors";
  * @param username The new username.
  * @returns Nothing if successful.
  */
-export async function setUsername(username: string): Promise<ApiRes<void>> {
+export async function setUsername(username: string): Promise<ApiRes<null>> {
     const session = await apiAuth();
 
     if (!session)
@@ -26,7 +26,7 @@ export async function setUsername(username: string): Promise<ApiRes<void>> {
     await db.update(usersTable).set({ name: username })
         .where(eq(usersTable.id, session.user.id!));
 
-    return {};
+    return { data: null };
 }
 
 /**
@@ -100,7 +100,7 @@ export async function updateUserSettings(newSettings: Partial<UserSettings>): Pr
  * Deletes a user and all of it's data from Filatrack.
  * @returns Nothing if successful.
  */
-export async function deleteUser(): Promise<ApiRes<void>> {
+export async function deleteUser(): Promise<ApiRes<null>> {
     const session = await apiAuth();
 
     if (!session)
@@ -108,7 +108,7 @@ export async function deleteUser(): Promise<ApiRes<void>> {
 
     await db.delete(usersTable).where(eq(usersTable.id, session.user.id!));
 
-    return { };
+    return { data: null };
 }
 
 /**
@@ -116,7 +116,7 @@ export async function deleteUser(): Promise<ApiRes<void>> {
  * @param id The ID of the dialog.
  * @returns Nothing if successful.
  */
-export async function setUserSeenDialog(id: string): Promise<ApiRes<void>> {
+export async function setUserSeenDialog(id: string): Promise<ApiRes<null>> {
     const session = await apiAuth();
 
     if (!session)
@@ -128,12 +128,12 @@ export async function setUserSeenDialog(id: string): Promise<ApiRes<void>> {
         return { error: userSettings.error };
 
     if ((userSettings.data?.seenDialogs ?? []).includes(id))
-        return { };
+        return { data: null };
 
     await db.update(userSettingsTable).set({
-        seenDialogs: [...(userSettings.data!.seenDialogs ?? []), id],
+        seenDialogs: [...(userSettings.data.seenDialogs ?? []), id],
     })
         .where(eq(userSettingsTable.userId, session.user.id!));
 
-    return { };
+    return { data: null };
 }

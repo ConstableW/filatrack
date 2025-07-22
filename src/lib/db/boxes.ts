@@ -243,7 +243,7 @@ export async function removeFilaments(boxId: string, filamentIds: string[]): Pro
  * @param boxId The box to delete
  * @returns Nothing if successful.
  */
-export async function deleteBox(boxId: string): Promise<ApiRes<void>> {
+export async function deleteBox(boxId: string): Promise<ApiRes<null>> {
     const session = await apiAuth();
 
     if (!session)
@@ -257,7 +257,7 @@ export async function deleteBox(boxId: string): Promise<ApiRes<void>> {
 
     await db.delete(boxesTable).where(eq(boxesTable.id, box.id));
 
-    return {};
+    return { data: null };
 }
 
 /**

@@ -1,17 +1,17 @@
+import { XOR } from "../typeUtils";
+
 /**
  * A result from a database action.
- * If there is an error, `data` will be null.
- * `error` is a user-facing error sent back by the API.
+ * `data` and `error` are mutually exclusive
  */
-export type ApiRes<T> = {
-    data?: T;
-    error?: ApiError;
-};
+export type ApiRes<T> = XOR<{ data: T; }, { error: ApiError; }>
 
 export type ApiError = {
     code: number,
     info?: string,
 }
+
+export type ApiFunction<T> = () => Promise<ApiRes<T>>;
 
 /**
  * Parameters for creating/updating an object in the database.

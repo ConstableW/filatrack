@@ -50,9 +50,9 @@ export default function AdminPage() {
     useEffect(() => {
         (async() => {
             setCurrentStats({
-                totalUsers: (await app.analytics.getTotalUsers()).data!,
-                totalFilament: (await app.analytics.getTotalFilament()).data!,
-                totalLogs: (await app.analytics.getTotalLogs()).data!,
+                totalUsers: (await app.analytics.getTotalUsers()).data,
+                totalFilament: (await app.analytics.getTotalFilament()).data,
+                totalLogs: (await app.analytics.getTotalLogs()).data,
 
                 authenticationMethods: (await app.analytics.getAuthenticationMethodStats()).data!,
             });

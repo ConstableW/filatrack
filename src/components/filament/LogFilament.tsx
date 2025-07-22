@@ -74,7 +74,7 @@ export default function LogFilamentModal({ open, onClose, filament, onFinish, cu
         setError("");
         setFilamentUsed(0);
         onClose();
-        onFinish(res.data!.filament ?? filament, res.data!.log);
+        onFinish(res.data.filament ?? filament, res.data.log);
     }
 
     return (

@@ -33,14 +33,14 @@ export default function BoxPage({ params }: { params: Promise<{ boxId: string }>
             if (res.error)
                 return void handleApiError(res.error, "toast");
 
-            setUserSettings(res.data!);
+            setUserSettings(res.data);
         });
 
         app.boxes.getAllBoxes().then(res => {
             if (res.error)
                 return void handleApiError(res.error, "toast");
 
-            setAllBoxes(res.data!);
+            setAllBoxes(res.data);
         });
 
         params.then(p => {
@@ -48,14 +48,14 @@ export default function BoxPage({ params }: { params: Promise<{ boxId: string }>
                 if (res.error)
                     return void handleApiError(res.error, "toast");
 
-                setBox(res.data!);
+                setBox(res.data);
             });;
 
             app.filament.getAllFilaments(p.boxId).then(res => {
                 if (res.error)
                     return void handleApiError(res.error, "toast");
 
-                setAllFilament(res.data!);
+                setAllFilament(res.data);
             });
         });
     }, []);

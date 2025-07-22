@@ -32,7 +32,7 @@ export default function FilamentPage() {
             if (res.error)
                 return void handleApiError(res.error, "toast");
 
-            setAllFilament(res.data!);
+            setAllFilament(res.data);
         });
     }
 
@@ -41,7 +41,7 @@ export default function FilamentPage() {
             if (res.error)
                 return void handleApiError(res.error, "toast");
 
-            setUserSettings(res.data!);
+            setUserSettings(res.data);
         });
 
         fetchFilament();
@@ -50,7 +50,7 @@ export default function FilamentPage() {
             if (res.error)
                 return void handleApiError(res.error, "toast");
 
-            setAllBoxes(res.data!);
+            setAllBoxes(res.data);
         });
     }, []);
 

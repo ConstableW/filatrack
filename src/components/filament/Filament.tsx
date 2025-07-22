@@ -149,7 +149,7 @@ export default function FilamentEntry({
                             app.filament.createFilament({ ...filament })
                                 .then(res => (
                                     res.error ? handleApiError(res.error, "toast") :
-                                        onAdd?.(res.data!)
+                                        onAdd?.(res.data)
                                 ));
                         }}>
                             Duplicate

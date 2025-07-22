@@ -87,7 +87,7 @@ export default function FilamentHistoryList({ filament }: { filament: Filament }
                 return;
             }
 
-            setLogs(res.data!.sort((a, b) => Number(a.time) - Number(b.time)));
+            setLogs(res.data.sort((a, b) => Number(a.time) - Number(b.time)));
         });
     }, [open]);
 

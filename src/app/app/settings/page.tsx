@@ -78,7 +78,7 @@ export default function SettingsPage() {
         if (res.error)
             handleApiError(res.error, "toast");
         else
-            setUserSettingsData(res.data!);
+            setUserSettingsData(res.data);
 
         setSaveLoading(false);
     }

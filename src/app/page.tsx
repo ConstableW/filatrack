@@ -49,21 +49,21 @@ export default async function Home() {
                 <div className="flex flex-row gap-2">
                     <div>
                         <Subtext className="text-xl">Users</Subtext>
-                        <h2>{(await getTotalUsers()).data!}</h2>
+                        <h2>{(await getTotalUsers()).data}</h2>
                     </div>
 
                     <Divider vertical />
 
                     <div>
                         <Subtext className="text-xl">Filament</Subtext>
-                        <h2>{(await getTotalFilament()).data!}</h2>
+                        <h2>{(await getTotalFilament()).data}</h2>
                     </div>
 
                     <Divider vertical />
 
                     <div>
                         <Subtext className="text-xl">Logs</Subtext>
-                        <h2>{(await getTotalLogs()).data!}</h2>
+                        <h2>{(await getTotalLogs()).data}</h2>
                     </div>
                 </div>
             </div>

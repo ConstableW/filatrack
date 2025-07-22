@@ -38,7 +38,7 @@ export default function CreateBoxModal({ onAdd, currentBox, ...props }: { onAdd:
             return;
         }
 
-        onAdd(res.data!);
+        onAdd(res.data);
         props.onClose();
         setLoading(false);
         setName("");

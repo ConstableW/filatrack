@@ -111,7 +111,7 @@ export default function AddFilamentModal({ onAdd, currentFilament, open, onClose
         setLoading(false);
         onClose();
 
-        onAdd?.([res.data!, ...(copiesRes?.data! ?? [])]);
+        onAdd?.([res.data, ...(copiesRes?.data ?? [])]);
     }
 
     useEffect(() => {

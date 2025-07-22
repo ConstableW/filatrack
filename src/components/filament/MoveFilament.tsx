@@ -37,7 +37,7 @@ export default function MoveFilamentModal({ filament, allBoxes, onMove, ...props
             return;
         }
 
-        onMove(res.data!.filament);
+        onMove(res.data.filament);
         setLoading(false);
         props.onClose();
     }

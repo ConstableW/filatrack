@@ -154,7 +154,7 @@ export function RandomDialogs() {
             if (res.error || !res.data)
                 return;
 
-            const userSettings = res.data!;
+            const userSettings = res.data;
 
             const lastSeenPrivacyPolicy = userSettings.seenDialogs?.find(d => d.startsWith("privacy-policy:"));
 
