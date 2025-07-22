@@ -15,6 +15,7 @@ export const changelog = [
             </li>
             <li>Some backend reworking</li>
             <li>Update landing page background a little</li>
+            <li>Change 'Your Filament' to a collapsable 'All Filament' section</li>
         </ul>,
     },
     {

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import FilamentEntry from "./Filament";
 import { Box, Filament, UserSettings } from "@/db/types";
 import Skeleton from "../Skeleton";
-import { ArchiveRestore, Pencil, Plus, QrCode, Trash2, X } from "lucide-react";
+import { ArchiveRestore, ChevronUp, Pencil, Plus, QrCode, Trash2, X } from "lucide-react";
 import AddFilamentModal from "./AddFilament";
 import Divider from "../Divider";
 import Button, { ButtonStyles } from "../Button";
@@ -15,13 +15,15 @@ import Modal, { ModalFooter } from "../Modal";
 import { ReorderableList } from "../RerorderList";
 import MoveFilamentModal from "./MoveFilament";
 
-export default function FilamentList({ data, userSettings, allowAdd, title, sortBy, search, boxId, allBoxes, onModify }:
+export default function FilamentList({ data, userSettings, allowAdd, title, sortBy, search, boxId, allBoxes, collapsable, onModify }:
     { data?: Filament[] | null, userSettings?: UserSettings, allowAdd?: boolean, boxId?: string, allBoxes?: Box[],
-        isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string, onModify?: () => void,
+        isEmpty?: boolean, title: string, sortBy?: keyof Filament, search?: string, onModify?: () => void, collapsable?: boolean,
 }) {
     const [editMode, setEditMode] = useState(false);
     const [openModal, setOpenModal] = useState("");
     const [deleteLoading, setDeleteLoading] = useState(false);
+
+    const [collapsed, setCollapsed] = useState(false);
 
     const [filament, setFilament] = useState(data);
     const [searchedFilament, setSearchedFilament] = useState<number[] | null>(null);
@@ -196,7 +198,15 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
 
     return (<div>
         <div className="flex flex-row items-center justify-between mt-1">
-            <h2>{title}</h2>
+            <div className="flex flex-row gap-2 items-center">
+                {collapsable && <ChevronUp
+                    size={32}
+                    className={`${collapsed ? "rotate-180" : ""} transition-all cursor-pointer`}
+                    onClick={() => setCollapsed(!collapsed)}
+                />}
+
+                <h2>{title}</h2>
+            </div>
             {allowAdd && <div className="flex flex-row gap-2">
                 {editMode && <>
                     <Button
@@ -247,14 +257,14 @@ export default function FilamentList({ data, userSettings, allowAdd, title, sort
                 className="flex flex-row gap-2 md:flex-wrap [&>br]:hidden w-full *:w-full md:*:!w-[175px]"
             />}
 
-            {editMode ?
+            {!collapsed && (editMode ?
                 <ReorderableList onChange={onReorderFilament}>
                     {filamentElements}
                 </ReorderableList> :
                 filamentElements
-            }
+            )}
 
-            {(allowAdd && !!filament && !editMode) &&
+            {(allowAdd && !!filament && !editMode && !collapsed) &&
             <div
                 className={`bg-bg-light rounded-lg p-2 flex flex-col gap-1 items-center justify-center relative md:w-[175px]
                     cursor-pointer transition-all border-2 border-transparent hover:border-primary w-full min-h-[270px]

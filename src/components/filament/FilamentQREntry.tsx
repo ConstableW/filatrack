@@ -1,5 +1,5 @@
 import { Filament } from "@/db/types";
-import { endpoints } from "@/lib/constants";
+import { baseUrl, endpoints } from "@/lib/constants";
 import { grams } from "@/lib/units";
 import { Weight, Box } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
@@ -10,17 +10,20 @@ export function FilamentQREntry({ options, filament }: { options: string[], fila
             p-3 bg-white text-black mr-1 flex gap-4 w-[350px] relative`}
         key={filament.shortId}
     >
-        <QRCodeSVG
-            value={`${endpoints.app}?f=${filament.shortId}`}
-            imageSettings={{
-                src: "/filament-black.png",
-                width: 35,
-                height: 35,
-                excavate: true,
-            }}
-            level="M"
-            className="h-full"
-        />
+        <div className="">
+            <QRCodeSVG
+                value={`${endpoints.app}?f=${filament.shortId}`}
+                imageSettings={{
+                    src: "/filament-black.png",
+                    width: 35,
+                    height: 35,
+                    excavate: true,
+                }}
+                level="M"
+                className="h-full"
+            />
+            <p className="text-xs leading-2 w-full text-center">{baseUrl.replaceAll(/(http(s)?:\/\/|\/)/g, "")}</p>
+        </div>
 
         <div className="flex flex-col pr-2 justify-center max-w-[150px]">
             {options.includes("name") && <p className="text-xl font-bold leading-5 mb-1">{filament.name}</p>}

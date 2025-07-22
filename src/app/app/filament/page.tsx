@@ -96,14 +96,15 @@ export default function FilamentPage() {
             />
 
             <FilamentList
-                data={search ? allFilament : allFilament?.filter(f => !f.box)}
-                title="Your Filament"
+                data={allFilament}
+                title="All Filament"
                 allowAdd
                 sortBy={sortBy}
                 search={search}
                 allBoxes={allBoxes}
                 userSettings={userSettings}
                 onModify={fetchFilament}
+                collapsable
             />
 
             <Footer />
