@@ -6,6 +6,7 @@ export const changelog = [
         version: "v1.2.3",
         content: <ul>
             <li>Some backend reworking</li>
+            <li>Update landing page background a little</li>
         </ul>,
     },
     {

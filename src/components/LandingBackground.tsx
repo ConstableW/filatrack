@@ -68,7 +68,7 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
 
         grid[randX][randY].color = randColor;
         grid[randX][randY].opacity = 1;
-    }, 500);
+    }, 250);
 
     let prevX = 0;
     let prevY = 0;
@@ -91,6 +91,63 @@ function initCanvas(ctx: CanvasRenderingContext2D) {
         grid[gridX][gridY].color = randomFrom(randomColors);
         grid[gridX][gridY].opacity = 1;
         grid[gridX][gridY].decay = 0.05;
+    });
+
+    const maxDepth = 3;
+    window.addEventListener("mousedown", e => {
+        const x = e.clientX;
+        const y = e.clientY - ctx.canvas.getBoundingClientRect().top;
+
+        const gridX = Math.floor(x / squareSize);
+        const gridY = Math.floor(y / squareSize);
+
+        const traversed: { x: number, y: number }[] = [];
+
+        function effect(x: number, y: number, depth: number) {
+            if (depth <= 0)
+                return;
+
+            const newSquares = [
+                { x: x + 1, y },
+                { x, y: y + 1 },
+                { x: x - 1, y },
+                { x, y: y - 1 },
+            ];
+
+            if (depth % 2 === 0)
+                newSquares.push(
+                    { x: x + 1, y: y + 1 },
+                    { x: x + 1, y: y - 1 },
+                    { x: x - 1, y: y - 1 },
+                    { x: x - 1, y: y + 1 },
+                );
+
+            for (const square of newSquares) {
+                const gridSquare = grid[square.x]?.[square.y];
+
+                if (!gridSquare || traversed.find(v => v.x === square.x && v.y === square.y))
+                    continue;
+
+                grid[square.x][square.y].color = randomFrom(randomColors);
+                grid[square.x][square.y].opacity = 1;
+                grid[square.x][square.y].decay = 0.05;
+
+                traversed.push(square);
+
+                setTimeout(() => {
+                    effect(square.x, square.y, depth - 1);
+                }, 75);
+            }
+        }
+
+        grid[gridX][gridY].color = randomFrom(randomColors);
+        grid[gridX][gridY].opacity = 1;
+        grid[gridX][gridY].decay = 0.075;
+
+        effect(gridX, gridY, maxDepth);
+        // grid[gridX][gridY].color = "#fff";
+        // grid[gridX][gridY].opacity = 1;
+        // grid[gridX][gridY].decay = 0;
     });
 }
 
@@ -115,7 +172,7 @@ function LandingBackground() {
         hasInit.current = true;
     }, [canvasRef.current]);
 
-    return <canvas ref={canvasRef} className="bottom-fade absolute-center w-full h-full motion-reduce:hidden" />;
+    return <canvas ref={canvasRef} className="bottom-fade absolute-center w-full h-full motion-reduce:hidden opacity-50" />;
 }
 
 export default dynamic(() => Promise.resolve(LandingBackground), { ssr: false });
