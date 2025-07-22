@@ -12,7 +12,7 @@ export function FilamentQREntry({ options, filament }: { options: string[], fila
     >
         <div className="">
             <QRCodeSVG
-                value={`${endpoints.app}?f=${filament.shortId}`}
+                value={`${endpoints.filament}?f=${filament.shortId}`}
                 imageSettings={{
                     src: "/filament-black.png",
                     width: 35,
