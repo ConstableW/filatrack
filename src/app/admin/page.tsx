@@ -25,6 +25,8 @@ export default function AdminPage() {
         totalUsers: 0,
         totalFilament: 0,
         totalLogs: 0,
+        totalBoxes: 0,
+
         authenticationMethods: {},
     });
 
@@ -53,6 +55,7 @@ export default function AdminPage() {
                 totalUsers: (await app.analytics.getTotalUsers()).data,
                 totalFilament: (await app.analytics.getTotalFilament()).data,
                 totalLogs: (await app.analytics.getTotalLogs()).data,
+                totalBoxes: (await app.analytics.getTotalBoxes()).data,
 
                 authenticationMethods: (await app.analytics.getAuthenticationMethodStats()).data!,
             });
@@ -71,7 +74,7 @@ export default function AdminPage() {
                 }, {} as Record<string, string>)
             } />
         </div>
-        <div className="w-full flex flex-col md:flex-row gap-2 p-3 md:p-10 md:pt-0 pt-0">
+        <div className="w-full flex flex-col md:flex-row gap-2 pt-3 md:px-10 md:pt-0 pt-0">
             <div className="w-full bg-bg-light p-5 rounded-lg">
                 <h1 className="text-gray-500">Users</h1>
                 <Divider />
@@ -98,23 +101,6 @@ export default function AdminPage() {
                         },
                     ]}
                 />
-                <Divider />
-                <h2 className="text-gray-500">Authentication Methods</h2>
-                <Divider />
-                <table>
-                    <thead>
-                        <tr>
-                            <td>Method</td>
-                            <td>Users</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {Object.keys(currentStats.authenticationMethods).map(method => <tr key={method}>
-                            <td>{method}</td>
-                            <td>{currentStats.authenticationMethods[method as keyof typeof currentStats.authenticationMethods]}</td>
-                        </tr>)}
-                    </tbody>
-                </table>
             </div>
             <div className="w-full bg-bg-light p-5 rounded-lg">
                 <h1 className="text-gray-500">Filament</h1>
@@ -159,6 +145,56 @@ export default function AdminPage() {
                     }]}
                 />
             </div>
+            <div className="w-full bg-bg-light p-5 rounded-lg">
+                <h1 className="text-gray-500">Boxes</h1>
+                <Divider />
+                <p>Total Boxes</p>
+                <h1>{currentStats.totalFilament}</h1>
+
+                <LineChart
+                    height={300}
+                    series={[
+                        {
+                            data: Array.from({ length: timespan }).map((_, i) => entries[i]?.boxesCreated ?? 0)
+                                .reverse(),
+                            label: "Boxes Created",
+                        },
+                    ]}
+                    xAxis={[
+                        {
+                            scaleType: "point",
+                            data: Array
+                                .from({ length: timespan })
+                                .map((_, i) => new Date(new Date().getTime() - i * day))
+                                .reverse(),
+                            valueFormatter: (value: Date) => dateFormatter.format(value),
+                        },
+                    ]}
+                    yAxis={[{
+                        min: 0,
+                    }]}
+                />
+            </div>
+        </div>
+        <div className="bg-bg-light rounded-lg p-4 m-3 md:mx-10 my-2 md:my-2">
+            <h2 className="text-gray-500">Authentication Methods</h2>
+
+            <Divider />
+
+            <table>
+                <thead>
+                    <tr>
+                        <td>Method</td>
+                        <td>Users</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {Object.keys(currentStats.authenticationMethods).map(method => <tr key={method}>
+                        <td>{method}</td>
+                        <td>{currentStats.authenticationMethods[method as keyof typeof currentStats.authenticationMethods]}</td>
+                    </tr>)}
+                </tbody>
+            </table>
         </div>
     </>);
 }

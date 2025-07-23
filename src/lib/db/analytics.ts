@@ -8,6 +8,7 @@ import { accountsTable, usersTable } from "@/db/schema/user";
 import { ApiRes } from "./types";
 import { apiAuth } from "./helpers";
 import { ApiError } from "../errors";
+import { boxesTable } from "@/db/schema/boxes";
 
 export type AnalyticEntry = typeof analyticsTable.$inferSelect;
 
@@ -38,6 +39,16 @@ export async function getTotalFilament() {
 export async function getTotalLogs() {
     return {
         data: (await db.select().from(filamentLogTable)).length,
+    };
+}
+
+/**
+ * Gets the total number of filament boxes listed in the database.
+ * @returns Number of boxes in database
+ */
+export async function getTotalBoxes() {
+    return {
+        data: (await db.select().from(boxesTable)).length,
     };
 }
 
