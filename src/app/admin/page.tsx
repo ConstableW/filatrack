@@ -74,7 +74,7 @@ export default function AdminPage() {
                 }, {} as Record<string, string>)
             } />
         </div>
-        <div className="w-full flex flex-col md:flex-row gap-2 pt-3 md:px-10 md:pt-0 pt-0">
+        <div className="w-full flex flex-col md:flex-row gap-2 pt-3 md:px-10 md:pt-0">
             <div className="w-full bg-bg-light p-5 rounded-lg">
                 <h1 className="text-gray-500">Users</h1>
                 <Divider />
@@ -149,7 +149,7 @@ export default function AdminPage() {
                 <h1 className="text-gray-500">Boxes</h1>
                 <Divider />
                 <p>Total Boxes</p>
-                <h1>{currentStats.totalFilament}</h1>
+                <h1>{currentStats.totalBoxes}</h1>
 
                 <LineChart
                     height={300}
