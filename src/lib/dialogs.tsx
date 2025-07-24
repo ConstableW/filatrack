@@ -17,10 +17,10 @@ type Dialog = {
 }
 
 export const dialogs: Record<string, Dialog> = {
-    feedback: {
+    feedback2: {
         toast: (openModal, closeToast) => toast.info("Feedback", {
             description: <div className="flex flex-col gap-2">
-                <p>We're always looking for ways to improve Filatrack. Please give us some feedback!</p>
+                <p>Something bothering you about Filatrack, or want something changed? Help us out!</p>
                 <div className="flex flex-row gap-2">
                     <Button onClick={openModal} className="text-xs">Give Feedback</Button>
                     <Button onClick={() => {
@@ -92,11 +92,11 @@ export const dialogs: Record<string, Dialog> = {
             duration: 99999,
         }),
     },
-    discord: {
+    discord2: {
         toast: (_, closeToast) => toast.info("Discord", {
             description: <div className="flex flex-col gap-2">
                 <p>
-                    We have a Discord! Feel free to come chat or suggest stuff!
+                    Want something added to Filatrack? Comes suggest it in our discord server!
                 </p>
                 <div className="flex flex-row gap-2">
                     <a href={endpoints.discord} target="_blank"><Button className="text-xs">Join</Button></a>
