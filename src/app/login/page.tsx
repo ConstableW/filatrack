@@ -7,6 +7,7 @@ import React from "react";
 import { FaGithub } from "react-icons/fa";
 import { getAuthErrorMessage } from "../../lib/errors";
 import { FaGoogle } from "react-icons/fa6";
+import { endpoints } from "@/lib/constants";
 
 function LogInButton({ provider, children }: { provider: string } & React.PropsWithChildren) {
     return (
@@ -30,5 +31,7 @@ export default function LoginPage() {
         <LogInButton provider="google"><FaGoogle size={32} /> Sign in with Google</LogInButton>
         <LogInButton provider="github"><FaGithub size={32} /> Sign in with GitHub</LogInButton>
         {error && <p className="text-red-500">{getAuthErrorMessage(error)}</p>}
+
+        <a href={endpoints.privacyPolicy} className="style">Privacy Policy</a>
     </main>);
 }
