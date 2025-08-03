@@ -4,7 +4,7 @@ export default function Input({ multiline, label, error, ...props }:
     React.InputHTMLAttributes<HTMLInputElement> & { multiline?: boolean | "true"; label?: string; error?: string | false }) {
     const Component = multiline ? "textarea" : "input";
 
-    return (<div className={`flex ${props.type === "checkbox" ? "flex-row gap-2" : "flex-col"}`}>
+    return (<div className={`flex ${props.type === "checkbox" ? `flex-row gap-2 ${props.className}` : "flex-col"}`}>
         {(label && props.type !== "checkbox") &&
             <label className="text-white">{label}</label>
         }
