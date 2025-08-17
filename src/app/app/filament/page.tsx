@@ -27,6 +27,8 @@ export default function FilamentPage() {
     const [allFilament, setAllFilament] = useState<Filament[]>();
     const [allBoxes, setAllBoxes] = useState<Box[]>();
 
+    const [hideEmpty, setHideEmpty] = useState(false);
+
     function fetchFilament() {
         app.filament.getAllFilaments().then(res => {
             if (res.error)
@@ -96,7 +98,7 @@ export default function FilamentPage() {
             />
 
             <FilamentList
-                data={allFilament}
+                data={hideEmpty ? allFilament?.filter(f => f.currentMass > 0) ?? undefined : allFilament}
                 title="All Filament"
                 allowAdd
                 sortBy={sortBy}
@@ -105,6 +107,13 @@ export default function FilamentPage() {
                 userSettings={userSettings}
                 onModify={fetchFilament}
                 collapsable
+            />
+            <Input
+                type="checkbox"
+                label="Hide Empty Rolls"
+                className="text-sm"
+                checked={hideEmpty}
+                onChange={e => setHideEmpty(e.target.checked)}
             />
 
             <Footer />
